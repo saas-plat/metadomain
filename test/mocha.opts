@@ -1,0 +1,5 @@
+--recursive
+--bail
+--watch
+--timeout 30000
+ test/*.js
