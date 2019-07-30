@@ -28,7 +28,8 @@
     "mongodb": "^3.0.1",
     "nools": "^0.4.4",
     "shortid": "^2.2.13",
-    "sourced": "^0.1.4"
+    "sourced": "^0.1.4",
+    "sourced-repo-mongo": "^0.3.13"
   },
   "devDependencies": {
     "chai": "^4.1.2",

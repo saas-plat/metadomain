@@ -4,15 +4,20 @@ const {
   Repository,
   MetaEntity,
   BaseData
-} = require('./lib');
+} = require('../lib');
 
-before(done => {
-  Repository.connect(done);
+before(async () => {
+  await Repository.connect();
+})
+
+after(async () => {
+  await Repository.close();
 })
 
 describe('基础档案', () => {
 
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
+    let eventbus = [];
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
       "Code": 'string',
       "Name": 'string',
@@ -26,16 +31,23 @@ describe('基础档案', () => {
       "MarketingOrgan_id": 'int',
       "Admin_name": 'string',
       "Admin_id": 'int'
-    }, `rule code_not_null {
+    }, [`rule code_required_onsave {
       when{
-        arg: Arguments
+        e: Event e.name == 'save';
+        saved: Object arg.$name == 'saved'
       }
       then{
-        
+        if (!saved.Code){
+          return new Error('仓库编码不能为空')
+        }
       }
-    }`, {
-      on: (event, args) => {
-        console.log(event, args);
+    }`], {
+      on: (name, args) => {
+        console.log(name, args);
+        eventbus.push({
+          name,
+          args
+        })
       }
     });
 
@@ -45,21 +57,24 @@ describe('基础档案', () => {
       Name: 'test001',
       Code: '001'
     });
-    await WarehouseRep.commit(warehouse);
+    console.log(warehouse)
+    await WarehouseRep.commitAll(warehouse);
 
-    warehouse = await WarehouseRep.find(warehouse.id);
+    warehouse = await WarehouseRep.get(warehouse.id);
     expect(warehouse).to.not.be.null;
     await exists.save({
       Address: 'xxxxxxxxxxxxxxxxxx',
     });
-    await WarehouseRep.commit(warehouse);
+    await WarehouseRep.commitAll(warehouse);
 
     warehouse = await WarehouseRep.find(warehouse.id);
     expect(warehouse.Name).to.be.eql('test001');
     expect(warehouse.Code).to.be.eql('001');
     expect(warehouse.Address).to.be.eql('xxxxxxxxxxxxxxxxxx');
     warehouse.delete();
-    await WarehouseRep.commit(warehouse);
+    await WarehouseRep.commitAll(warehouse);
+
+    expect(eventbus.length).to.be.eql(3);
   })
 
   it('创建部门档案，添加部门分类和部门数据', async () => {
