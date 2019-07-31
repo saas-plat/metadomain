@@ -35,7 +35,7 @@ describe('基础档案', () => {
       "Admin_id": 'int'
     }, [`rule required_onsave {
       when{
-        e: Event e.name == 'Warehouse.save';
+        e: Event e.name == 'save';
         d: Object d.$name == 'saved';
         o: Entity
       }
