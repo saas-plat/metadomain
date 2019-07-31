@@ -132,23 +132,52 @@ describe('基础档案', () => {
 
   it('创建部门档案，添加部门分类和部门数据', async () => {
 
-    // const Department = MetaEntity.create(BaseData, 'Department', {
-    //   "ID":'int',
-    //   "Code":'string',
-    //   "Name":'string',
-    //   "StoreType_Name":'string',
-    //   "Person_Name":'string',
-    //   "Warehouse_Name":'string',
-    //   "Department_Name":'string',
-    //   "District_Name":'string',
-    //   "CashShieldNum":'int',
-    //   "Customer_Name":'string',
-    //   "Person_id":'int',
-    //   "Warehouse_id":'int',
-    //   "Department_id":'int',
-    //   "Customer_id":'int',
-    //   "District_id":'int'
-    // }, handleActionRule, handleCreated);
+    const DepartmentCategory = MetaEntity.create(CategoryData, 'DepartmentCategory', {
+
+    }, [`rule has_date_cant_be_delete {
+      when{
+        evt: Event e.name == 'delete';
+        e: Entity
+      }
+      then{
+
+      }
+    }`]);
+
+    const Department = MetaEntity.create(BaseData, 'Department', {
+      "Code": 'string',
+      "Name": 'string',
+      "StoreType_Name": 'string',
+      "Person_Name": 'string',
+      "Warehouse_Name": 'string',
+      "Department_Name": 'string',
+      "District_Name": 'string',
+      "CashShieldNum": 'int',
+      "Customer_Name": 'string',
+      "Person_id": 'int',
+      "Warehouse_id": 'int',
+      "Department_id": 'int',
+      "Customer_id": 'int',
+      "District_id": 'int'
+    }, [`rule not_end_cant_be_add {
+      when{
+        evt: Event e.name == 'save';
+        a: Object d.$name == 'saved';
+        e: Entity
+      }
+      then{
+
+      }
+    }`]); 
+
+    const DepartmentRep = Repository.create(Department);
+    let department = Department.create();
+
+    await department.save({
+      Name: 'test001',
+    });
+    //console.log(warehouse)
+    await DepartmentRep.commitAll(department);
 
   })
 
@@ -156,6 +185,10 @@ describe('基础档案', () => {
 
   })
   it('采购订单，保存审核生效、生成进货单，保存审核', async () => {
+
+  })
+
+  it('实体字段修改，增加、删除、更新类型', async () => {
 
   })
 })
