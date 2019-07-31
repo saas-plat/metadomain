@@ -1,5 +1,5 @@
 --recursive
---bail 
---timeout 30000
+--bail
+--timeout 3000
 --require ./test/env.opts
  test/*.js

@@ -5,6 +5,9 @@ const {
   MetaEntity,
   BaseData
 } = require('../lib');
+const {
+  expect
+} = require('chai');
 
 before(async () => {
   await Repository.connect();
@@ -19,7 +22,6 @@ describe('基础档案', () => {
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
-      "Code": 'string',
       "Name": 'string',
       "Address": 'string',
       "InvolveATP": 'bool',
@@ -31,14 +33,15 @@ describe('基础档案', () => {
       "MarketingOrgan_id": 'int',
       "Admin_name": 'string',
       "Admin_id": 'int'
-    }, [`rule code_required_onsave {
+    }, [`rule required_onsave {
       when{
-        e: Event e.name == 'save';
-        saved: Object arg.$name == 'saved'
+        e: Event e.name == 'Warehouse.save';
+        d: Object d.$name == 'saved';
+        o: Entity
       }
       then{
-        if (!saved.Code){
-          return new Error('仓库编码不能为空')
+        if (!o.Name && !d.Name){
+          throw new Error(t('仓库编码不能为空'))
         }
       }
     }`], {
@@ -51,30 +54,80 @@ describe('基础档案', () => {
       }
     });
 
+    console.log('------------------------------')
+
     const WarehouseRep = Repository.create(Warehouse);
     let warehouse = Warehouse.create();
+    try {
+      await warehouse.save({
+        //Name: 'test001',
+      });
+      expect.fail();
+    } catch (err) {
+
+    }
     await warehouse.save({
       Name: 'test001',
-      Code: '001'
     });
-    console.log(warehouse)
+    //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);
+
+    console.log('------------------------------')
 
     warehouse = await WarehouseRep.get(warehouse.id);
     expect(warehouse).to.not.be.null;
-    await exists.save({
+    await warehouse.save({
       Address: 'xxxxxxxxxxxxxxxxxx',
+      NONONO: '111',
     });
     await WarehouseRep.commitAll(warehouse);
 
-    warehouse = await WarehouseRep.find(warehouse.id);
+    console.log('------------------------------')
+
+    warehouse = await WarehouseRep.get(warehouse.id);
     expect(warehouse.Name).to.be.eql('test001');
-    expect(warehouse.Code).to.be.eql('001');
+    //expect(warehouse.Code).to.be.eql('001');
     expect(warehouse.Address).to.be.eql('xxxxxxxxxxxxxxxxxx');
-    warehouse.delete();
+    expect(warehouse.NONONO).to.be.undefined;
+    await warehouse.delete();
     await WarehouseRep.commitAll(warehouse);
 
-    expect(eventbus.length).to.be.eql(3);
+    expect(eventbus.map(({
+      name,
+      args
+    }) => {
+      const {
+        id,
+        ...other
+      } = args;
+      return {
+        name,
+        args: other
+      };
+    })).to.be.eql([{
+      name: 'saved',
+      args: {
+        //id: 'ZjEQMSG2T',
+        //  Code: '001',
+        Name: 'test001',
+        createBy: undefined,
+        status: 'addnew'
+      }
+    }, {
+      name: 'saved',
+      args: {
+        //id: 'ZjEQMSG2T',
+        Address: 'xxxxxxxxxxxxxxxxxx',
+        updateBy: undefined
+      }
+    }, {
+      name: 'deleted',
+      args: {
+        //id: 'ZjEQMSG2T',
+        status: 'abandoned',
+        deleteBy: undefined
+      }
+    }]);
   })
 
   it('创建部门档案，添加部门分类和部门数据', async () => {
@@ -99,8 +152,10 @@ describe('基础档案', () => {
 
   })
 
-  it('创建采购订单，保存、审核生效、生成进货单，保存审核', async () => {
+  it('创建采购订单，保存同时生成订金的付款单 ', async () => {
 
   })
+  it('采购订单，保存审核生效、生成进货单，保存审核', async () => {
 
+  })
 })
