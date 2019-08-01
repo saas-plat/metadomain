@@ -3,11 +3,15 @@ const {
   RuleSet,
   Repository,
   MetaEntity,
-  BaseData
+  BaseData,
+  CategoryDataService,
+  LevelDataService,
+  VoucherService,
 } = require('../lib');
 const {
   expect
 } = require('chai');
+const util = require('util');
 
 before(async () => {
   await Repository.connect();
@@ -22,6 +26,8 @@ describe('基础档案', () => {
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
+      "Code": 'string',
+      "Name": 'string',
       "Name": 'string',
       "Address": 'string',
       "InvolveATP": 'bool',
@@ -60,6 +66,7 @@ describe('基础档案', () => {
     let warehouse = Warehouse.create();
     try {
       await warehouse.save({
+        Code: '001',
         //Name: 'test001',
       });
       expect.fail();
@@ -67,6 +74,7 @@ describe('基础档案', () => {
 
     }
     await warehouse.save({
+      Code: '001',
       Name: 'test001',
     });
     //console.log(warehouse)
@@ -108,7 +116,7 @@ describe('基础档案', () => {
       name: 'saved',
       args: {
         //id: 'ZjEQMSG2T',
-        //  Code: '001',
+        Code: '001',
         Name: 'test001',
         createBy: undefined,
         status: 'addnew'
@@ -130,65 +138,5 @@ describe('基础档案', () => {
     }]);
   })
 
-  it('创建部门档案，添加部门分类和部门数据', async () => {
-
-    const DepartmentCategory = MetaEntity.create(CategoryData, 'DepartmentCategory', {
-
-    }, [`rule has_date_cant_be_delete {
-      when{
-        evt: Event e.name == 'delete';
-        e: Entity
-      }
-      then{
-
-      }
-    }`]);
-
-    const Department = MetaEntity.create(BaseData, 'Department', {
-      "Code": 'string',
-      "Name": 'string',
-      "StoreType_Name": 'string',
-      "Person_Name": 'string',
-      "Warehouse_Name": 'string',
-      "Department_Name": 'string',
-      "District_Name": 'string',
-      "CashShieldNum": 'int',
-      "Customer_Name": 'string',
-      "Person_id": 'int',
-      "Warehouse_id": 'int',
-      "Department_id": 'int',
-      "Customer_id": 'int',
-      "District_id": 'int'
-    }, [`rule not_end_cant_be_add {
-      when{
-        evt: Event e.name == 'save';
-        a: Object d.$name == 'saved';
-        e: Entity
-      }
-      then{
-
-      }
-    }`]); 
-
-    const DepartmentRep = Repository.create(Department);
-    let department = Department.create();
-
-    await department.save({
-      Name: 'test001',
-    });
-    //console.log(warehouse)
-    await DepartmentRep.commitAll(department);
-
-  })
-
-  it('创建采购订单，保存同时生成订金的付款单 ', async () => {
-
-  })
-  it('采购订单，保存审核生效、生成进货单，保存审核', async () => {
-
-  })
-
-  it('实体字段修改，增加、删除、更新类型', async () => {
-
-  })
+ 
 })
