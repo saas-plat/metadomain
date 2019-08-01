@@ -3,10 +3,7 @@ const {
   RuleSet,
   Repository,
   MetaEntity,
-  BaseData,
-  CategoryDataService,
-  LevelDataService,
-  VoucherService,
+  BaseData, 
 } = require('../lib');
 const {
   expect
@@ -138,5 +135,5 @@ describe('基础档案', () => {
     }]);
   })
 
- 
+
 })

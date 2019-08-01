@@ -4,9 +4,7 @@ const {
   Repository,
   MetaEntity,
   BaseData,
-  CategoryDataService,
-  LevelDataService,
-  VoucherService,
+  CategoryDataService, 
 } = require('../lib');
 const {
   expect
@@ -149,5 +147,5 @@ describe('分类档案', () => {
     expect(depall).to.be.eql([]);
   })
 
- 
+
 })

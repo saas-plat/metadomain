@@ -4,9 +4,7 @@ const {
   Repository,
   MetaEntity,
   BaseData,
-  CategoryDataService,
-  LevelDataService,
-  VoucherService,
+  LevelService,
 } = require('../lib');
 const {
   expect
@@ -62,7 +60,7 @@ describe('层级数据', () => {
     await DepartmentRep.events.drop();
     await DepartmentRep.snapshots.drop();
 
-    const levelService = new LevelDataService({
+    const levelService = new LevelService({
       data: DepartmentRep,
       user,
     });
@@ -91,5 +89,5 @@ describe('层级数据', () => {
     expect(depall).to.be.eql([]);
   })
 
-   
+
 })
