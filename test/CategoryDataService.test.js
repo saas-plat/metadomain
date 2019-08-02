@@ -4,7 +4,7 @@ const {
   Repository,
   MetaEntity,
   BaseData,
-  CategoryDataService, 
+  CategoryDataService,
 } = require('../lib');
 const {
   expect
@@ -21,7 +21,7 @@ after(async () => {
 
 describe('分类档案', () => {
 
-   it('创建供应商档案，添加行业分类和供应商数据', async () => {
+  it('创建供应商档案，添加行业分类和供应商数据', async () => {
 
     const PartnerCategory = MetaEntity.create(CategoryData, 'PartnerCategory', {
       "Code": 'string',
@@ -81,9 +81,7 @@ describe('分类档案', () => {
     await PartnerRep.events.drop();
     await PartnerRep.snapshots.drop();
 
-    const categoryService = new CategoryDataService({
-      category: PartnerCategoryRep,
-      data: PartnerRep,
+    const categoryService = new CategoryDataService(PartnerCategoryRep, PartnerRep, {
       user,
     });
     const categories = await categoryService.saveCategory({
@@ -146,6 +144,5 @@ describe('分类档案', () => {
     expect(cateall).to.be.eql([]);
     expect(depall).to.be.eql([]);
   })
-
 
 })

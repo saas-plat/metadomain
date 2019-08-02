@@ -3,7 +3,7 @@ const {
   RuleSet,
   Repository,
   MetaEntity,
-  BaseData, 
+  BaseData,
 } = require('../lib');
 const {
   expect
@@ -22,20 +22,73 @@ describe('基础档案', () => {
 
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
+  const Department = MetaEntity.create(BaseData,  "Department", {
+      "Code": "string",
+      "Name": "string"
+    })
+    const Persion = MetaEntity.create(BaseData, 'Persion', {
+      "ID": 5,
+      "Code": "2-2",
+      "Ts": "0000000000b05a3a",
+      "Status": 0,
+      "Name": "导购2-2",
+      "Shorthand": "DG2-2",
+      "Department":  'Department',  // 引用部门
+      "Position": null,
+      "IsSalesman": false,
+      "VisitManage": false,
+      "IsNavigator": true,
+      "CreditDate": null,
+      "CreditQuantity": null,
+      "ARBalance": 0,
+      "APBalance": 0,
+      "AutoCreateOperator": false,
+      "UserGroup": null,
+      "Disabled": false,
+      "Birthday": new Date(1, 0, 1, 0, 0, 0, 0),
+      "NativePlace": "",
+      "Education": null,
+      "IdentificationType": null,
+      "IdentityNo": "",
+      "OfficePhoneNo": null,
+      "FamilyPhoneNo": null,
+      "MobilePhoneNo": null,
+      "EmailAddr": null,
+      "Qqcode": "",
+      "MsnAddr": "",
+      "UuNo": "",
+      "PostCode": "",
+      "PostAddr": ""
+    });
+    const WarehouseType = MetaEntity.create(BaseData, 'WarehouseType', {
+      "Code": "string",
+      "Name": "string"
+    });
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
-      "Code": 'string',
-      "Name": 'string',
-      "Name": 'string',
-      "Address": 'string',
+      "Code": "string",
+      "Name": "string",
+      "Status": 'int',
+      "Shorthand": "string",
+      "Address": "string",
+      "FloorStocks": 'bool',
+      "Memo": "string",
       "InvolveATP": 'bool',
-      "hasPosition": 'bool',
-      "Memo": 'string',
-      "Disabled": 'bool',
       "AllowZeroStockOut": 'bool',
-      "MarketingOrgan_Name": 'string',
-      "MarketingOrgan_id": 'int',
-      "Admin_name": 'string',
-      "Admin_id": 'int'
+      "Disabled": 'bool',
+      "HasPosition": 'bool',
+      "Admin": 'Persion', // 引用员工档案
+      "WarehouseType": {
+        type: 'reference',
+        reference: 'WarehouseType'
+      }, // 引用的另一种写法
+      "MarketingOrgan": { // 对象类型
+        "Code": "string",
+        "Name": "string"
+      },
+      'TestArrayData':[{  // 对象数组
+        "Code": "string",
+        "Name": "string"
+      }]
     }, [`rule required_onsave {
       when{
         e: Event e.name == 'save';
@@ -134,6 +187,5 @@ describe('基础档案', () => {
       }
     }]);
   })
-
 
 })
