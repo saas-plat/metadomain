@@ -22,18 +22,16 @@ describe('基础档案', () => {
 
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
-  const Department = MetaEntity.create(BaseData,  "Department", {
+    const Department = MetaEntity.create(BaseData, "Department", {
       "Code": "string",
       "Name": "string"
     })
     const Persion = MetaEntity.create(BaseData, 'Persion', {
-      "ID": 5,
-      "Code": "2-2",
-      "Ts": "0000000000b05a3a",
-      "Status": 0,
-      "Name": "导购2-2",
-      "Shorthand": "DG2-2",
-      "Department":  'Department',  // 引用部门
+      "Code": "string",
+      "Status": 'bool',
+      "Name": "string",
+      "Shorthand": "string",
+      "Department": 'Department', // 引用部门
       "Position": null,
       "IsSalesman": false,
       "VisitManage": false,
@@ -65,27 +63,27 @@ describe('基础档案', () => {
       "Name": "string"
     });
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
-      "Code": "string",
+      "Code": "string",   // 字符串
       "Name": "string",
-      "Status": 'int',
+      "Status": 'number',   // 数值
       "Shorthand": "string",
       "Address": "string",
-      "FloorStocks": 'bool',
+      "FloorStocks": 'bool',   // 布尔
       "Memo": "string",
-      "InvolveATP": 'bool',
+      "DateTest": 'date',      // 日期
       "AllowZeroStockOut": 'bool',
       "Disabled": 'bool',
       "HasPosition": 'bool',
-      "Admin": 'Persion', // 引用员工档案
-      "WarehouseType": {
+      "Admin": 'Persion',    // 引用员工档案
+      "WarehouseType": {     // 引用 另一种写法
         type: 'reference',
         reference: 'WarehouseType'
-      }, // 引用的另一种写法
+      },
       "MarketingOrgan": { // 对象类型
         "Code": "string",
         "Name": "string"
       },
-      'TestArrayData':[{  // 对象数组
+      'TestArrayData': [{ // 对象数组
         "Code": "string",
         "Name": "string"
       }]
@@ -113,6 +111,9 @@ describe('基础档案', () => {
     console.log('------------------------------')
 
     const WarehouseRep = Repository.create(Warehouse);
+    const PersionRep = Repository.create(Persion);
+
+    let persion = Persion.create();
     let warehouse = Warehouse.create();
     try {
       await warehouse.save({
@@ -123,12 +124,46 @@ describe('基础档案', () => {
     } catch (err) {
 
     }
+    await persion.save({
+      "Code": "2-2",
+      "Ts": "0000000000b05a3a",
+      "Status": 0,
+      "Name": "导购2-2",
+      "Shorthand": "DG2-2",
+      "Department": 'Department', // 引用部门
+      "Position": null,
+      "IsSalesman": false,
+      "VisitManage": false,
+      "IsNavigator": true,
+      "CreditDate": null,
+      "CreditQuantity": null,
+      "ARBalance": 0,
+      "APBalance": 0,
+      "AutoCreateOperator": false,
+      "UserGroup": null,
+      "Disabled": false,
+      "Birthday": new Date(1, 0, 1, 0, 0, 0, 0),
+      "NativePlace": "",
+      "Education": null,
+      "IdentificationType": null,
+      "IdentityNo": "",
+      "OfficePhoneNo": null,
+      "FamilyPhoneNo": null,
+      "MobilePhoneNo": null,
+      "EmailAddr": null,
+      "Qqcode": "",
+      "MsnAddr": "",
+      "UuNo": "",
+      "PostCode": "",
+      "PostAddr": ""
+    });
     await warehouse.save({
       Code: '001',
       Name: 'test001',
+      Persion: persion
     });
     //console.log(warehouse)
-    await WarehouseRep.commitAll(warehouse);
+    await WarehouseRep.commitAll(persion, warehouse);
 
     console.log('------------------------------')
 
