@@ -25,12 +25,15 @@ describe('基础档案', () => {
     let eventbus = [];
 
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
-      "Code": "string",   // 字符串
+      "Code": {
+        type: "string",
+        required: true // 必录
+      }, // 字符串
       "Name": "string",
-      "Status": 'number',   // 数值
+      "Status": 'number', // 数值
       "Shorthand": "string",
       "Address": "string",
-      "FloorStocks": 'bool',   // 布尔
+      "FloorStocks": 'bool', // 布尔
       "Memo": "string",
       "AllowZeroStockOut": 'bool',
       "Disabled": 'bool',
@@ -75,6 +78,14 @@ describe('基础档案', () => {
     let warehouse = Warehouse.create();
     try {
       await warehouse.save({
+        Name: 'test001',
+      });
+      expect.fail();
+    } catch (err) {
+
+    }
+    try {
+      await warehouse.save({
         Code: '001',
         //Name: 'test001',
       });
@@ -88,7 +99,7 @@ describe('基础档案', () => {
       Persion: persion
     });
     //console.log(warehouse)
-    await WarehouseRep.commitAll(  warehouse);
+    await WarehouseRep.commitAll(warehouse);
 
     console.log('------------------------------')
 
@@ -191,20 +202,23 @@ describe('基础档案', () => {
       "Name": "string"
     });
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
-      "Code": "string",   // 字符串
+      "Code": {
+        type: "string",
+        required: true // 必录
+      }, // 字符串
       "Name": "string",
-      "Status": 'number',   // 数值
+      "Status": 'number', // 数值
       "Shorthand": "string",
       "Address": "string",
-      "FloorStocks": 'bool',   // 布尔
+      "FloorStocks": 'bool', // 布尔
       "Memo": "string",
       "AllowZeroStockOut": 'bool',
       "Disabled": 'bool',
       "HasPosition": 'bool',
-      "Admin": 'Persion',    // 引用员工档案
-      "WarehouseType": {    // 引用 另一种写法
+      "Admin": 'Persion', // 引用员工档案
+      "WarehouseType": { // 引用 另一种写法
         type: 'reference',
-        reference: 'WarehouseType'
+        src: 'WarehouseType'
       },
       "MarketingOrgan": { // 对象类型
         "Code": "string",
@@ -237,9 +251,13 @@ describe('基础档案', () => {
 
     console.log('------------------------------')
 
+    const DepartmentRep = Repository.create(Department);
+    const WarehouseTypenRep = Repository.create(WarehouseType);
     const WarehouseRep = Repository.create(Warehouse);
     const PersionRep = Repository.create(Persion);
 
+    let department = Department.create();
+    let warehouseType = WarehouseType.create();
     let persion = Persion.create();
     let warehouse = Warehouse.create();
     try {
@@ -257,7 +275,7 @@ describe('基础档案', () => {
       "Status": 0,
       "Name": "导购2-2",
       "Shorthand": "DG2-2",
-      "Department": 'Department', // 引用部门
+      "Department": department,
       "Position": null,
       "IsSalesman": false,
       "VisitManage": false,
@@ -284,14 +302,18 @@ describe('基础档案', () => {
       "PostCode": "",
       "PostAddr": ""
     });
+    await warehouseType.save({
+      Code: 'type1',
+      Name: 'type1'
+    })
     await warehouse.save({
       Code: '001',
       Name: 'test001',
-      Persion: persion
+      Persion: persion,
+      WarehouseType: warehouseType
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(persion, warehouse);
-
 
   })
 
