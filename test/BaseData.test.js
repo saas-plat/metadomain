@@ -97,7 +97,7 @@ describe('基础档案', () => {
     await warehouse.save({
       Code: '001',
       Name: 'test001',
-      Persion: persion
+      //Persion: persion
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);
