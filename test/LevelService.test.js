@@ -64,10 +64,13 @@ describe('层级数据', () => {
       id: 'xxxx'
     };
     const DepartmentRep = Repository.create(Department);
+    const reps = {
+      Department: DepartmentRep,
+    }
 
-    const levelService = new LevelService(DepartmentRep,{
+    const levelService = new LevelService(DepartmentRep, {
       user,
-    });
+    }, (entityName) => reps[entityName]);
 
     const dats = await levelService.save({
       Code: '001',

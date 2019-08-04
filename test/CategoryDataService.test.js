@@ -74,6 +74,10 @@ describe('分类档案', () => {
     };
     const PartnerCategoryRep = Repository.create(PartnerCategory);
     const PartnerRep = Repository.create(Partner);
+    const reps = {
+      PartnerCategory: PartnerCategoryRep,
+      Partner: PartnerRep,
+    }
 
     // 清理数据
     await PartnerCategoryRep.events.drop();
@@ -81,8 +85,10 @@ describe('分类档案', () => {
     await PartnerRep.events.drop();
     await PartnerRep.snapshots.drop();
 
-    const categoryService = new CategoryDataService(PartnerCategoryRep, PartnerRep, {
+    const categoryService = new CategoryDataService(PartnerCategory, Partner, {
       user,
+    }, (entityName) => {
+      return reps[entityName];
     });
     const categories = await categoryService.saveCategory({
       Code: '001',
