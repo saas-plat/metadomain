@@ -313,7 +313,7 @@ describe('基础档案', () => {
       WarehouseType: warehouseType
     });
     //console.log(warehouse)
-    await WarehouseRep.commitAll(persion, warehouse);
+    await WarehouseRep.commitAll(department， persion, warehouseType， warehouse);
 
   })
 
