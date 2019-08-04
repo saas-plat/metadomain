@@ -1,4 +1,5 @@
 const {
+  env,
   Event,
   RuleSet,
   Repository,
@@ -228,18 +229,7 @@ describe('基础档案', () => {
         "Code": "string",
         "Name": "string"
       }]
-    }, [`rule required_onsave {
-      when{
-        e: Event e.name == 'save';
-        d: Object d.$name == 'saved';
-        o: Entity
-      }
-      then{
-        if (!o.Name && !d.Name){
-          throw new Error(t('仓库编码不能为空'))
-        }
-      }
-    }`], {
+    }, [], {
       on: (name, args) => {
         console.log(name, args);
         eventbus.push({
@@ -249,33 +239,45 @@ describe('基础档案', () => {
       }
     });
 
-    console.log('------------------------------')
-
     const DepartmentRep = Repository.create(Department);
     const WarehouseTypenRep = Repository.create(WarehouseType);
     const WarehouseRep = Repository.create(Warehouse);
     const PersionRep = Repository.create(Persion);
 
+    const reps = {
+      Department: DepartmentRep,
+      WarehouseType: WarehouseTypenRep,
+      Warehouse: WarehouseRep,
+      Persion: PersionRep,
+    }
+
+    env.getRepsitory = (entityName) => {
+      return reps[entityName];
+    }
+
+    console.log('------------------------------')
+
     let department = Department.create();
+    await department.save({
+      Code: '111',
+      Name: '111'
+    })
+
+    await WarehouseRep.commitAll(department);
+
+    console.log('------------------------------')
+
     let warehouseType = WarehouseType.create();
     let persion = Persion.create();
-    let warehouse = Warehouse.create();
-    try {
-      await warehouse.save({
-        Code: '001',
-        //Name: 'test001',
-      });
-      expect.fail();
-    } catch (err) {
-
-    }
     await persion.save({
       "Code": "2-2",
       "Ts": "0000000000b05a3a",
       "Status": 0,
       "Name": "导购2-2",
       "Shorthand": "DG2-2",
-      "Department": department,
+      "Department": {
+        id: department.id
+      },
       "Position": null,
       "IsSalesman": false,
       "VisitManage": false,
@@ -306,14 +308,23 @@ describe('基础档案', () => {
       Code: 'type1',
       Name: 'type1'
     })
+    await WarehouseRep.commitAll(persion, warehouseType);
+
+    console.log('------------------------------')
+
+    let warehouse = Warehouse.create();
     await warehouse.save({
       Code: '001',
       Name: 'test001',
-      Persion: persion,
-      WarehouseType: warehouseType
+      Persion: {
+        id: persion.id
+      },
+      WarehouseType: {
+        id: warehouseType.id
+      }
     });
     //console.log(warehouse)
-    await WarehouseRep.commitAll(department， persion, warehouseType， warehouse);
+    await WarehouseRep.commitAll(warehouse);
 
   })
 
