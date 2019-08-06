@@ -1,6 +1,7 @@
 const {
   BaseData,
   MetaEntity,
+  Repository
 } = require('../lib');
 const {
   expect
@@ -90,5 +91,6 @@ describe('业务实体', () => {
     });
     testRepository.commitAll(test);
   });
+
 
 })

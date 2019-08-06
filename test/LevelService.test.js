@@ -12,13 +12,7 @@ const {
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
 
-before(async () => {
-  await Repository.connect();
-})
-
-after(async () => {
-  await Repository.close();
-})
+ 
 
 describe('层级数据', () => {
 

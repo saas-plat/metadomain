@@ -11,14 +11,6 @@ const {
 } = require('chai');
 const util = require('util');
 
-before(async () => {
-  await Repository.connect();
-})
-
-after(async () => {
-  await Repository.close();
-})
-
 describe('分类档案', () => {
 
   it('创建供应商档案，添加行业分类和供应商数据', async () => {

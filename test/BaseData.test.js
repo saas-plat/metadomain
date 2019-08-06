@@ -12,13 +12,7 @@ const {
 } = require('chai');
 const util = require('util');
 
-before(async () => {
-  await Repository.connect();
-})
 
-after(async () => {
-  await Repository.close();
-})
 
 describe('基础档案', () => {
 
