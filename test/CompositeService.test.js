@@ -88,7 +88,7 @@ describe('单据', () => {
       "Code": "15",
       "Name": "普通销售"
     }).id;
-      orderService = new CompositeService(SaleOrder, ctx, getRep);
+    orderService = new CompositeService(SaleOrder, ctx, getRep);
     const orderId = await orderService.save({
       "Code": "SO-2019-08-0000000001-0054",
       "ts": "00000000098e3f49",
@@ -257,18 +257,35 @@ describe('单据', () => {
     const orderRepository = getRep('SaleOrder');
     order = await orderRepository.get(orderId);
     expect(order).to.not.null;
+    console.log(saleDelivery)
 
     // 付款信息
     const receivePaymentRepository = getRep('ReceivePayment');
     const receivePayment = await receivePaymentRepository.get(orderService.newEntities[0].id);
     expect(receivePayment).to.not.null;
-
+    console.log(saleDelivery)
   })
 
   it('采购订单，保存审核生效、【生成进货单】，保存审核', async () => {
-    orderService.setStatus({
-      status: ''
-    })
+    await orderService.setStatus({
+      id: order.id,
+      status: 'effective'
+    });
+    await commitAll();
+    const generateService = new GenerateService(SaleOrder, SaleDelivery, ctx, getRep);
+    saleDelivery = await generateService.generate(order.id);
+    await commitAll();
+    expect(saleDelivery).to.not.null;
+    saleDeliveryService = new CompositeService(SaleDelivery, ctx, getRep);
+    await saleDeliveryService.setStatus({
+      id: saleDelivery.id,
+      status: 'effective'
+    });
+    await commitAll();
+    const SaleDeliveryRepository = getRep('SaleDelivery');
+    saleDelivery = await SaleDeliveryRepository.get(saleDelivery.id);
+    expect(saleDelivery).to.not.null;
+    console.log(saleDelivery)
   })
 
 })
