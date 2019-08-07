@@ -18,11 +18,12 @@
   "author": "saas-plat.com",
   "license": "ISC",
   "dependencies": {
-    "i18next-xhr-backend": "^3.0.0",
     "automapper": "^1.0.0",
     "debug": "^3.1.0",
+    "en-inflectors": "^1.0.12",
     "eventasync": "^1.0.0",
     "i18next": "^10.2.2",
+    "i18next-xhr-backend": "^3.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "mongodb": "^3.0.1",

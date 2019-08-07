@@ -49,7 +49,7 @@ describe('基础档案', () => {
     }, [`rule required_onsave {
       when{
         e: Event e.name == 'save';
-        d: Object d.$name == 'saved';
+        d: Object d.$name == 'changes';
         o: Entity
       }
       then{

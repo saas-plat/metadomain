@@ -92,5 +92,48 @@ describe('业务实体', () => {
     testRepository.commitAll(test);
   });
 
+  it('一个实体可以自定义行为和行为的处理规则', async () => {
+    const TestObj = MetaEntity.create(BaseData, 'TestObj2', {
+      "Code": "string"
+    }, [`rule custom_action1{
+      when{
+        e: Event e.name == 'action1ing';
+        d: Object
+      }
+      then{
+        if (!d.Code  ){
+          throw new Error('error')
+        }
+      }
+    }`,`rule custom_action2{
+      when{
+        e: Event e.name == 'action2ed';
+        d: Object d.name === 'changes';
+        p: Object p.name === 'parsms';
+      }
+      then{
+         d.Code = p.Code;
+         modify(d);
+      }
+    }`]);
+    const testRepository = Repository.create(TestObj);
+    const test = TestObj.create();
+    await test.save({
+      Code: 'xxxxxxxxx'
+    });
+    // 默认自定义行为不修改数据
+    await test.customAction('action1', {
+      Code: 'bbbbbbbbbb'
+    });
+    expect(test.Code).to.be.eql('xxxxxxxxx');
+
+    await test.customAction('action2', {
+      Code: 'cccccccccc'
+    });
+    expect(test.Code).to.be.eql('cccccccccc');
+    testRepository.commitAll(test);
+
+
+  })
 
 })

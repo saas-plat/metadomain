@@ -53,7 +53,7 @@ describe('分类档案', () => {
     }, [`rule not_end_cant_be_add {
       when{
         evt: Event e.name == 'save';
-        a: Object d.$name == 'saved';
+        a: Object d.$name == 'changes';
         e: Entity
       }
       then{
