@@ -93,6 +93,7 @@ describe('业务实体', () => {
   });
 
   it('一个实体可以自定义行为和行为的处理规则', async () => {
+    let ec = 0;
     const TestObj = MetaEntity.create(BaseData, 'TestObj2', {
       "Code": "string"
     }, [`rule custom_action1{
@@ -105,7 +106,7 @@ describe('业务实体', () => {
           throw new Error('error')
         }
       }
-    }`,`rule custom_action2{
+    }`, `rule custom_action2{
       when{
         e: Event e.name == 'action2ed';
         d: Object d.name === 'changes';
@@ -115,7 +116,16 @@ describe('业务实体', () => {
          d.Code = p.Code;
          modify(d);
       }
-    }`]);
+    }`], {
+      action1ed: (...args) => {
+        ec++;
+        console.log(...args);
+      },
+      action2ed: (...args) => {
+        ec++;
+        console.log(...args);
+      }
+    });
     const testRepository = Repository.create(TestObj);
     const test = TestObj.create();
     await test.save({
@@ -133,7 +143,8 @@ describe('业务实体', () => {
     expect(test.Code).to.be.eql('cccccccccc');
     testRepository.commitAll(test);
 
-
+    // 收到两个自定义业务事件
+    expect(ec).to.be.eql(2);
   })
 
 })
