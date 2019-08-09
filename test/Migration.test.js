@@ -81,4 +81,8 @@ describe('数据迁移', () => {
     expect(d12.Name2).to.be.eql('aaaaaaaaaa');
   })
 
+  it('数据表字段修改和数据迁移', async () => {
+
+  })
+
 })
