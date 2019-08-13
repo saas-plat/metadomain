@@ -62,7 +62,7 @@ describe('数据表', () => {
       }]
     });
     await dt1.save();
-    await DataTable1.commit();
+    await DataTable1.commitAll();
 
     await DataTable1.findOneAndUpdate({
       id: 'aaaa'
@@ -88,7 +88,7 @@ describe('数据表', () => {
 
   it('只创建一个Schame给gql生成类型用', async () => {
 
-    const DataTable1 = MetaTable.createSchame(BaseTable, 'DataTable1', {
+    const DataTable1 = MetaTable.createSchame('DataTable1', {
       "id": "string",
       "Code": "string",
       "Str1": {

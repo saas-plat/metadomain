@@ -6,7 +6,7 @@ module.exports = {
   "Name": {
     "Type": "string"
   },
-  "ID": {
+  "id": {
     "Type": "number"
   }
 }
