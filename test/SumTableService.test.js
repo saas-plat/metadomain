@@ -11,7 +11,7 @@ describe('明细汇总数据服务', () => {
 
   it('将业务实体按照明细维度进行保存，查询', async () => {
     const sumservice = new SumTableService(SaleOrderSumTable);
-    sumservice.onSaved({
+    await sumservice.onSaved({
       id: 'aaaa',
       Name: 'test001',
       Code: '0001',
@@ -25,6 +25,19 @@ describe('明细汇总数据服务', () => {
         id: '003',
         Name: 'cccccccccccccc'
       }]
+      ts: new Date().getTime().toString()
+    });
+
+    await sumservice.onSaved({
+      id: 'aaaa',
+      details: [{
+        id: '001',
+      },{
+        id: '002',
+        Name: 'bbbbbbbbbb22222222'
+      }
+      // 003被删除
+     ]
       ts: new Date().getTime().toString()
     });
 
