@@ -1,11 +1,6 @@
 {
-  "ID": {
-    "Type": "number"
-  },
-  "Name": {
-    "Type": "string"
-  },
-  "Code": {
-    "Type": "string"
-  }
+
+  "Code": "string",
+  "Name": "string",
+  "NewBalance": "number"
 }

@@ -1,7 +1,7 @@
 const {
 	MetaEntity,
 	CompositeData,
-} = require('../lib');
+} = require('../../lib');
 
 // 销货
 module.exports = MetaEntity.create(CompositeData, 'SaleDelivery', {
@@ -189,7 +189,7 @@ module.exports = MetaEntity.create(CompositeData, 'SaleDelivery', {
 					"Type": "SettleStyle",
 				},
 				"BankAccount": {
-					"Type": "BankAccount", 
+					"Type": "BankAccount",
 				}
 			}
 		}

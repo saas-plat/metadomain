@@ -2,4 +2,4 @@
 --bail
 --timeout 3000
 --require ./test/env.opts
- test/Base*.js test/Level*.js test/*.js
+test/MetaE*.js test/Base*.js test/Level*.js test/Cate*.js test/Comp*.js test/Rep*.js test/Mig*.js  test/MetaT*.js  test/Sum*.js  test/DataTable*.js test/*.js
