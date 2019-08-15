@@ -1,5 +1,5 @@
 const {
-  Repository，
+  Repository,
   BaseData,
   MetaEntity,
 } = require('../lib');

@@ -18,11 +18,7 @@ describe('单据', () => {
     }
   }
 
-  const reps = {
-    SaleOrder: Repository.create(SaleOrder),
-    SaleDelivery: Repository.create(SaleDelivery),
-    ReceivePayment: Repository.create(ReceivePayment),
-  }
+  let reps;
 
   const getRep = name => reps[name];
 
@@ -36,6 +32,14 @@ describe('单据', () => {
 
   let order;
   let orderService;
+
+  before(() => {
+    reps = {
+      SaleOrder: Repository.create(SaleOrder),
+      SaleDelivery: Repository.create(SaleDelivery),
+      ReceivePayment: Repository.create(ReceivePayment),
+    };
+  })
 
   it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
     const custId = await customerService.save({
@@ -259,7 +263,7 @@ describe('单据', () => {
     // 付款单不能自动生成，需要业务控制生单逻辑
     const generateService = new GenerateService(SaleOrder, ReceivePayment, ctx, getRep);
     const newEntity = await generateService.generate(orderId);
-    expect(newEntity.constructor.name).to.be.eql('ReceivePayment');  
+    expect(newEntity.constructor.name).to.be.eql('ReceivePayment');
 
     // 付款信息
     const receivePaymentRepository = getRep('ReceivePayment');

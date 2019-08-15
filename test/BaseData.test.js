@@ -12,8 +12,6 @@ const {
 } = require('chai');
 const util = require('util');
 
-
-
 describe('基础档案', () => {
 
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
@@ -71,6 +69,19 @@ describe('基础档案', () => {
 
     const WarehouseRep = Repository.create(Warehouse);
     let warehouse = Warehouse.create();
+
+    let onsaved = false;
+    warehouse.on('saved',args=>{
+      onsaved = true;
+      expect(args).to.be.eql({
+        //id: 'ZjEQMSG2T',
+        Code: '001',
+        Name: 'test001',
+        createBy: undefined,
+        status: 'addnew'
+      })
+    });
+
     try {
       await warehouse.save({
         Name: 'test001',
@@ -79,6 +90,8 @@ describe('基础档案', () => {
     } catch (err) {
 
     }
+    expect(onsaved).to.be.false;
+
     try {
       await warehouse.save({
         Code: '001',
@@ -88,6 +101,8 @@ describe('基础档案', () => {
     } catch (err) {
 
     }
+    expect(onsaved).to.be.false;
+
     await warehouse.save({
       Code: '001',
       Name: 'test001',
@@ -95,6 +110,7 @@ describe('基础档案', () => {
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);
+    expect(onsaved).to.be.true;
 
     console.log('------------------------------')
 
