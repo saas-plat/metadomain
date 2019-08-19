@@ -24,7 +24,7 @@ describe('业务实体', () => {
         type: "string",
         required: true, // 必录
         min: 1,
-        max: 4,
+        max: 10,
         unique: true
       }, // 字符串
       "Str1": {
@@ -74,7 +74,7 @@ describe('业务实体', () => {
     const test = TestObj.create();
 
     await test.save({
-      Name: 'test001',
+      Code: 'test001',
       Str1: 'abcxyz',
       Bool1: true,
       Obj1: {
@@ -89,7 +89,7 @@ describe('业务实体', () => {
         Value: 200
       }]
     });
-    testRepository.commitAll(test);
+    await testRepository.commitAll(test);
   });
 
   it('一个实体可以自定义行为和行为的处理规则', async () => {
@@ -98,7 +98,7 @@ describe('业务实体', () => {
       "Code": "string"
     }, [`rule custom_action1{
       when{
-        e: Event e.name == 'action1ing';
+        e: Action e.name == 'action1ing';
         d: Object
       }
       then{
@@ -108,7 +108,7 @@ describe('业务实体', () => {
       }
     }`, `rule custom_action2{
       when{
-        e: Event e.name == 'action2ed';
+        e: Action e.name == 'action2ed';
         d: Object d.name === 'changes';
         p: Object p.name === 'parsms';
       }
@@ -131,6 +131,7 @@ describe('业务实体', () => {
     await test.save({
       Code: 'xxxxxxxxx'
     });
+    expect(test.Code).to.be.eql('xxxxxxxxx');
     // 默认自定义行为不修改数据
     await test.customAction('action1', {
       Code: 'bbbbbbbbbb'
@@ -141,7 +142,7 @@ describe('业务实体', () => {
       Code: 'cccccccccc'
     });
     expect(test.Code).to.be.eql('cccccccccc');
-    testRepository.commitAll(test);
+    await testRepository.commitAll(test);
 
     // 收到两个自定义业务事件
     expect(ec).to.be.eql(2);
