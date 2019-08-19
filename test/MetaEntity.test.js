@@ -55,15 +55,15 @@ describe('业务实体', () => {
 
     const TestReference1Rep = Repository.create(TestReference1);
     const TestReference2Rep = Repository.create(TestReference2);
-    const ref1 = TestReference1.create();
+    const ref1 = await TestReference1.create();
     await ref1.save({
       Code: '10000'
     });
-    const ref21 = TestReference2.create();
+    const ref21 = await TestReference2.create();
     await ref21.save({
       Code: '10001'
     });
-    const ref22 = TestReference2.create();
+    const ref22 = await TestReference2.create();
     await ref22.save({
       Code: 'xxxxxxx'
     });
@@ -71,7 +71,7 @@ describe('业务实体', () => {
     await TestReference2Rep.commitAll(ref21, ref22);
 
     const testRepository = Repository.create(TestObj);
-    const test = TestObj.create();
+    const test = await TestObj.create();
 
     await test.save({
       Code: 'test001',
@@ -98,23 +98,22 @@ describe('业务实体', () => {
       "Code": "string"
     }, [`rule custom_action1{
       when{
-        e: Action e.name == 'action1ing';
-        d: Object
+        e: Action e.name == 'TestObj2.action1ing';
       }
       then{
-        if (!d.Code  ){
+        if (!e.data.Code  ){
           throw new Error('error')
         }
       }
     }`, `rule custom_action2{
       when{
-        e: Action e.name == 'action2ed';
-        d: Object d.name === 'changes';
-        p: Object p.name === 'parsms';
+        e: Action e.name == 'TestObj2.action2';
+        d: EventData;
       }
       then{
-         d.Code = p.Code;
-         modify(d);
+        console.log('----dododo---');
+         d.Code = e.data.Code;
+         //modify(d);
       }
     }`], {
       action1ed: (...args) => {
@@ -127,7 +126,7 @@ describe('业务实体', () => {
       }
     });
     const testRepository = Repository.create(TestObj);
-    const test = TestObj.create();
+    const test = await TestObj.create();
     await test.save({
       Code: 'xxxxxxxxx'
     });

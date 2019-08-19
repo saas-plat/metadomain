@@ -28,17 +28,17 @@ describe('数据迁移', () => {
     })
     const DepartmentRep = Repository.create(Department2, scope);
     const WarehouseRep = Repository.create(Warehouse2, scope);
-    const d = Department2.create();
+    const d =await  Department2.create();
     await d.save({
       Code: '111',
       Name: 'aaaaaaaaaa'
     });
-    const d2 = Department2.create();
+    const d2 =await  Department2.create();
     await d2.save({
       Code: '222',
       Name: 'bbbbbbbb'
     });
-    const d3 = Warehouse2.create();
+    const d3 =await  Warehouse2.create();
     await d3.save({
       Code: 'qqqq',
       Name: 'ccccccccc'

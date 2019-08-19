@@ -25,7 +25,7 @@ describe('实体仓库', () => {
       orgid: 'org002'
     });
 
-    const test = TestObj.create();
+    const test =await  TestObj.create();
     await test.save({
       Code: 'test001',
     });
@@ -35,7 +35,7 @@ describe('实体仓库', () => {
     expect(testRepository2.get(test.id)).to.be.null;
     expect(testRepository1.get(test.id)).to.not.null;
 
-    const test2 = TestObj.create();
+    const test2 =await  TestObj.create();
     await test2.save({
       orgid: 'xxxxxx',
       Code: 'test001',

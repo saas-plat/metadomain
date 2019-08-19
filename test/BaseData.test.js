@@ -46,12 +46,11 @@ describe('基础档案', () => {
       }]
     }, [`rule required_onsave {
       when{
-        e: Event e.name == 'save';
-        d: Object d.$name == 'changes';
+        e: Action e.name == 'save';
         o: Entity
       }
       then{
-        if (!o.Name && !d.Name){
+        if (!o.Name && !e.data.Name){
           throw new Error(t('仓库编码不能为空'))
         }
       }
@@ -68,10 +67,10 @@ describe('基础档案', () => {
     console.log('------------------------------')
 
     const WarehouseRep = Repository.create(Warehouse);
-    let warehouse = Warehouse.create();
+    let warehouse = await Warehouse.create();
 
     let onsaved = false;
-    warehouse.on('saved',args=>{
+    warehouse.on('saved', args => {
       onsaved = true;
       expect(args).to.be.eql({
         //id: 'ZjEQMSG2T',
@@ -267,7 +266,7 @@ describe('基础档案', () => {
 
     console.log('------------------------------')
 
-    let department = Department.create();
+    let department = await Department.create();
     await department.save({
       Code: '111',
       Name: '111'
@@ -277,8 +276,8 @@ describe('基础档案', () => {
 
     console.log('------------------------------')
 
-    let warehouseType = WarehouseType.create();
-    let persion = Persion.create();
+    let warehouseType = await WarehouseType.create();
+    let persion = await Persion.create();
     await persion.save({
       "Code": "2-2",
       "Ts": "0000000000b05a3a",
@@ -322,7 +321,7 @@ describe('基础档案', () => {
 
     console.log('------------------------------')
 
-    let warehouse = Warehouse.create();
+    let warehouse = await Warehouse.create();
     await warehouse.save({
       Code: '001',
       Name: 'test001',
