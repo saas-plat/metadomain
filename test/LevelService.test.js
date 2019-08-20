@@ -1,9 +1,5 @@
 const {
-  Event,
-  RuleSet,
   Repository,
-  MetaEntity,
-  BaseData,
   LevelService,
 } = require('../lib');
 const {
@@ -13,8 +9,6 @@ const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
 
 describe('层级数据', () => {
-
-
 
   before(async () => {
     const db = mongo.db;

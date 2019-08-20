@@ -6,6 +6,7 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+
 const SaleOrder = require('./entities/SaleOrder');
 const SaleDelivery = require('./entities/SaleDelivery');
 const ReceivePayment = require('./entities/ReceivePayment');
@@ -42,6 +43,7 @@ describe('单据', () => {
   })
 
   it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
+
     const custId = await customerService.save({
       "Code": "00000001",
       "Name": "广东JH",

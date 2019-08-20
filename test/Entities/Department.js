@@ -2,6 +2,7 @@ const {
   MetaEntity,
   LevelData,
 } = require('../../lib');
+
 // 订单
 module.exports = MetaEntity.create(LevelData, 'Department', {
   "Code": 'string',
