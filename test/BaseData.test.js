@@ -1,5 +1,4 @@
 const {
-  env,
   Event,
   RuleSet,
   Repository,
@@ -11,8 +10,22 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+const mongo = require('sourced-repo-mongo/mongo');
 
 describe('基础档案', () => {
+
+  before(async () => {
+    const db = mongo.db;
+    const keys = ['Warehouse', 'Department', 'Persion', 'WarehouseType'];
+    for (const key of keys) {
+      const snapshots = db.collection(key + '.snapshots');
+      const events = db.collection(key + '.events');
+      if (await events.count() > 0) {
+        await events.drop();
+        await snapshots.drop();
+      }
+    }
+  })
 
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
@@ -281,7 +294,7 @@ describe('基础档案', () => {
       Persion: PersionRep,
     }
 
-    env.getRepsitory = (entityName) => {
+    const getRepsitory = (entityName) => {
       return reps[entityName];
     }
 

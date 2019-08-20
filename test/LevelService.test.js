@@ -12,15 +12,15 @@ const {
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
 
- 
-
 describe('层级数据', () => {
+
+
 
   before(async () => {
     const db = mongo.db;
     const snapshots = db.collection('Department.snapshots');
     const events = db.collection('Department.events');
-    if (events.count() > 0) {
+    if (await events.count() > 0) {
       await events.drop();
       await snapshots.drop();
     }
@@ -28,41 +28,18 @@ describe('层级数据', () => {
 
   it('创建部门档案，添加部门分类和部门数据', async () => {
 
-    const Department = MetaEntity.create(BaseData, 'Department', {
-      "Code": 'string',
-      "Name": 'string',
-      "StoreType_Name": 'string',
-      "Person_Name": 'string',
-      "Warehouse_Name": 'string',
-      "Department_Name": 'string',
-      "District_Name": 'string',
-      "CashShieldNum": 'int',
-      "Customer_Name": 'string',
-      "Person_id": 'int',
-      "Warehouse_id": 'int',
-      "Department_id": 'int',
-      "Customer_id": 'int',
-      "District_id": 'int'
-    }, [`rule use_not_be_modify {
-      when{
-        evt: Event e.name == 'save';
-        a: Object d.$name == 'saved';
-        e: Entity
-      }
-      then{
-
-      }
-    }`]);
+    const Department = require('./entities/Department');
+    const DepartmentRep = Repository.create(Department);
 
     const user = {
       id: 'xxxx'
     };
-    const DepartmentRep = Repository.create(Department);
+
     const reps = {
       Department: DepartmentRep,
     }
 
-    const levelService = new LevelService(DepartmentRep, {
+    const levelService = new LevelService(Department, {
       user,
     }, (entityName) => reps[entityName]);
 
@@ -72,7 +49,6 @@ describe('层级数据', () => {
     }, {
       Code: '003',
       Name: '市场部',
-      cid: cn.id
     });
     await levelService.save({
       Code: '001001',
