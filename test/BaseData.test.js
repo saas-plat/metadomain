@@ -51,7 +51,7 @@ describe('基础档案', () => {
       }
       then{
         if (!o.Name && !e.data.Name){
-          throw new Error(t('仓库编码不能为空'))
+          throw new Error(t('仓库名称不能为空'))
         }
       }
     }`], {
@@ -64,7 +64,7 @@ describe('基础档案', () => {
       }
     });
 
-    console.log('------------------------------')
+    console.log('--------------1----------------')
 
     const WarehouseRep = Repository.create(Warehouse);
     let warehouse = await Warehouse.create();
@@ -72,18 +72,19 @@ describe('基础档案', () => {
     let onsaved = false;
     warehouse.on('saved', args => {
       onsaved = true;
-      expect(args).to.be.eql({
+      expect(args).to.include({
         //id: 'ZjEQMSG2T',
         Code: '001',
         Name: 'test001',
-        createBy: undefined,
-        status: 'addnew'
+        // status 是默认值，并没有修改所以不包含
+        //status: 'invalid'
       })
     });
 
     try {
       await warehouse.save({
         Name: 'test001',
+        ts: warehouse.ts
       });
       expect.fail();
     } catch (err) {
@@ -95,6 +96,7 @@ describe('基础档案', () => {
       await warehouse.save({
         Code: '001',
         //Name: 'test001',
+        ts: warehouse.ts
       });
       expect.fail();
     } catch (err) {
@@ -105,30 +107,34 @@ describe('基础档案', () => {
     await warehouse.save({
       Code: '001',
       Name: 'test001',
-      //Persion: persion
+      //Persion: persion,
+      ts: warehouse.ts
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);
     expect(onsaved).to.be.true;
 
-    console.log('------------------------------')
+    console.log('-------------2-----------------')
 
     warehouse = await WarehouseRep.get(warehouse.id);
     expect(warehouse).to.not.be.null;
     await warehouse.save({
       Address: 'xxxxxxxxxxxxxxxxxx',
       NONONO: '111',
+      ts: warehouse.ts
     });
     await WarehouseRep.commitAll(warehouse);
 
-    console.log('------------------------------')
+    console.log('--------------3----------------')
 
     warehouse = await WarehouseRep.get(warehouse.id);
     expect(warehouse.Name).to.be.eql('test001');
     //expect(warehouse.Code).to.be.eql('001');
     expect(warehouse.Address).to.be.eql('xxxxxxxxxxxxxxxxxx');
     expect(warehouse.NONONO).to.be.undefined;
-    await warehouse.delete();
+    await warehouse.delete({
+      ts: warehouse.ts
+    });
     await WarehouseRep.commitAll(warehouse);
 
     expect(eventbus.map(({
@@ -136,7 +142,12 @@ describe('基础档案', () => {
       args
     }) => {
       const {
+        // 这些都是动态值排除
         id,
+        updateAt,
+        createAt,
+        deleteAt,
+        ts,
         ...other
       } = args;
       return {
@@ -144,27 +155,37 @@ describe('基础档案', () => {
         args: other
       };
     })).to.be.eql([{
+      args: {
+        // "createAt": [Date: 2019-08-20T07:00:30.126Z]
+        "createBy": null,
+        "status": "invalid",
+        // "ts": "1566284430126"
+        // "updateAt": [Date: 2019-08-20T07:00:30.126Z]
+        "updateBy": null,
+      },
+      name: "created"
+    }, {
       name: 'saved',
       args: {
         //id: 'ZjEQMSG2T',
         Code: '001',
         Name: 'test001',
-        createBy: undefined,
-        status: 'addnew'
+        updateBy: null
       }
     }, {
       name: 'saved',
       args: {
         //id: 'ZjEQMSG2T',
         Address: 'xxxxxxxxxxxxxxxxxx',
-        updateBy: undefined
+        updateBy: null
       }
     }, {
       name: 'deleted',
       args: {
         //id: 'ZjEQMSG2T',
         status: 'abandoned',
-        deleteBy: undefined
+        updateBy: null,
+        deleteBy: null
       }
     }]);
   })
@@ -269,7 +290,8 @@ describe('基础档案', () => {
     let department = await Department.create();
     await department.save({
       Code: '111',
-      Name: '111'
+      Name: '111',
+      ts: department.ts
     })
 
     await WarehouseRep.commitAll(department);
@@ -280,7 +302,6 @@ describe('基础档案', () => {
     let persion = await Persion.create();
     await persion.save({
       "Code": "2-2",
-      "Ts": "0000000000b05a3a",
       "Status": 0,
       "Name": "导购2-2",
       "Shorthand": "DG2-2",
@@ -311,11 +332,13 @@ describe('基础档案', () => {
       "MsnAddr": "",
       "UuNo": "",
       "PostCode": "",
-      "PostAddr": ""
+      "PostAddr": "",
+      ts: persion.ts
     });
     await warehouseType.save({
       Code: 'type1',
-      Name: 'type1'
+      Name: 'type1',
+      ts: warehouseType.ts
     })
     await WarehouseRep.commitAll(persion, warehouseType);
 
@@ -330,7 +353,8 @@ describe('基础档案', () => {
       },
       WarehouseType: {
         id: warehouseType.id
-      }
+      },
+      ts: warehouse.ts
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);

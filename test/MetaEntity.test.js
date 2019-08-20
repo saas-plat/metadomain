@@ -55,17 +55,21 @@ describe('业务实体', () => {
 
     const TestReference1Rep = Repository.create(TestReference1);
     const TestReference2Rep = Repository.create(TestReference2);
+
     const ref1 = await TestReference1.create();
     await ref1.save({
-      Code: '10000'
+      Code: '10000',
+      ts: ref1.ts
     });
     const ref21 = await TestReference2.create();
     await ref21.save({
-      Code: '10001'
+      Code: '10001',
+      ts: ref21.ts
     });
     const ref22 = await TestReference2.create();
     await ref22.save({
-      Code: 'xxxxxxx'
+      Code: 'xxxxxxx',
+      ts: ref22.ts
     });
     await TestReference1Rep.commitAll(ref1);
     await TestReference2Rep.commitAll(ref21, ref22);
@@ -87,7 +91,8 @@ describe('业务实体', () => {
       }, {
         REF2: ref22,
         Value: 200
-      }]
+      }],
+      ts: test.ts
     });
     await testRepository.commitAll(test);
   });
@@ -128,17 +133,20 @@ describe('业务实体', () => {
     const testRepository = Repository.create(TestObj);
     const test = await TestObj.create();
     await test.save({
-      Code: 'xxxxxxxxx'
+      Code: 'xxxxxxxxx',
+      ts: test.ts
     });
     expect(test.Code).to.be.eql('xxxxxxxxx');
     // 默认自定义行为不修改数据
     await test.customAction('action1', {
-      Code: 'bbbbbbbbbb'
+      Code: 'bbbbbbbbbb',
+      ts: test.ts
     });
     expect(test.Code).to.be.eql('xxxxxxxxx');
 
     await test.customAction('action2', {
-      Code: 'cccccccccc'
+      Code: 'cccccccccc',
+      ts: test.ts
     });
     expect(test.Code).to.be.eql('cccccccccc');
     await testRepository.commitAll(test);
