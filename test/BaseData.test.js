@@ -12,7 +12,7 @@ const {
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
 
-describe('单一数据', () => {
+describe('基础数据结构对象', () => {
 
   before(async () => {
     const db = mongo.db;
@@ -85,6 +85,7 @@ describe('单一数据', () => {
     let onsaved = false;
     warehouse.on('saved', args => {
       onsaved = true;
+      //console.log(args)
       expect(args).to.include({
         //id: 'ZjEQMSG2T',
         Code: '001',
@@ -96,6 +97,7 @@ describe('单一数据', () => {
 
     try {
       await warehouse.save({
+        createBy: 'user1',
         Name: 'test001',
         ts: warehouse.ts
       });
@@ -107,6 +109,7 @@ describe('单一数据', () => {
 
     try {
       await warehouse.save({
+        createBy: 'user1',
         Code: '001',
         //Name: 'test001',
         ts: warehouse.ts
@@ -118,6 +121,7 @@ describe('单一数据', () => {
     expect(onsaved).to.be.false;
 
     await warehouse.save({
+      createBy: 'user1',
       Code: '001',
       Name: 'test001',
       //Persion: persion,
@@ -180,6 +184,7 @@ describe('单一数据', () => {
     }, {
       name: 'saved',
       args: {
+        createBy: 'user1',
         //id: 'ZjEQMSG2T',
         Code: '001',
         Name: 'test001',

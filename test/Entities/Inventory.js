@@ -1,4 +1,9 @@
-{
+const {
+  MetaEntity,
+  BaseData,
+} = require('../../lib');
+
+module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
   "LatestPPrice": "string",
   "LatestSalePrice": "string",
   "IdUnitByPurchase": "number",
@@ -179,4 +184,4 @@
   "CaseSensitive": "bool",
   "RecordDynamicNullValue": "bool",
   "data": "object"
-}
+})
