@@ -10,8 +10,7 @@ const {
   expect
 } = require('chai');
 const util = require('util');
-const PartnerCategory = require('./entities/PartnerCategory');
-const Partner = require('./entities/Partner');
+const mongo = require('sourced-repo-mongo/mongo');
 
 describe('分类数据', () => {
   before(async () => {
@@ -33,6 +32,9 @@ describe('分类数据', () => {
     const user = {
       id: 'xxxx'
     };
+
+    const PartnerCategory = require('./entities/PartnerCategory');
+    const Partner = require('./entities/Partner');
     const PartnerCategoryRep = Repository.create(PartnerCategory);
     const PartnerRep = Repository.create(Partner);
     const reps = {

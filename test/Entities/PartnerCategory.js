@@ -1,15 +1,15 @@
 const {
   MetaEntity,
-  CategoryData,
+  LevelData,
 } = require('../../lib');
 
-module.exports = = MetaEntity.create(CategoryData, 'PartnerCategory', {
+module.exports = MetaEntity.create(LevelData, 'PartnerCategory', {
   "Code": 'string',
   "Name": 'string',
 }, [`rule has_date_cant_be_delete {
   when{
-    evt: Action e.name == 'delete';
-    e: Entity
+    e: Action e.name == 'delete';
+    o: Entity
   }
   then{
 
