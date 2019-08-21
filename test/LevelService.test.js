@@ -36,7 +36,9 @@ describe('层级数据', () => {
 
     const levelService = new LevelService(Department, {
       user,
-    }, (entityName) => reps[entityName]);
+    }, (entityName) => reps[entityName], {
+      parent: 'Department'
+    });
 
     const dats = await levelService.save({
       Code: '001',
@@ -46,25 +48,35 @@ describe('层级数据', () => {
       Name: '市场部',
     });
     await DepartmentRep.commitAll();
+
+    console.log('-----------2--------------')
     await levelService.save({
       Code: '001001',
       Name: '销售一部',
-      pid: dats[0].id
+      Department: {
+        id: dats[0].id
+      }
     }, {
       Code: '002002',
       Name: '销售二部',
-      pid: dats[0].id
+      Department: {
+        id: dats[0].id
+      }
     });
     await DepartmentRep.commitAll();
-    const getAll = util.promisify(DepartmentRep.getAll);
-    let depall = await getAll();
-    console.log(depall);
-    expect(depall).to.not.eql([]);
 
+    console.log('-----------3--------------')
+    let depall = await DepartmentRep.getAll();
+    //console.log(depall);
+    expect(depall.map(it => it.Name)).to.have.members(['销售部', '市场部', '销售一部', '销售二部']);
+
+    console.log('-----------4--------------')
     await levelService.delete(dats[1].id);
     await DepartmentRep.commitAll();
-    depall = await getAll();
-    console.log(depall);
-    expect(depall).to.be.eql([]);
+
+      console.log('-----------5--------------')
+    depall = await DepartmentRep.getAll();
+    //console.log(depall);
+    expect(depall.filter(it => it.status !== 'abandoned').map(it => it.Name)).to.have.members(['销售部', '销售一部', '销售二部']);
   })
 })

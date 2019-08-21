@@ -12,7 +12,7 @@ const {
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
 
-describe('基础档案', () => {
+describe('单一数据', () => {
 
   before(async () => {
     const db = mongo.db;
