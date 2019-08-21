@@ -16,7 +16,7 @@ describe('基础档案', () => {
 
   before(async () => {
     const db = mongo.db;
-    const keys = ['Warehouse', 'Department', 'Persion', 'WarehouseType'];
+    const keys = ['Warehouse3', 'Department3', 'Department4', 'Persion3', 'WarehouseType3'];
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
@@ -30,7 +30,7 @@ describe('基础档案', () => {
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
 
-    const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
+    const Warehouse = MetaEntity.create(BaseData, 'Warehouse3', {
       "Code": {
         type: "string",
         required: true // 必录
@@ -47,7 +47,7 @@ describe('基础档案', () => {
       // "Admin": 'Persion',    // 引用员工档案
       // "WarehouseType": {     // 引用 另一种写法
       //   type: 'reference',
-      //   reference: 'WarehouseType'
+      //   reference: 'WarehouseType3'
       // },
       "MarketingOrgan": { // 对象类型
         "Code": "string",
@@ -205,20 +205,20 @@ describe('基础档案', () => {
 
   it('创建一个仓库档案，并引用了人员和部门档案等信息', async () => {
     let eventbus = [];
-    const Department = MetaEntity.create(BaseData, "Department", {
+    const Department = MetaEntity.create(BaseData, "Department3", {
       "Code": "string",
       "Name": "string"
     })
-    const Persion = MetaEntity.create(BaseData, 'Persion', {
+    const Persion = MetaEntity.create(BaseData, 'Persion3', {
       "Code": "string",
       "Status": 'bool',
       "Name": "string",
       "Shorthand": "string",
-      "Department": 'Department', // 引用部门
+      "Department": 'Department3', // 引用部门
       "Position": "string",
       "IsSalesman": 'date',
       "VisitManage": 'date',
-      "IsNavigator": 'date',
+      "IsNavigator": 'bool',
       "CreditDate": 'date',
       "CreditQuantity": "string",
       "ARBalance": 'number',
@@ -241,11 +241,11 @@ describe('基础档案', () => {
       "PostCode": "string",
       "PostAddr": "string"
     });
-    const WarehouseType = MetaEntity.create(BaseData, 'WarehouseType', {
+    const WarehouseType = MetaEntity.create(BaseData, 'WarehouseType3', {
       "Code": "string",
       "Name": "string"
     });
-    const Warehouse = MetaEntity.create(BaseData, 'Warehouse', {
+    const Warehouse = MetaEntity.create(BaseData, 'Warehouse4', {
       "Code": {
         type: "string",
         required: true // 必录
@@ -259,10 +259,10 @@ describe('基础档案', () => {
       "AllowZeroStockOut": 'bool',
       "Disabled": 'bool',
       "HasPosition": 'bool',
-      "Admin": 'Persion', // 引用员工档案
+      "Admin": 'Persion3', // 引用员工档案
       "WarehouseType": { // 引用 另一种写法
         type: 'reference',
-        src: 'WarehouseType'
+        src: 'WarehouseType3'
       },
       "MarketingOrgan": { // 对象类型
         "Code": "string",
@@ -288,10 +288,10 @@ describe('基础档案', () => {
     const PersionRep = Repository.create(Persion);
 
     const reps = {
-      Department: DepartmentRep,
-      WarehouseType: WarehouseTypenRep,
-      Warehouse: WarehouseRep,
-      Persion: PersionRep,
+      Department3: DepartmentRep,
+      WarehouseType3: WarehouseTypenRep,
+      Warehouse4: WarehouseRep,
+      Persion3: PersionRep,
     }
 
     const getRepsitory = (entityName) => {
@@ -361,10 +361,10 @@ describe('基础档案', () => {
     await warehouse.save({
       Code: '001',
       Name: 'test001',
-      Persion: {
+      Persion3: {
         id: persion.id
       },
-      WarehouseType: {
+      WarehouseType3: {
         id: warehouseType.id
       },
       ts: warehouse.ts
