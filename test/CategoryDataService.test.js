@@ -65,6 +65,9 @@ describe('分类数据', () => {
         id: categories[0].id
       },
     });
+    await PartnerCategoryRep.commitAll();
+
+    console.log('----------------1-------------------')
     try {
       // 不是末级节点
       await categoryService.saveData({
@@ -95,6 +98,9 @@ describe('分类数据', () => {
         id: cn.id
       }
     });
+    await PartnerRep.commitAll();
+
+    console.log('----------------2-------------------')
     await categoryService.deleteData(dats[1].id);
     try {
       // 有数据分类不能删除
@@ -107,7 +113,9 @@ describe('分类数据', () => {
       expect.fail();
     } catch (err) {}
     await categoryService.deleteCategory(categories[3].id);
+    await PartnerCategoryRep.commitAll();
 
+    console.log('----------------3-------------------')
     const cateall = await PartnerCategoryRep.getAll();
     const depall = await PartnerRep.getAll();
     console.log(cateall, depall);
