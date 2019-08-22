@@ -64,7 +64,7 @@ describe('分类数据', () => {
       parent: {
         id: categories[0].id
       },
-    })[0];
+    });
     try {
       // 不是末级节点
       await categoryService.saveData({

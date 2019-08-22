@@ -80,7 +80,9 @@ describe('基础数据结构对象', () => {
     console.log('--------------1----------------')
 
     const WarehouseRep = Repository.create(Warehouse);
-    let warehouse = await Warehouse.create();
+    let warehouse = await Warehouse.create({
+      createBy: 'user1',
+    });
 
     let onsaved = false;
     warehouse.on('saved', args => {
@@ -97,7 +99,6 @@ describe('基础数据结构对象', () => {
 
     try {
       await warehouse.save({
-        createBy: 'user1',
         Name: 'test001',
         ts: warehouse.ts
       });
@@ -109,7 +110,6 @@ describe('基础数据结构对象', () => {
 
     try {
       await warehouse.save({
-        createBy: 'user1',
         Code: '001',
         //Name: 'test001',
         ts: warehouse.ts
@@ -121,7 +121,6 @@ describe('基础数据结构对象', () => {
     expect(onsaved).to.be.false;
 
     await warehouse.save({
-      createBy: 'user1',
       Code: '001',
       Name: 'test001',
       //Persion: persion,
@@ -174,17 +173,16 @@ describe('基础数据结构对象', () => {
     })).to.be.eql([{
       args: {
         // "createAt": [Date: 2019-08-20T07:00:30.126Z]
-        "createBy": null,
+        "createBy": 'user1',
         "status": "invalid",
         // "ts": "1566284430126"
         // "updateAt": [Date: 2019-08-20T07:00:30.126Z]
-        "updateBy": null,
+        "updateBy": 'user1',
       },
       name: "created"
     }, {
       name: 'saved',
       args: {
-        createBy: 'user1',
         //id: 'ZjEQMSG2T',
         Code: '001',
         Name: 'test001',
