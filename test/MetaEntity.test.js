@@ -155,4 +155,32 @@ describe('业务实体', () => {
     expect(ec).to.be.eql(2);
   })
 
+  it('实体支持字段名称映射，但是也不影响基类的写法', async () => {
+    const MappingObj = MetaEntity.create(BaseData, 'MappingObj', {
+      "ID": {
+        type: 'string',
+        mapping: 'id'
+      },
+      "timestamp": {
+        type: 'string',
+        mapping: 'ts'
+      },
+      "Code": "string"
+    });
+    const testRepository = Repository.create(MappingObj);
+    const test = await MappingObj.create({
+      ID: '111000bbb'
+    });
+    await test.save({
+      Code: 'xxxxxxxxx',
+      timestamp: test.ts
+    });
+    await testRepository.commitAll();
+    const obj = await testRepository.get(test.id);
+
+    expect(obj).to.be.eql({
+      // todo
+    })
+  })
+
 })

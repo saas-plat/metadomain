@@ -31,6 +31,7 @@ describe('基础数据结构对象', () => {
     let eventbus = [];
 
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse3', {
+     
       "Code": {
         type: "string",
         required: true // 必录
