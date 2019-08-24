@@ -18,10 +18,10 @@ describe('实体仓库', () => {
     });
 
     // scope 和 schema 字段同名不冲突
-    const testRepository1 = Repository.create(TestObj, {
+    const testRepository1 = await Repository.create(TestObj, {
       orgid: 'org001'
     });
-    const testRepository2 = Repository.create(TestObj, {
+    const testRepository2 = await Repository.create(TestObj, {
       orgid: 'org002'
     });
 

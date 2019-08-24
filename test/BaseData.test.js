@@ -31,7 +31,7 @@ describe('基础数据结构对象', () => {
     let eventbus = [];
 
     const Warehouse = MetaEntity.create(BaseData, 'Warehouse3', {
-     
+
       "Code": {
         type: "string",
         required: true // 必录
@@ -80,7 +80,7 @@ describe('基础数据结构对象', () => {
 
     console.log('--------------1----------------')
 
-    const WarehouseRep = Repository.create(Warehouse);
+    const WarehouseRep = await Repository.create(Warehouse);
     let warehouse = await Warehouse.create({
       createBy: 'user1',
     });
@@ -286,10 +286,10 @@ describe('基础数据结构对象', () => {
       }
     });
 
-    const DepartmentRep = Repository.create(Department);
-    const WarehouseTypenRep = Repository.create(WarehouseType);
-    const WarehouseRep = Repository.create(Warehouse);
-    const PersionRep = Repository.create(Persion);
+    const DepartmentRep = await Repository.create(Department);
+    const WarehouseTypenRep = await Repository.create(WarehouseType);
+    const WarehouseRep = await Repository.create(Warehouse);
+    const PersionRep = await Repository.create(Persion);
 
     const reps = {
       Department3: DepartmentRep,

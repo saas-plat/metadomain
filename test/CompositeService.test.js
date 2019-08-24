@@ -34,11 +34,11 @@ describe('单据', () => {
   let order;
   let orderService;
 
-  before(() => {
+  before(async() => {
     reps = {
-      SaleOrder: Repository.create(SaleOrder),
-      SaleDelivery: Repository.create(SaleDelivery),
-      ReceivePayment: Repository.create(ReceivePayment),
+      SaleOrder: await Repository.create(SaleOrder),
+      SaleDelivery: await Repository.create(SaleDelivery),
+      ReceivePayment: await Repository.create(ReceivePayment),
     };
   })
 

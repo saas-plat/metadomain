@@ -53,8 +53,8 @@ describe('业务实体', () => {
       }]
     });
 
-    const TestReference1Rep = Repository.create(TestReference1);
-    const TestReference2Rep = Repository.create(TestReference2);
+    const TestReference1Rep = await Repository.create(TestReference1);
+    const TestReference2Rep = await Repository.create(TestReference2);
 
     const ref1 = await TestReference1.create();
     await ref1.save({
@@ -74,7 +74,7 @@ describe('业务实体', () => {
     await TestReference1Rep.commitAll(ref1);
     await TestReference2Rep.commitAll(ref21, ref22);
 
-    const testRepository = Repository.create(TestObj);
+    const testRepository = await Repository.create(TestObj);
     const test = await TestObj.create();
 
     await test.save({
@@ -130,7 +130,7 @@ describe('业务实体', () => {
         console.log(...args);
       }
     });
-    const testRepository = Repository.create(TestObj);
+    const testRepository = await Repository.create(TestObj);
     const test = await TestObj.create();
     await test.save({
       Code: 'xxxxxxxxx',
@@ -156,7 +156,8 @@ describe('业务实体', () => {
   })
 
   it('实体支持字段名称映射，但是也不影响基类的写法', async () => {
-    const MappingObj = MetaEntity.create(BaseData, 'MappingObj', {
+
+    const MappingObj = MetaEntity.create(BaseData, 'MappingObj1', {
       "ID": {
         type: 'string',
         mapping: 'id'
@@ -167,7 +168,7 @@ describe('业务实体', () => {
       },
       "Code": "string"
     });
-    const testRepository = Repository.create(MappingObj);
+    const testRepository = await Repository.create(MappingObj);
     const test = await MappingObj.create({
       ID: '111000bbb'
     });

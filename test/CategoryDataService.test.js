@@ -35,8 +35,8 @@ describe('分类数据', () => {
 
     const PartnerCategory = require('./entities/PartnerCategory');
     const Partner = require('./entities/Partner');
-    const PartnerCategoryRep = Repository.create(PartnerCategory);
-    const PartnerRep = Repository.create(Partner);
+    const PartnerCategoryRep = await Repository.create(PartnerCategory);
+    const PartnerRep = await Repository.create(Partner);
     const reps = {
       PartnerCategory: PartnerCategoryRep,
       Partner: PartnerRep,

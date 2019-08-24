@@ -26,8 +26,8 @@ describe('数据迁移', () => {
       "Code": "string",
       "Name": "string"
     })
-    const DepartmentRep = Repository.create(Department2, scope);
-    const WarehouseRep = Repository.create(Warehouse2, scope);
+    const DepartmentRep = await Repository.create(Department2, scope);
+    const WarehouseRep = await Repository.create(Warehouse2, scope);
     const d =await  Department2.create();
     await d.save({
       Code: '111',
@@ -67,7 +67,7 @@ describe('数据迁移', () => {
     await migration.unlock();
 
     // 检查升级效果
-    const DepartmentRep_v2 = Repository.create(Department2_v2, scope);
+    const DepartmentRep_v2 = await Repository.create(Department2_v2, scope);
     const d12 = DepartmentRep_v2.get(d.id);
     expect(d12.Code).to.be.eql(111);
     expect(d12.Name2).to.be.eql('aaaaaaaaaa');

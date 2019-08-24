@@ -8,5 +8,5 @@ before(async () => {
 })
 
 after(async () => {
-  await close();
+  await setTimeout(async () => await close(), 100)
 })

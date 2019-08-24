@@ -24,7 +24,7 @@ describe('层级数据', () => {
 
   it('创建部门档案，添加部门分类和部门数据', async () => {
 
-    const DepartmentRep = Repository.create(Department);
+    const DepartmentRep = await Repository.create(Department);
 
     const user = {
       id: 'xxxx'
