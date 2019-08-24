@@ -162,7 +162,7 @@ describe('业务实体', () => {
         type: 'string',
         mapping: 'id'
       },
-      "timestamp": {
+      "times": {
         type: 'string',
         mapping: 'ts'
       },
@@ -170,17 +170,33 @@ describe('业务实体', () => {
     });
     const testRepository = await Repository.create(MappingObj);
     const test = await MappingObj.create({
-      ID: '111000bbb'
+      ID: new Date().getTime().toString()
     });
+    //console.log(111,test)
     await test.save({
+      ...test,
       Code: 'xxxxxxxxx',
-      timestamp: test.ts
     });
-    await testRepository.commitAll();
+    //console.log(111,test)
+    expect(test.times).to.not.undefined;
+    expect(test.times).to.be.eql(test.ts);
+
+    await testRepository.commitAll(test);
+    expect(test.id).to.not.null;
     const obj = await testRepository.get(test.id);
 
-    expect(obj).to.be.eql({
-      // todo
+    console.log(test, obj)
+    expect(obj).to.include({
+      ID: test.id,
+      times: test.ts,
+      Code: 'xxxxxxxxx',
+      status: 'invalid',
+      createBy: null,
+      //createAt: 2019-08-24T00:44:28.521Z,
+      updateBy: null,
+      //updateAt: 2019-08-24T00:44:28.529Z,
+      deleteBy: undefined,
+      deleteAt: undefined
     })
   })
 
