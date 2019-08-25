@@ -7,10 +7,6 @@ const {
 } = require('chai');
 const util = require('util');
 
-const SaleOrder = require('./entities/SaleOrder');
-const SaleDelivery = require('./entities/SaleDelivery');
-const ReceivePayment = require('./entities/ReceivePayment');
-
 describe('单据', () => {
 
   const ctx = {
@@ -34,15 +30,19 @@ describe('单据', () => {
   let order;
   let orderService;
 
-  before(async() => {
+ 
+
+  it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
+
+    const SaleOrder = require('./entities/SaleOrder');
+    const SaleDelivery = require('./entities/SaleDelivery');
+    const ReceivePayment = require('./entities/ReceivePayment');
+
     reps = {
       SaleOrder: await Repository.create(SaleOrder),
       SaleDelivery: await Repository.create(SaleDelivery),
       ReceivePayment: await Repository.create(ReceivePayment),
     };
-  })
-
-  it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
 
     const custId = await customerService.save({
       "Code": "00000001",

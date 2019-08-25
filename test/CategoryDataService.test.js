@@ -1,9 +1,5 @@
 const {
-  Event,
-  RuleSet,
   Repository,
-  MetaEntity,
-  BaseData,
   CategoryDataService,
 } = require('../lib');
 const {
@@ -32,7 +28,7 @@ describe('分类数据', () => {
     const user = {
       id: 'xxxx'
     };
-
+ 
     const PartnerCategory = require('./entities/PartnerCategory');
     const Partner = require('./entities/Partner');
     const PartnerCategoryRep = await Repository.create(PartnerCategory);

@@ -1,9 +1,9 @@
 const {
   MetaEntity,
-  BaseData,
+  CategoryData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
+module.exports = MetaEntity.create(CategoryData, 'PartnerCategory', {
   "PartnerAbbName": "string",
   "ShortHand": "string",
   "PartnerType": {
