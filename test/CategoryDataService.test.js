@@ -28,8 +28,23 @@ describe('分类数据', () => {
     const user = {
       id: 'xxxx'
     };
- 
+
     const PartnerCategory = require('./entities/PartnerCategory');
+    expect(PartnerCategory.references).to.have.property('Parent');
+    expect(PartnerCategory.fields.find(it => it.key === 'Partners')).to.be.eql({
+      "key": "Partners",
+      "src": "Partner",
+      "subtype": "reference",
+      "type": "array",
+      "rules": {
+        "type": "array"
+      },
+      "mapping": "details",
+      "defValue": [],
+      "fields": undefined
+    });
+    expect(PartnerCategory.references).to.have.property('Partners');
+
     const Partner = require('./entities/Partner');
     const PartnerCategoryRep = await Repository.create(PartnerCategory);
     const PartnerRep = await Repository.create(Partner);
@@ -54,13 +69,19 @@ describe('分类数据', () => {
       Code: '003',
       Name: '欧美',
     });
+    await PartnerCategoryRep.commitAll();
+
+    expect(categories[0].id).to.be.ok;
     const cn = await categoryService.saveCategory({
       Code: '001001',
       Name: '中国内地',
-      parent: {
+      Parent: {
         id: categories[0].id
       },
     });
+    cn.on('created', args => {
+      expect(args.Partners).to.be.eql([]);
+    })
     await PartnerCategoryRep.commitAll();
 
     console.log('----------------1-------------------')
@@ -69,7 +90,7 @@ describe('分类数据', () => {
       await categoryService.saveData({
         Code: '001',
         Name: '供应商1',
-        category: {
+        PartnerClass: {
           id: categories[0].id
         }
       });
@@ -78,19 +99,19 @@ describe('分类数据', () => {
     const dats = await categoryService.saveData({
       Code: '001',
       Name: '供应商1',
-      category: {
+      PartnerClass: {
         id: cn.id
       }
     }, {
       Code: '002',
       Name: '供应商2',
-      category: {
+      PartnerClass: {
         id: cn.id
       }
     }, {
       Code: '003',
       Name: '供应商3',
-      category: {
+      PartnerClass: {
         id: cn.id
       }
     });

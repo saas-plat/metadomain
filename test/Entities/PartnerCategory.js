@@ -14,8 +14,8 @@ module.exports = MetaEntity.create(CategoryTree, 'PartnerCategory', {
   },
 
   "Partners": {
-    type: 'reference',
-    src: 'Partner',
+    type: 'array',
+    subtype: 'Partner',
     mapping: 'details'
   },
 
