@@ -3,11 +3,12 @@ const {
   CategoryData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(CategoryData, 'PartnerCategory', {
+module.exports = MetaEntity.create(CategoryData, 'Partner', {
+  "PartnerClass":  {type:'reference',src:'PartnerCategory',mapping:'category'},
+
   "PartnerAbbName": "string",
   "ShortHand": "string",
   "PartnerType": {
-
     "Code": "string",
     "Name": "string",
     "Position": "number",
@@ -88,41 +89,6 @@ module.exports = MetaEntity.create(CategoryData, 'PartnerCategory', {
   "Disabled": "bool",
   "MadeDate": "date",
   "CreatedTime": "date",
-
-  "PartnerClass": {
-    "IsEndNode": "bool",
-    "MadeDate": "date",
-    "CreatedTime": "date",
-    "Depth": "number",
-    "Disabled": "bool",
-
-    "Parent": "string",
-    "InId": "string",
-
-    "MarketingOrgan": "string",
-    "WeakTypeDtoName": "string",
-    "DtoClassName": "string",
-    "IsWeakType": "bool",
-    "AliName": "string",
-    "Status": "number",
-    "EnableHasChanged": "bool",
-    "ChangedProperty": ["string"],
-    "DynamicPropertyKeys": ["string"],
-    "DynamicPropertyValues": ["string"],
-
-    "DeleteID": "number",
-    "Name": "string",
-    "Code": "string",
-    "Updated": "date",
-    "UpdatedBy": "string",
-    "InnerSearchLevel": "number",
-    "RecordChange": "bool",
-    "InnerPropInParentRecure": "string",
-
-    "CaseSensitive": "bool",
-    "RecordDynamicNullValue": "bool",
-    "data": "object"
-  },
   "District": "string",
   "SaleMan": "string",
   "SaleDepartment": "string",
