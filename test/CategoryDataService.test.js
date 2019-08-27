@@ -34,6 +34,7 @@ describe('分类数据', () => {
     expect(PartnerCategory.fields.find(it => it.key === 'Partners')).to.be.eql({
       "key": "Partners",
       "src": "Partner",
+      "index": undefined,
       "subtype": "reference",
       "type": "array",
       "rules": {
@@ -55,6 +56,9 @@ describe('分类数据', () => {
       Partner: PartnerRep,
     }
 
+    expect(await PartnerCategoryRep.getAll()).to.eql([]);
+    expect(await PartnerRep.getAll()).to.eql([]);
+
     const categoryService = new CategoryDataService(PartnerCategory, Partner, {
       user,
     }, (entityName) => {
@@ -66,7 +70,23 @@ describe('分类数据', () => {
     }, {
       Code: '002',
       Name: '东南亚区',
+      Parent: null
     });
+    //console.log(categories)
+    expect(categories[0]).to.deep.include({
+      "Code": "001",
+      "Name": "大中华区",
+      "Parent": undefined, // 默认
+      "Partners": [], // 默认为[]
+    });
+    expect(categories[1]).to.deep.include({
+      "Code": "002",
+      "Name": "东南亚区",
+      "Parent": null,
+      "Partners": [],
+    })
+    // --------------------------
+
     const cate2 = await categoryService.saveCategory({
       Code: '003',
       Name: '欧美',
@@ -87,24 +107,28 @@ describe('分类数据', () => {
       expect(Partners).to.be.eql([]);
     })
     await PartnerCategoryRep.commitAll();
+    expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
 
     console.log('----------------1-------------------')
+    let dit;
     try {
       // 不是末级节点
-      await categoryService.saveData({
+      dit = await categoryService.saveData({
         Code: '001',
         Name: '供应商1',
         PartnerClass: {
           id: categories[0].id
         }
       });
-      expect.fail();
     } catch (err) {}
+    expect(dit).to.be.undefined;
+    expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
+
     const dats = await categoryService.saveData({
       Code: '001',
       Name: '供应商1',
       PartnerClass: {
-        id: cn.id
+        id: categories[1].id
       }
     }, {
       Code: '002',
@@ -121,40 +145,111 @@ describe('分类数据', () => {
     });
     await PartnerRep.commitAll();
 
+    expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
+
     console.log('----------------2-------------------')
-    await categoryService.deleteData(dats[1].id);
+    const remit1 = await categoryService.deleteData(dats[1].id);
+    expect(remit1).to.not.undefined;
+
+    let remit;
     try {
-      // 有数据分类不能删除
-      await categoryService.deleteCategory(categories[0].id);
-      expect.fail();
+      // 有数据时，分类不能删除
+      remit = await categoryService.deleteCategory(categories[1].id);
     } catch (err) {}
+    expect(remit).to.be.undefined;
+
     try {
-      // 有数据分类不能删除
-      await categoryService.deleteCategory(categories[1].id);
-      expect.fail();
+      // 不是末级无数据的分类
+      remit = await categoryService.deleteCategory(categories[0].id);
     } catch (err) {}
+    expect(remit).to.be.undefined;
+
     await categoryService.deleteCategory(cn.id);
     await PartnerCategoryRep.commitAll();
+    expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
 
     console.log('----------------3-------------------')
     const cateall = await PartnerCategoryRep.getAll();
     const depall = await PartnerRep.getAll();
-    //console.log(cateall, depall);
+    //console.log(cateall);
 
-    expect(cateall).to.have.deep.members([{
+    expect(cateall.sort((a, b) => a.Code - b.Code).map(({
+      Name,
+      Code,
+      Parent,
+      Partners,
+      status,
+      createBy,
+      updateBy,
+      deleteBy,
+    }) => ({
+      Name,
+      Code,
+      Parent,
+      Partners,
+      status,
+      createBy,
+      updateBy,
+      deleteBy,
+    }))).to.have.deep.members([{
+      //id: 'qTfZ3MwlM',
+      Name: '大中华区',
+      Code: '001',
+      Parent: undefined,
+      Partners: [],
+
+      status: 'abandoned',
+      createBy: 'xxxx',
+      //createAt: 2019-08-27T05:24:25.286Z,
+      updateBy: null,
+      //updateAt: 2019-08-27T05:24:26.634Z,
+      deleteBy: 'xxxx',
+      //deleteAt: 2019-08-27T05:24:26.636Z,
+      //  ts: '1566883466634'
+    }, {
       "Code": "002",
       "Name": "东南亚区",
       "Parent": null,
       "Partners": [],
       //"createAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
       "createBy": "xxxx",
-      "deleteAt": undefined,
       "deleteBy": undefined,
       //"id": "xGnkwcKZWt",
       "status": "invalid",
       //"ts": "1566871163712",
       //"updateAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
       "updateBy": "xxxx",
+    }, {
+      //id: 'Y6h6q9w63I',
+      Name: '欧美',
+      Code: '003',
+      Parent: undefined,
+      Partners: [],
+
+      status: 'invalid',
+      createBy: 'xxxx',
+      //  createAt: 2019-08-27T05:24:25.357Z,
+      updateBy: 'xxxx',
+      //  updateAt: 2019-08-27T05:24:25.357Z,
+      deleteBy: undefined,
+      //  ts: '1566883465356'
+    }, {
+      //  id: 'nEoxOe4u_K',
+      Name: '中国内地',
+      Code: '001001',
+      Parent: {
+        id: cn.id
+      },
+      Partners: [],
+
+      status: 'abandoned',
+      createBy: 'xxxx',
+      //  createAt: 2019-08-27T05:24:25.502Z,
+      updateBy: 'xxxx',
+      //  updateAt: 2019-08-27T05:24:26.217Z,
+      deleteBy: 'xxxx',
+      //  deleteAt: 2019-08-27T05:24:26.768Z,
+      //  ts: '1566883466217'
     }])
     expect(depall).to.be.eql([]);
   })

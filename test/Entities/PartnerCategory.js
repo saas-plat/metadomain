@@ -13,6 +13,12 @@ module.exports = MetaEntity.create(CategoryTree, 'PartnerCategory', {
     mapping: 'parent'
   },
 
+  "Subs": {
+    type: 'array',
+    subtype: 'PartnerCategory',
+    mapping: 'childs'
+  },
+
   "Partners": {
     type: 'array',
     subtype: 'Partner',
