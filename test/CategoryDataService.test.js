@@ -43,7 +43,9 @@ describe('分类数据', () => {
       "defValue": [],
       "fields": undefined
     });
-    expect(PartnerCategory.references).to.have.property('Partners');
+
+    // 数组必须是[]结尾
+    expect(PartnerCategory.references).to.have.property('Partners[]');
 
     const Partner = require('./entities/Partner');
     const PartnerCategoryRep = await Repository.create(PartnerCategory);
@@ -65,7 +67,7 @@ describe('分类数据', () => {
       Code: '002',
       Name: '东南亚区',
     });
-    await categoryService.saveCategory({
+    const cate2 = await categoryService.saveCategory({
       Code: '003',
       Name: '欧美',
     });
@@ -79,8 +81,10 @@ describe('分类数据', () => {
         id: categories[0].id
       },
     });
-    cn.on('created', args => {
-      expect(args.Partners).to.be.eql([]);
+    cn.on('created', ({
+      Partners
+    }) => {
+      expect(Partners).to.be.eql([]);
     })
     await PartnerCategoryRep.commitAll();
 
@@ -129,15 +133,29 @@ describe('分类数据', () => {
       await categoryService.deleteCategory(categories[1].id);
       expect.fail();
     } catch (err) {}
-    await categoryService.deleteCategory(categories[3].id);
+    await categoryService.deleteCategory(cn.id);
     await PartnerCategoryRep.commitAll();
 
     console.log('----------------3-------------------')
     const cateall = await PartnerCategoryRep.getAll();
     const depall = await PartnerRep.getAll();
-    console.log(cateall, depall);
+    //console.log(cateall, depall);
 
-    expect(cateall).to.be.eql([]);
+    expect(cateall).to.have.deep.members([{
+      "Code": "002",
+      "Name": "东南亚区",
+      "Parent": null,
+      "Partners": [],
+      //"createAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
+      "createBy": "xxxx",
+      "deleteAt": undefined,
+      "deleteBy": undefined,
+      //"id": "xGnkwcKZWt",
+      "status": "invalid",
+      //"ts": "1566871163712",
+      //"updateAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
+      "updateBy": "xxxx",
+    }])
     expect(depall).to.be.eql([]);
   })
 
