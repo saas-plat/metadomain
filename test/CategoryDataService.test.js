@@ -162,6 +162,8 @@ describe('分类数据', () => {
     expect(remit1).to.not.undefined;
     cate_cn = await PartnerCategoryRep.get(cn.id);
     expect(cate_cn.Partners.length).to.be.eql(2);
+    await PartnerRep.commitAll();
+    await PartnerCategoryRep.commitAll();
 
     let remit;
     try {
@@ -224,10 +226,10 @@ describe('分类数据', () => {
         Code: '001',
         Parent: undefined,
         Partners: [],
-        status: 'abandoned',
+        status: "invalid",
         createBy: 'xxxx',
-        updateBy: null,
-        deleteBy: 'xxxx'
+        updateBy: 'xxxx',
+        deleteBy: undefined,
       },
       {
         Name: '东南亚区',
@@ -260,10 +262,10 @@ describe('分类数据', () => {
         }, {
           id: dats[2].id,
         }],
-        status: 'abandoned',
+        status: "invalid",
         createBy: 'xxxx',
-        updateBy: null,
-        deleteBy: 'xxxx'
+        updateBy: 'xxxx',
+        deleteBy: undefined,
       }
     ])
     console.log(JSON.stringify(depall, null, 2))
