@@ -1,4 +1,5 @@
 const {
+  BizError,
   Repository,
   CategoryDataService,
 } = require('../lib');
@@ -120,7 +121,9 @@ describe('分类数据', () => {
           id: categories[0].id
         }
       });
-    } catch (err) {}
+    } catch (err) {
+      expect(err).to.be.an.instanceof(BizError);
+    }
     expect(dit).to.be.undefined;
     expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
 
@@ -128,7 +131,7 @@ describe('分类数据', () => {
       Code: '001',
       Name: '供应商1',
       PartnerClass: {
-        id: categories[1].id
+        id: cn.id
       }
     }, {
       Code: '002',
@@ -144,36 +147,48 @@ describe('分类数据', () => {
       }
     });
     await PartnerRep.commitAll();
+    await PartnerCategoryRep.commitAll();
+    let cate_cn = await PartnerCategoryRep.get(cn.id);
+    expect(cate_cn.Partners.length).to.be.eql(3);
 
     expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
 
     console.log('----------------2-------------------')
+
     const remit1 = await categoryService.deleteData(dats[1].id);
+    // 不提交获取的也是对的
+    // await PartnerRep.commitAll();
+    // await PartnerCategoryRep.commitAll();
     expect(remit1).to.not.undefined;
+    cate_cn = await PartnerCategoryRep.get(cn.id);
+    expect(cate_cn.Partners.length).to.be.eql(2);
 
     let remit;
     try {
       // 有数据时，分类不能删除
-      remit = await categoryService.deleteCategory(categories[1].id);
-    } catch (err) {}
+      remit = await categoryService.deleteCategory(cn.id);
+    } catch (err) {
+      expect(err).to.be.a.instanceof(BizError);
+    }
     expect(remit).to.be.undefined;
 
     try {
       // 不是末级无数据的分类
       remit = await categoryService.deleteCategory(categories[0].id);
-    } catch (err) {}
+    } catch (err) {
+      expect(err).to.be.an.instanceof(BizError);
+    }
     expect(remit).to.be.undefined;
 
-    await categoryService.deleteCategory(cn.id);
+    remit = await categoryService.deleteCategory(categories[1].id);
+    expect(remit).to.not.undefined;
+
+    await PartnerRep.commitAll();
     await PartnerCategoryRep.commitAll();
     expect((await PartnerCategoryRep.getAll()).length).to.eql(4);
 
     console.log('----------------3-------------------')
-    const cateall = await PartnerCategoryRep.getAll();
-    const depall = await PartnerRep.getAll();
-    //console.log(cateall);
-
-    expect(cateall.sort((a, b) => a.Code - b.Code).map(({
+    const cateall = (await PartnerCategoryRep.getAll()).sort((a, b) => a.Code - b.Code).map(({
       Name,
       Code,
       Parent,
@@ -191,67 +206,81 @@ describe('分类数据', () => {
       createBy,
       updateBy,
       deleteBy,
-    }))).to.have.deep.members([{
-      //id: 'qTfZ3MwlM',
-      Name: '大中华区',
-      Code: '001',
-      Parent: undefined,
-      Partners: [],
+    }));
+    const depall = (await PartnerRep.getAll()).filter(s => s.status !== 'abandoned').sort((a, b) => a.Code - b.Code).map(({
+      Name,
+      Code,
+      PartnerClass,
+      id
+    }) => ({
+      Name,
+      Code,
+      PartnerClass,
+      id
+    }));
 
-      status: 'abandoned',
-      createBy: 'xxxx',
-      //createAt: 2019-08-27T05:24:25.286Z,
-      updateBy: null,
-      //updateAt: 2019-08-27T05:24:26.634Z,
-      deleteBy: 'xxxx',
-      //deleteAt: 2019-08-27T05:24:26.636Z,
-      //  ts: '1566883466634'
-    }, {
-      "Code": "002",
-      "Name": "东南亚区",
-      "Parent": null,
-      "Partners": [],
-      //"createAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
-      "createBy": "xxxx",
-      "deleteBy": undefined,
-      //"id": "xGnkwcKZWt",
-      "status": "invalid",
-      //"ts": "1566871163712",
-      //"updateAt": [Date: 2019 - 08 - 27 T01: 59: 23.713 Z],
-      "updateBy": "xxxx",
-    }, {
-      //id: 'Y6h6q9w63I',
-      Name: '欧美',
-      Code: '003',
-      Parent: undefined,
-      Partners: [],
-
-      status: 'invalid',
-      createBy: 'xxxx',
-      //  createAt: 2019-08-27T05:24:25.357Z,
-      updateBy: 'xxxx',
-      //  updateAt: 2019-08-27T05:24:25.357Z,
-      deleteBy: undefined,
-      //  ts: '1566883465356'
-    }, {
-      //  id: 'nEoxOe4u_K',
-      Name: '中国内地',
-      Code: '001001',
-      Parent: {
-        id: cn.id
+    expect(cateall).to.have.deep.members([{
+        Name: '大中华区',
+        Code: '001',
+        Parent: undefined,
+        Partners: [],
+        status: 'abandoned',
+        createBy: 'xxxx',
+        updateBy: null,
+        deleteBy: 'xxxx'
       },
-      Partners: [],
-
-      status: 'abandoned',
-      createBy: 'xxxx',
-      //  createAt: 2019-08-27T05:24:25.502Z,
-      updateBy: 'xxxx',
-      //  updateAt: 2019-08-27T05:24:26.217Z,
-      deleteBy: 'xxxx',
-      //  deleteAt: 2019-08-27T05:24:26.768Z,
-      //  ts: '1566883466217'
+      {
+        Name: '东南亚区',
+        Code: '002',
+        Parent: null,
+        Partners: [],
+        status: 'abandoned',
+        createBy: 'xxxx',
+        updateBy: null,
+        deleteBy: 'xxxx'
+      },
+      {
+        Name: '欧美',
+        Code: '003',
+        Parent: undefined,
+        Partners: [],
+        status: 'invalid',
+        createBy: 'xxxx',
+        updateBy: 'xxxx',
+        deleteBy: undefined
+      },
+      {
+        Name: '中国内地',
+        Code: '001001',
+        Parent: {
+          id: categories[0].id
+        },
+        Partners: [{
+          id: dats[0].id,
+        }, {
+          id: dats[2].id,
+        }],
+        status: 'abandoned',
+        createBy: 'xxxx',
+        updateBy: null,
+        deleteBy: 'xxxx'
+      }
+    ])
+    console.log(JSON.stringify(depall, null, 2))
+    expect(depall).to.be.eql([{
+      id: dats[0].id,
+      Code: '001',
+      Name: '供应商1',
+      PartnerClass: {
+        id: cn.id
+      }
+    }, {
+      id: dats[2].id,
+      Code: '003',
+      Name: '供应商3',
+      PartnerClass: {
+        id: cn.id
+      }
     }])
-    expect(depall).to.be.eql([]);
   })
-
 })
