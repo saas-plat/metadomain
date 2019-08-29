@@ -5,9 +5,9 @@ const {
 
 module.exports = MetaEntity.create(BaseData, 'Warehouse', {
   "Code": {
-    mapping: 'code'
+    _mapping: 'code'
   },
   "Name": {
-    mapping: 'name'
+    _mapping: 'name'
   },
 })
