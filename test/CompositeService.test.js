@@ -1,6 +1,7 @@
 const {
   Repository,
   CompositeService,
+  GenerateService,
 } = require('../lib');
 const {
   expect
@@ -27,24 +28,89 @@ describe('单据', () => {
     }
   }
 
+  const clear = async () => {
+    for (const key of Object.keys(getRep)) {
+      const snapshots = db.collection(key + '.snapshots');
+      const events = db.collection(key + '.events');
+      if (await events.count() > 0) {
+        await events.drop();
+        await snapshots.drop();
+        console.log('-------clear-------');
+      }
+    }
+  }
+
+  // 档案
+  let Partner;
+  let Department;
+  let Warehouse;
+  let ReciveType;
+  let Currency;
+  let VoucherState;
+  let BusinessType;
+
+  // 单据
+  let SaleOrder;
+  let SaleDelivery;
+  let ReceivePayment
+
+let  PartnerRepository;
+let  DepartmentRepository;
+let  WarehouseRepository;
+let  ReciveTypeRepository;
+let  CurrencyRepository;
+let  VoucherStateRepository;
+let  BusinessTypeRepository;
+let  SaleOrderRepository;
+let  SaleDeliveryRepository;
+let  ReceivePaymentRepository;
+
+  before(async () => {
+    Partner = require('./entities/Partner');
+    Department = require('./entities/Department');
+    Warehouse = require('./entities/Warehouse');
+    ReciveType = require('./entities/ReciveType');
+    Currency = require('./entities/Currency');
+    VoucherState = require('./entities/VoucherState');
+    BusinessType = require('./entities/BusinessType');
+
+    SaleOrder = require('./entities/SaleOrder');
+    SaleDelivery = require('./entities/SaleDelivery');
+    ReceivePayment = require('./entities/ReceivePayment');
+
+    PartnerRepository= await Repository.create(Partner),
+    DepartmentRepository= await Repository.create(Department),
+    WarehouseRepository= await Repository.create(Warehouse),
+    ReciveTypeRepository= await Repository.create(ReciveType),
+    CurrencyRepository= await Repository.create(Currency),
+    VoucherStateRepository= await Repository.create(VoucherState),
+    BusinessTypeRepository= await Repository.create(BusinessType),
+    SaleOrderRepository= await Repository.create(SaleOrder),
+    SaleDeliveryRepository= await Repository.create(SaleDelivery),
+    ReceivePaymentRepository= await Repository.create(ReceivePayment),
+
+    reps = {
+      Partner: PartnerRepository,
+      Department: DepartmentRepository,
+      Warehouse: WarehouseRepository,
+      ReciveType: ReciveTypeRepository,
+      Currency: CurrencyRepository,
+      VoucherState: VoucherStateRepository,
+      BusinessType: BusinessTypeRepository,
+      SaleOrder: SaleOrderRepository,
+      SaleDelivery: SaleDeliveryRepository,
+      ReceivePayment: ReceivePaymentRepository,
+    };
+
+    await clear();
+  })
+
   let order;
   let orderService;
 
- 
-
   it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
 
-    const SaleOrder = require('./entities/SaleOrder');
-    const SaleDelivery = require('./entities/SaleDelivery');
-    const ReceivePayment = require('./entities/ReceivePayment');
-
-    reps = {
-      SaleOrder: await Repository.create(SaleOrder),
-      SaleDelivery: await Repository.create(SaleDelivery),
-      ReceivePayment: await Repository.create(ReceivePayment),
-    };
-
-    const custId = await customerService.save({
+    const cust = (await PartnerRepository.create({
       "Code": "00000001",
       "Name": "广东JH",
       "priuserdefnvc1": "",
@@ -62,67 +128,64 @@ describe('单据', () => {
       "Representative": "",
       "District": null,
       "SaleCreditDays": null
-    }).id;
+    }));
 
-    const deptId = await departmentService.save({
+    const dept = (await DepartmentRepository.create({
       "Code": "83103",
       "Name": "市场一部"
-    }).id;
-    const clerkId = await clerkService.save({
+    }));
+    const clerk = (await PartnerRepository.create({
       "Code": "tplusdemo101",
       "Name": "tplusdemo101"
-    }).id;
-    const warehouseId = await warehouseService.save({
+    }));
+    const warehouse = (await WarehouseRepository.create({
       "Code": "00",
       "Name": "a"
-    }).id;
-    const reciveTypeId = await reciveTypeService.save({
+    }));
+    const reciveType = (await ReciveTypeRepository.create({
       "Code": "05",
       "Name": "其它"
-    }).id;
+    }));
 
-    const currencyId = await currencyService.save({
+    const currency = (await CurrencyRepository.create({
       "Code": "RMB",
       "Name": "人民币"
-    }).id;
+    }));
 
-    const voucherStateId = await voucherStateService.save({
+    const voucherState = (await VoucherStateRepository.create({
       "Code": "00",
       "Name": "未审"
-    }).id;
-    const businessTypeId = await businessTypeService.save({
+    }));
+    const businessType  = (await BusinessTypeRepository.create({
       "Code": "15",
       "Name": "普通销售"
-    }).id;
+    }));
+
+    //await commitAll();
+
     orderService = new CompositeService(SaleOrder, ctx, getRep);
-    const orderId = await orderService.save({
+      order = (await orderService.save({
       "Code": "SO-2019-08-0000000001-0054",
       "Status": 0,
-      "Customer": {
-        "id": custId,
-      },
+      "Customer": cust,
       "CustomerPhone": "123",
-      "SettleCustomer": {
-        "id": custId
-      },
+      "SettleCustomer": cust,
       "pubuserdefnvc1": null,
       "OrigEarnestMoney": 0,
-      "Department": {
-        "id": deptId,
-      },
+      "Department": dept,   // 支持对象
       "Clerk": {
-        "id": clerkId,
+        "id": clerk.id,   // 简化的对象id
       },
       "LinkMan": "123",
       "Warehouse": {
-        "id": warehouseId,
+        "id": warehouse.id,
       },
       "Address": "123",
       "Member": null,
       "Mobilephone": null,
       "DiscountRate": 1,
       "ReciveType": {
-        "id": reciveTypeId,
+        "id": reciveType.id,
       },
       "Project": null,
       "MemberAddress": null,
@@ -131,7 +194,7 @@ describe('单据', () => {
       "DeliveryDate": new Date(1, 0, 1, 0, 0, 0, 0),
       "ContactPhone": "",
       "Currency": {
-        "id": currencyId,
+        "id": currency.id,
       },
       "DeliveryMode": null,
       "ContractCode": null,
@@ -145,11 +208,11 @@ describe('单据', () => {
       "SourceVoucherCode": null,
       "collaborateVoucherCode": null,
       "VoucherState": {
-        "id": voucherStateId,
+        "id": voucherState.id,
       },
       "IsModifiedCode": false,
       "BusinessType": {
-        "id": businessTypeId,
+        "id": businessType.id,
       },
       "IsNoModify": null,
       "SourceVoucherId": null,
@@ -184,7 +247,7 @@ describe('单据', () => {
         $fields: ["Project", "Inventory", "Unit", "freeitem3", "Quantity", "SourceVoucherType", "PartnerInventoryName", "freeitem1", "freeitem0", "pubuserdefnvc4", "SourceVoucherCode", "PartnerInventoryCode", "InventoryBarCode", "DataSource", "SingleInvGrossProfit", "LatestCost", "IsPresent", "freeitem6", "freeitem7", "freeitem8", "freeitem9", "freeitem2", "freeitem4", "freeitem5", "UnitExchangeRate", "Quantity2", "Unit2", "Retailprice", "LatestPOrigTaxPrice", "LatestSaleOrigTaxPrice", "OrigDiscountAmount", "LowestSalePrice", "CompositionQuantity", "OrigTaxPrice", "OrigPrice", "OrigDiscountPrice", "TaxRate", "OrigDiscount", "DiscountRate", "OrigInvoiceTaxAmount", "OrigTaxAmount", "AvailableQuantity", "TaxPrice", "OrigTax", "ExistingQuantity", "priuserdefnvc4", "SourceVoucherId", "SourceVoucherDetailId", "GrossProfitRate", "TaxAmount", "AvailableCompositionQuantity", "DiscountPrice", "IsClose", "DiscountAmount", "Tax", "PriceStrategyTypeName", "Discount", "DeliveryDate", "Closer", "CloseDate", "GrossProfit", "PurchaseQuantity", "PurchaseQuantity2", "HasMRP", "Bom", "ExecutedQuantity", "ExecutedQuantity2", "ManufactureQuantity", "ManufactureQuantity2", "DistributionQuantity", "DistributionQuantity2", "TransferQuantity", "TransferQuantity2", "IsModifiedPrice", "TaxFlag", "LastModifiedField", "Code", "PriceStrategyTypeId", "PriceStrategySchemeIds", "PromotionVoucherIds", "IsMemberIntegral", "IsPromotionPresent", "idsaleOrderDTO", "IsNoModify", "PromotionPresentVoucherID", "PromotionPresentTypeID", "PromotionSingleTypeID", "PromotionSingleVoucherID", "ModifyFieldsForPromotion", "PromotionPresentVoucherCode", "PromotionSingleVoucherCode", "PromotionPresentGroupID", "PromotionSingleGroupID", "CashbackWay", "PromotionSingleVoucherTs", "SourceVoucherDetailTs", "SourceVoucherTs", "PromotionPresentVoucherTs", "HasPRA", "priuserdefdecm2", "ExistingCompositionQuantity", "PriceStrategySchemeNames", "PromotionVoucherCodes", "PromotionPresentBatchInfo", "PromotionPresentBatchType", "PromotionPriceBatchInfo", "PromotionPriceBatchType", "PromotionBatchMemo", "priuserdefnvc1", "priuserdefdecm1", "pubuserdefnvc1", "priuserdefnvc2", "priuserdefnvc3", "pubuserdefdecm2", "DetailMemo", "priuserdefdecm3", "priuserdefdecm4", "pubuserdefnvc3", "pubuserdefdecm3", "pubuserdefnvc2", "Warehouse", "Ts", "Status", "id"],
         $data: [
           [{
-              "id": 3643,
+              "id": '3643',
               "Code": "...1",
               "Name": "1-1-101",
               "DynamicPropertyKeys": ["priuserdefnvc4", "priuserdefnvc5", "priuserdefnvc2", "priuserdefnvc3", "priuserdefnvc1", "withoutbargain", "haseverchanged", "ismodifiedcode", "isbatch_dy", "isqualityperiod_dy", "issingleunit_dy", "islaborcost_dy", "notcheckcolbyinvprop", "issingle_dy", "isfix_dy", "idunit_dy", "rateofunitgroup_dy", "allrateofunitgroup_dy", "islocation_dy"],
@@ -217,7 +280,7 @@ describe('单据', () => {
               "priuserdefnvc5": "",
               "ProductInfo": null
             }, {
-              "id": 434,
+              "id": '434',
               "Code": "2",
               "Name": "平米"
             }, , 1, , , , , , , , "", {
@@ -226,15 +289,15 @@ describe('单据', () => {
               "Name": "PC"
             }, -276.8, 276.8, false, , , , , , , , 120, 0.008333,
             {
-              "id": 433,
+              "id": '433',
               "Code": "1",
               "Name": "套"
             }, ,
-            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(1, 0, 1, 0, 0, 0, 0), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1, "1平米/0.008333套", 1, , {
+            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(1, 0, 1, 0, 0, 0, 0), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1,, "1平米/0.008333套", 1, , {
               "id": 362,
               "Code": "00",
               "Name": "a"
-            }, "00000000098e3f45", 0, 10664
+            }, "00000000098e3f45", 0, '10664'
           ]
         ]
       },
@@ -242,7 +305,7 @@ describe('单据', () => {
         $fields: ["SettleStyle", "BankAccount", "Project", "OrigProjectAmount", "ProjectAmount", "OrigAmount", "Amount", "BillNo", "SourceVoucherId", "SourceVoucherDetailId", "Status", "id", "Code"],
         $data: [
           [{
-            "id": 15,
+            "id": '15',
             "Code": "997",
             "Name": "转账"
           }, {
@@ -253,25 +316,32 @@ describe('单据', () => {
           }, , 0, , 5000, 5000, , , , 0, 1390, ]
         ]
       }
-    }).id;
+    }));
     await commitAll();
 
     // 保存成功
     const orderRepository = getRep('SaleOrder');
-    order = await orderRepository.get(orderId);
-    expect(order).to.not.null;
-    console.log(saleDelivery)
+    order = await orderRepository.get(order.id);
+    console.log(order)
+    expect(order.SaleOrderDetails).to.be.deep.eql([{
+      "id": '10664',
+      "Project": {
+        "id": '3643',
+        "Code": "...1",
+        "Name": "1-1-101",
+      }
+    }])
 
     // 付款单不能自动生成，需要业务控制生单逻辑
     const generateService = new GenerateService(SaleOrder, ReceivePayment, ctx, getRep);
-    const newEntity = await generateService.generate(orderId);
+    const newEntity = await generateService.generate(order.id);
     expect(newEntity.constructor.name).to.be.eql('ReceivePayment');
 
     // 付款信息
     const receivePaymentRepository = getRep('ReceivePayment');
     const receivePayment = await receivePaymentRepository.get(orderService.newEntities[0].id);
     expect(receivePayment).to.not.null;
-    console.log(saleDelivery)
+    console.log(receivePayment)
   })
 
   it('采购订单，保存审核生效、【生成进货单】，保存审核', async () => {

@@ -4,8 +4,8 @@ const {
 } = require('../../lib');
 
 module.exports = MetaEntity.create(CategoryTree, 'PartnerCategory', {
-  "Name": {type:"string",mpaaing:'name'},
-  "Code": "string",
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
 
   "Parent": {
     type: 'reference',

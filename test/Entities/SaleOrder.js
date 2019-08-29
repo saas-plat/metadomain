@@ -131,8 +131,8 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
   "DynamicPropertyValues": ["string"],
 
   "DeleteID": "number",
-  "Name": "string",
-  "Code": "string",
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",

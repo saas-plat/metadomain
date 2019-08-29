@@ -3,14 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
-  "id": {
-    "Type": "number"
-  },
-  "Code": {
-    "Type": "string"
-  },
-  "Name": {
-    "Type": "string"
-  }
+module.exports = MetaEntity.create(BaseData, 'DeliveryMode', {
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
 })

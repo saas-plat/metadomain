@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
+module.exports = MetaEntity.create(BaseData, 'MarketingOrgan', {
   "Disabled": "bool",
   "Depth": "number",
   "CreatedTime": "date",
@@ -23,8 +23,8 @@ module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
   "DynamicPropertyValues": ["string"],
 
   "DeleteID": "number",
-  "Name": "string",
-  "Code": "string",
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",

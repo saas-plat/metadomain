@@ -5,8 +5,8 @@ const {
 
 // 订单
 module.exports = MetaEntity.create(LevelData, 'Department', {
-  "Code": 'string',
-  "Name": 'string',
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
   // "StoreType_Name": 'string',
   // "Person_Name": 'string',
   // "Warehouse_Name": 'string',
@@ -16,9 +16,17 @@ module.exports = MetaEntity.create(LevelData, 'Department', {
   // "Customer_Name": 'string',
   "Person": 'Person',
   "Warehouse": 'Warehouse',
-  "Department": 'Department',  // 父部门
-  "Customer": 'Customer',
-  "District": 'District'
+  "Department": {
+    type: 'Department',
+    mapping: 'parent'
+  }, // 父部门
+  "Customer": 'Partner',
+  "District": 'string',
+  "Departments": {
+    type: 'array',
+    subtype: 'Department',
+    mapping: 'childs'
+  },
 }, [`rule use_not_be_modify {
   when{
     a: Action a.name == 'save';

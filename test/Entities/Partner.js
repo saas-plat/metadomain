@@ -4,7 +4,8 @@ const {
 } = require('../../lib');
 
 module.exports = MetaEntity.create(CategoryData, 'Partner', {
-  "Name": {type:"string",mpaaing:'name'},
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
   "PartnerClass":  {type:'reference',src:'PartnerCategory',mapping:'category'},
 
   "PartnerAbbName": "string",
@@ -381,7 +382,7 @@ module.exports = MetaEntity.create(CategoryData, 'Partner', {
 
   "DeleteID": "number",
 
-  "Code": "string",
+
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",

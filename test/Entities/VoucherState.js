@@ -3,10 +3,10 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'PartnerCategory', {
+module.exports = MetaEntity.create(BaseData, 'VoucherState', {
 
-  "Code": "string",
-  "Name": "string",
+  "Code": {type:"string",mapping:'code'},
+  "Name": {type:"string",mapping:'name'},
   "Position": "number",
   "CustomUse": "bool",
   "IsDelete": "number",
