@@ -78,7 +78,7 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
   "IsAutoWarehouse": "bool",
   "InputDataSource": "string",
   "Closer": "string",
-  "CloseDate": "string",
+  "CloseDate": "date",
   "DataSource": {
 
     "Code": "string",
@@ -226,7 +226,7 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
     "PromotionPresentVoucherTs": "string",
     "IsClose": "bool",
     "Closer": "string",
-    "CloseDate": "string",
+    "CloseDate": "date",
     "PartnerInventoryCode": "string",
     "PartnerInventoryName": "string",
     "OldIdunit": "string",

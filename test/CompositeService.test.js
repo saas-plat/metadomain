@@ -3,6 +3,7 @@ const {
   CompositeService,
   GenerateService,
 } = require('../lib');
+const _ = require('lodash');
 const {
   expect
 } = require('chai');
@@ -54,21 +55,21 @@ describe('单据', () => {
   let SaleDelivery;
   let ReceivePayment
 
-let  PartnerRepository;
-let  DepartmentRepository;
-let  WarehouseRepository;
-let  ReciveTypeRepository;
-let  CurrencyRepository;
-let  VoucherStateRepository;
-let  BusinessTypeRepository;
-let  SaleOrderRepository;
-let  SaleDeliveryRepository;
-let  ReceivePaymentRepository;
+  let PartnerRepository;
+  let DepartmentRepository;
+  let WarehouseRepository;
+  let ReciveTypeRepository;
+  let CurrencyRepository;
+  let VoucherStateRepository;
+  let BusinessTypeRepository;
+  let SaleOrderRepository;
+  let SaleDeliveryRepository;
+  let ReceivePaymentRepository;
 
   before(async () => {
+    Warehouse = require('./entities/Warehouse');
     Partner = require('./entities/Partner');
     Department = require('./entities/Department');
-    Warehouse = require('./entities/Warehouse');
     ReciveType = require('./entities/ReciveType');
     Currency = require('./entities/Currency');
     VoucherState = require('./entities/VoucherState');
@@ -78,29 +79,29 @@ let  ReceivePaymentRepository;
     SaleDelivery = require('./entities/SaleDelivery');
     ReceivePayment = require('./entities/ReceivePayment');
 
-    PartnerRepository= await Repository.create(Partner),
-    DepartmentRepository= await Repository.create(Department),
-    WarehouseRepository= await Repository.create(Warehouse),
-    ReciveTypeRepository= await Repository.create(ReciveType),
-    CurrencyRepository= await Repository.create(Currency),
-    VoucherStateRepository= await Repository.create(VoucherState),
-    BusinessTypeRepository= await Repository.create(BusinessType),
-    SaleOrderRepository= await Repository.create(SaleOrder),
-    SaleDeliveryRepository= await Repository.create(SaleDelivery),
-    ReceivePaymentRepository= await Repository.create(ReceivePayment),
+    PartnerRepository = await Repository.create(Partner),
+      DepartmentRepository = await Repository.create(Department),
+      WarehouseRepository = await Repository.create(Warehouse),
+      ReciveTypeRepository = await Repository.create(ReciveType),
+      CurrencyRepository = await Repository.create(Currency),
+      VoucherStateRepository = await Repository.create(VoucherState),
+      BusinessTypeRepository = await Repository.create(BusinessType),
+      SaleOrderRepository = await Repository.create(SaleOrder),
+      SaleDeliveryRepository = await Repository.create(SaleDelivery),
+      ReceivePaymentRepository = await Repository.create(ReceivePayment),
 
-    reps = {
-      Partner: PartnerRepository,
-      Department: DepartmentRepository,
-      Warehouse: WarehouseRepository,
-      ReciveType: ReciveTypeRepository,
-      Currency: CurrencyRepository,
-      VoucherState: VoucherStateRepository,
-      BusinessType: BusinessTypeRepository,
-      SaleOrder: SaleOrderRepository,
-      SaleDelivery: SaleDeliveryRepository,
-      ReceivePayment: ReceivePaymentRepository,
-    };
+      reps = {
+        Partner: PartnerRepository,
+        Department: DepartmentRepository,
+        Warehouse: WarehouseRepository,
+        ReciveType: ReciveTypeRepository,
+        Currency: CurrencyRepository,
+        VoucherState: VoucherStateRepository,
+        BusinessType: BusinessTypeRepository,
+        SaleOrder: SaleOrderRepository,
+        SaleDelivery: SaleDeliveryRepository,
+        ReceivePayment: ReceivePaymentRepository,
+      };
 
     await clear();
   })
@@ -156,7 +157,7 @@ let  ReceivePaymentRepository;
       "Code": "00",
       "Name": "未审"
     }));
-    const businessType  = (await BusinessTypeRepository.create({
+    const businessType = (await BusinessTypeRepository.create({
       "Code": "15",
       "Name": "普通销售"
     }));
@@ -164,7 +165,7 @@ let  ReceivePaymentRepository;
     //await commitAll();
 
     orderService = new CompositeService(SaleOrder, ctx, getRep);
-      order = (await orderService.save({
+    order = (await orderService.save({
       "Code": "SO-2019-08-0000000001-0054",
       "Status": 0,
       "Customer": cust,
@@ -172,9 +173,9 @@ let  ReceivePaymentRepository;
       "SettleCustomer": cust,
       "pubuserdefnvc1": null,
       "OrigEarnestMoney": 0,
-      "Department": dept,   // 支持对象
+      "Department": dept, // 支持对象
       "Clerk": {
-        "id": clerk.id,   // 简化的对象id
+        "id": clerk.id, // 简化的对象id
       },
       "LinkMan": "123",
       "Warehouse": {
@@ -283,7 +284,7 @@ let  ReceivePaymentRepository;
               "id": '434',
               "Code": "2",
               "Name": "平米"
-            }, , 1, , , , , , , , "", {
+            }, , 1, , , , , , , , , "", {
               "id": "2498",
               "Code": "08",
               "Name": "PC"
@@ -293,7 +294,7 @@ let  ReceivePaymentRepository;
               "Code": "1",
               "Name": "套"
             }, ,
-            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(1, 0, 1, 0, 0, 0, 0), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1,, "1平米/0.008333套", 1, , {
+            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(1, 0, 1, 0, 0, 0, 0), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1, "1平米/0.008333套", 1, , {
               "id": 362,
               "Code": "00",
               "Name": "a"
@@ -322,15 +323,8 @@ let  ReceivePaymentRepository;
     // 保存成功
     const orderRepository = getRep('SaleOrder');
     order = await orderRepository.get(order.id);
-    console.log(order)
-    expect(order.SaleOrderDetails).to.be.deep.eql([{
-      "id": '10664',
-      "Project": {
-        "id": '3643',
-        "Code": "...1",
-        "Name": "1-1-101",
-      }
-    }])
+    //console.log(JSON.stringify(order,null,2))
+    expect(_.omitBy(order.toJS(), v => _.isUndefined(v))).to.be.deep.eql(require('./Datas/order'));
 
     // 付款单不能自动生成，需要业务控制生单逻辑
     const generateService = new GenerateService(SaleOrder, ReceivePayment, ctx, getRep);

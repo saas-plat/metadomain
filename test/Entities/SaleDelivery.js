@@ -14,189 +14,189 @@ module.exports = MetaEntity.create(CompositeData, 'SaleDelivery', {
     mapping: 'name'
   },
   "IsSeparateByWareHouse": {
-    "Type": "boolean"
+    "type": "boolean"
   },
   "OrigAllowances": {
-    "Type": "number"
+    "type": "number"
   },
 
   "RecivingMaturity": {
-    "Type": "date"
+    "type": "date"
   },
   "VoucherDate": {
-    "Type": "date"
+    "type": "date"
   },
   "OrigSettleAmount": {
-    "Type": "number"
+    "type": "number"
   },
   "Code": {
-    "Type": "string"
+    "type": "string"
   },
   "LinkMan": {
-    "Type": "string"
+    "type": "string"
   },
   "ContactPhone": {
-    "Type": "string"
+    "type": "string"
   },
   "IsAutoGenerateInvoice": {
-    "Type": "boolean"
+    "type": "boolean"
   },
   "Address": {
-    "Type": "string"
+    "type": "string"
   },
   "Memo": {
-    "Type": "string"
+    "type": "string"
   },
   "DeliveryDate": {
-    "Type": "date"
+    "type": "date"
   },
   "OrigTaxAmount": {
-    "Type": "number"
+    "type": "number"
   },
   "IdbusinessType": {
-    "Type": "number"
+    "type": "number"
   },
   "ExternalCode": {
-    "Type": "string"
+    "type": "string"
   },
   "ExternalVoucherCode": {
-    "Type": "string"
+    "type": "string"
   },
   "CustomerPhone": {
-    "Type": "string"
+    "type": "string"
   },
   "DynamicPropertyKeys": {
-    "Type": "array"
+    "type": "array"
   },
   "DynamicPropertyValues": {
-    "Type": "array"
+    "type": "array"
   },
   "Warehouse": {
-    "Type": "Warehouse",
+    "type": "Warehouse",
   },
   "Project": {
-    "Type": "Project",
+    "type": "Project",
   },
   "DeliveryMode": {
-    "Type": "DeliveryMode",
+    "type": "DeliveryMode",
   },
   "VoucherState": {
-    "Type": "VoucherState",
+    "type": "VoucherState",
   },
   "InvoiceType": {
-    "Type": "InvoiceType",
+    "type": "InvoiceType",
   },
   "Customer": {
-    "Type": "Customer",
+    "type": "Customer",
   },
   "SettleCustomer": {
-    "Type": "Customer",
+    "type": "Customer",
   },
   "Department": {
-    "Type": "Department",
+    "type": "Department",
   },
   "Clerk": {
-    "Type": "Clerk",
+    "type": "Clerk",
   },
   "SaleDeliveryDetails": {
-    "Type": "array",
-    "Fields": {
+    "type": "array",
+    "fields": {
       "ExistingQuantity": {
-        "Type": "number"
+        "type": "number"
       },
       "AvailableQuantity": {
-        "Type": "number"
+        "type": "number"
       },
       "PromotionPresentVoucherID": {
-        "Type": "number"
+        "type": "number"
       },
       "PromotionPresentTypeID": {
-        "Type": "number"
+        "type": "number"
       },
       "PromotionSingleTypeID": {
-        "Type": "number"
+        "type": "number"
       },
       "PromotionSingleVoucherID": {
-        "Type": "number"
+        "type": "number"
       },
       "PriceStrategyTypeId": {
-        "Type": "number"
+        "type": "number"
       },
       "OrigPrice": {
-        "Type": "number"
+        "type": "number"
       },
       "Quantity": {
-        "Type": "number"
+        "type": "number"
       },
       "Code": {
-        "Type": "string"
+        "type": "string"
       },
       "ID": {
-        "Type": "number"
+        "type": "number"
       },
       "OrigTaxAmount": {
-        "Type": "number"
+        "type": "number"
       },
       "SaleOrderDetailId": {
-        "Type": "number"
+        "type": "number"
       },
       "OrigTaxPrice": {
-        "Type": "number"
+        "type": "number"
       },
       "IsPresent": {
-        "Type": "boolean"
+        "type": "boolean"
       },
       "DetailMemo": {
-        "Type": "string"
+        "type": "string"
       },
       "LatestCost": {
-        "Type": "number"
+        "type": "number"
       },
       "LatestPOrigTaxPrice": {
-        "Type": "number"
+        "type": "number"
       },
       "LowestSalePrice": {
-        "Type": "number"
+        "type": "number"
       },
       "LatestSaleOrigTaxPrice": {
-        "Type": "number"
+        "type": "number"
       },
       "DynamicPropertyKeys": {
-        "Type": "array"
+        "type": "array"
       },
       "DynamicPropertyValues": {
-        "Type": "array"
+        "type": "array"
       },
       "Warehouse": {
-        "Type": "Warehouse",
+        "type": "Warehouse",
 
       },
       "Project": {
-        "Type": "Project",
+        "type": "Project",
 
       },
       "Inventory": {
-        "Type": "Inventory",
+        "type": "Inventory",
       },
       "Unit": {
-        "Type": "Unit",
+        "type": "Unit",
       }
     }
   },
   "SaleDeliverySettlements": {
-    "Type": "array",
-    "Fields": {
+    "type": "array",
+    "fields": {
       "ID": {
-        "Type": "number"
+        "type": "number"
       },
       "Code": {
-        "Type": "string"
+        "type": "string"
       },
       "SettleStyle": {
-        "Type": "SettleStyle",
+        "type": "SettleStyle",
       },
       "BankAccount": {
-        "Type": "BankAccount",
+        "type": "BankAccount",
       }
     }
   }
