@@ -57,14 +57,14 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
 
   "Currency": "Currency",
 
-  "Department": "string",
+  "Department": "Department",
   "BusinessType": "BusinessType",
   "SaleOrderInstallmentPlans": ["string"],
 
   "SourceVoucherType": "string",
 
   "SettleCustomer": "Partner",
-  "Warehouse": "string",
+  "Warehouse": "Warehouse",
 
   "IsNoModify": "string",
   "ReferenceCount": "number",

@@ -9,9 +9,11 @@ const cutObj = exports.cutObj = (target) => {
   } else if (_.isObject(target)) {
     const r = _.omitBy(_.mapValues(target, cutObj), (v, k) => {
       return !v || (['id', 'ts', 'createAt', 'updateAt', 'deleteAt'].indexOf(k) > -1)
-    }); 
+    });
     return r;
   } else if (target) {
     return target;
+  }else{
+    return null;
   }
 }

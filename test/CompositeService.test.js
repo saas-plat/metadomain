@@ -8,7 +8,9 @@ const {
   expect
 } = require('chai');
 const util = require('util');
-const {cutObj} = require('./util');
+const {
+  cutObj
+} = require('./util');
 
 describe('单据', () => {
 
@@ -325,8 +327,15 @@ describe('单据', () => {
     const orderRepository = getRep('SaleOrder');
     order = await orderRepository.get(order.id);
     //console.log(JSON.stringify(order,null,2))
-    require('fs').writeFileSync(__dirname + '/Datas/order.json',JSON.stringify(cutObj(order.toJS()),null,2));
+    require('fs').writeFileSync(__dirname + '/Datas/order.json', JSON.stringify(cutObj(order.toJS()), null, 2));
     expect(cutObj(order.toJS())).to.be.deep.eql(require('./Datas/order'));
+
+    await orderService.saveStatus({
+      id: order.id,
+      status: 'effective',
+      ts: order.ts
+    });
+    await commitAll();
 
     // 付款单不能自动生成，需要业务控制生单逻辑
     const generateService = new GenerateService(SaleOrder, ReceivePayment, ctx, getRep);
