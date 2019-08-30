@@ -238,7 +238,7 @@ describe('分类数据', () => {
         Partners: [],
         status: 'abandoned',
         createBy: 'xxxx',
-        updateBy: null,
+        updateBy: undefined,
         deleteBy: 'xxxx'
       },
       {
@@ -248,7 +248,7 @@ describe('分类数据', () => {
         Partners: [],
         status: 'invalid',
         createBy: 'xxxx',
-        updateBy: 'xxxx',
+        updateBy:undefined,
         deleteBy: undefined
       },
       {

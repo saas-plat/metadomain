@@ -98,14 +98,18 @@ describe('基础数据结构对象', () => {
       })
     });
 
+    let err = false;
     try {
       await warehouse.save({
         Name: 'test001',
         ts: warehouse.ts
       });
-      expect.fail();
+      err = true;
     } catch (err) {
 
+    }
+    if (err) {
+      expect.fail();
     }
     expect(onsaved).to.be.false;
 
@@ -115,9 +119,12 @@ describe('基础数据结构对象', () => {
         //Name: 'test001',
         ts: warehouse.ts
       });
-      expect.fail();
+      err = true;
     } catch (err) {
 
+    }
+    if (err) {
+      expect.fail();
     }
     expect(onsaved).to.be.false;
 
@@ -178,7 +185,7 @@ describe('基础数据结构对象', () => {
         "status": "invalid",
         // "ts": "1566284430126"
         // "updateAt": [Date: 2019-08-20T07:00:30.126Z]
-        "updateBy": 'user1',
+        "createBy": 'user1',
       },
       name: "created"
     }, {
@@ -200,8 +207,7 @@ describe('基础数据结构对象', () => {
       name: 'deleted',
       args: {
         //id: 'ZjEQMSG2T',
-        status: 'abandoned',
-        updateBy: null,
+        status: 'abandoned', 
         deleteBy: null
       }
     }]);
