@@ -252,6 +252,7 @@ describe('分类数据', () => {
         deleteBy: undefined
       },
       {
+        id: cn.id,
         Name: '中国内地',
         Code: '001001',
         Parent: {
