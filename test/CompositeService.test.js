@@ -41,7 +41,6 @@ describe('单据', () => {
       if (await events.count() > 0) {
         await events.drop();
         await snapshots.drop();
-        console.log('-------clear-------');
       }
     }
   }
@@ -274,8 +273,8 @@ describe('单据', () => {
     const orderRepository = getRep('SaleOrder');
     order = await orderRepository.get(order.id);
     //console.log(JSON.stringify(order,null,2))
-    require('fs').writeFileSync(__dirname + '/Datas/order.json', JSON.stringify(cutObj(order.toJS()), null, 2));
-    expect(cutObj(order.toJS())).to.be.deep.eql(require('./Datas/order'));
+    //require('fs').writeFileSync(__dirname + '/Datas/order.json', JSON.stringify(cutObj(order.toJS()), null, 2));
+    expect(JSON.parse(JSON.stringify(cutObj(order.toJS())))).to.be.deep.eql(require('./Datas/order.json'));
 
     await orderService.saveStatus({
       id: order.id,
@@ -302,7 +301,7 @@ describe('单据', () => {
     let saleDelivery = await generateService.generate(order.id);
     await commitAll();
     expect(saleDelivery).to.not.null;
-    const saleDeliveryService = new CompositeService(SaleDelivery, ctx, getRep);
+    const saleDeliveryService = new CompositeService(entities.SaleDelivery, ctx, getRep);
     await saleDeliveryService.saveStatus({
       id: saleDelivery.id,
       ts: saleDelivery.ts,
