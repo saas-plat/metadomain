@@ -47,4 +47,7 @@ describe('实体仓库', () => {
     expect(testRepository2.get(test2.id).orgid).to.be.eql('xxxxxx');
   });
 
+  it('测试快照保存和加载能力', async () => {
+
+  })
 })

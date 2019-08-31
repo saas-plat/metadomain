@@ -7,8 +7,22 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+const mongo = require('sourced-repo-mongo/mongo');
 
 describe('业务实体', () => {
+
+  before(async () => {
+    const db = mongo.db;
+    const keys = ['TestReference1', 'TestReference2', 'TestObj', 'TestObj2', 'MappingObj1'];
+    for (const key of keys) {
+      const snapshots = db.collection(key + '.snapshots');
+      const events = db.collection(key + '.events');
+      if (await events.count() > 0) {
+        await events.drop();
+        await snapshots.drop();
+      }
+    }
+  })
 
   it('创建一个业务实体,数据类型转换和规则检查', async () => {
     const TestReference1 = MetaEntity.create(BaseData, 'TestReference1', {
@@ -51,7 +65,7 @@ describe('业务实体', () => {
         "Value": "number",
         "REF2": 'TestReference2' // 数组中的引用
       }]
-    });
+    },null,null,()=>testRepository);
 
     const TestReference1Rep = await Repository.create(TestReference1);
     const TestReference2Rep = await Repository.create(TestReference2);
@@ -59,16 +73,19 @@ describe('业务实体', () => {
     const ref1 = await TestReference1.create();
     await ref1.save({
       Code: '10000',
+      updateBy: 'aa',
       ts: ref1.ts
     });
     const ref21 = await TestReference2.create();
     await ref21.save({
       Code: '10001',
+      updateBy: 'aa',
       ts: ref21.ts
     });
     const ref22 = await TestReference2.create();
     await ref22.save({
       Code: 'xxxxxxx',
+      updateBy: 'aa',
       ts: ref22.ts
     });
     await TestReference1Rep.commitAll(ref1);
@@ -78,6 +95,7 @@ describe('业务实体', () => {
     const test = await TestObj.create();
 
     await test.save({
+    updateBy: 'aa',
       Code: 'test001',
       Str1: 'abcxyz',
       Bool1: true,
@@ -134,19 +152,22 @@ describe('业务实体', () => {
     const test = await TestObj.create();
     await test.save({
       Code: 'xxxxxxxxx',
-      ts: test.ts
+      ts: test.ts,
+      updateBy: 'aa'
     });
     expect(test.Code).to.be.eql('xxxxxxxxx');
     // 默认自定义行为不修改数据
     await test.customAction('action1', {
       Code: 'bbbbbbbbbb',
-      ts: test.ts
+      ts: test.ts,
+      updateBy: 'aa'
     });
     expect(test.Code).to.be.eql('xxxxxxxxx');
 
     await test.customAction('action2', {
       Code: 'cccccccccc',
-      ts: test.ts
+      ts: test.ts,
+      updateBy: 'aa'
     });
     expect(test.Code).to.be.eql('cccccccccc');
     await testRepository.commitAll(test);
@@ -173,9 +194,11 @@ describe('业务实体', () => {
       ID: new Date().getTime().toString()
     });
     //console.log(111,test)
+    const {ID, ...props} = test;
     await test.save({
-      ...test,
+      ...props,
       Code: 'xxxxxxxxx',
+      updateBy: 'aa'
     });
     //console.log(111,test)
     expect(test.times).to.not.undefined;
@@ -193,14 +216,12 @@ describe('业务实体', () => {
       status: 'invalid',
       createBy: null,
       //createAt: 2019-08-24T00:44:28.521Z,
-      updateBy: null,
+      updateBy: 'aa',
       //updateAt: 2019-08-24T00:44:28.529Z,
       deleteBy: undefined,
       deleteAt: undefined
     })
   })
 
-  it('测试快照保存和加载能力', async () => {
 
-  })
 })
