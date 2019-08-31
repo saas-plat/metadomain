@@ -132,7 +132,8 @@ describe('基础数据结构对象', () => {
       Code: '001',
       Name: 'test001',
       //Persion: persion,
-      ts: warehouse.ts
+      ts: warehouse.ts,
+      updateBy: 'aaa'
     });
     //console.log(warehouse)
     await WarehouseRep.commitAll(warehouse);
@@ -145,7 +146,8 @@ describe('基础数据结构对象', () => {
     await warehouse.save({
       Address: 'xxxxxxxxxxxxxxxxxx',
       NONONO: '111',
-      ts: warehouse.ts
+      ts: warehouse.ts,
+      updateBy: 'aaa'
     });
     await WarehouseRep.commitAll(warehouse);
 
@@ -194,20 +196,20 @@ describe('基础数据结构对象', () => {
         //id: 'ZjEQMSG2T',
         Code: '001',
         Name: 'test001',
-        updateBy: null
+        updateBy: 'aaa'
       }
     }, {
       name: 'saved',
       args: {
         //id: 'ZjEQMSG2T',
         Address: 'xxxxxxxxxxxxxxxxxx',
-        updateBy: null
+        updateBy: 'aaa'
       }
     }, {
       name: 'deleted',
       args: {
         //id: 'ZjEQMSG2T',
-        status: 'abandoned', 
+        status: 'abandoned',
         deleteBy: null
       }
     }]);
@@ -314,6 +316,7 @@ describe('基础数据结构对象', () => {
     await department.save({
       Code: '111',
       Name: '111',
+      updateBy: 'aaa',
       ts: department.ts
     })
 
@@ -356,11 +359,13 @@ describe('基础数据结构对象', () => {
       "UuNo": "",
       "PostCode": "",
       "PostAddr": "",
+      updateBy: 'aaa',
       ts: persion.ts
     });
     await warehouseType.save({
       Code: 'type1',
       Name: 'type1',
+      updateBy: 'aaa',
       ts: warehouseType.ts
     })
     await WarehouseRep.commitAll(persion, warehouseType);
@@ -371,6 +376,7 @@ describe('基础数据结构对象', () => {
     await warehouse.save({
       Code: '001',
       Name: 'test001',
+      updateBy: 'aaa',
       Persion3: {
         id: persion.id
       },
