@@ -339,3 +339,5 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
   }],
 
 })
+
+//throw module.exports.fields.find(it=>it.key === 'SaleOrderDetails').fields

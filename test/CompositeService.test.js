@@ -11,6 +11,7 @@ const util = require('util');
 const {
   cutObj
 } = require('./util');
+const mongo = require('sourced-repo-mongo/mongo');
 
 describe('单据', () => {
 
@@ -21,7 +22,7 @@ describe('单据', () => {
   }
 
   let reps;
-
+  let entities;
   const getRep = name => reps[name];
 
   const commitAll = async () => {
@@ -33,7 +34,8 @@ describe('单据', () => {
   }
 
   const clear = async () => {
-    for (const key of Object.keys(getRep)) {
+    const db = mongo.db;
+    for (const key of Object.keys(reps)) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
@@ -44,68 +46,12 @@ describe('单据', () => {
     }
   }
 
-  // 档案
-  let Partner;
-  let Department;
-  let Warehouse;
-  let ReciveType;
-  let Currency;
-  let VoucherState;
-  let BusinessType;
-
-  // 单据
-  let SaleOrder;
-  let SaleDelivery;
-  let ReceivePayment
-
-  let PartnerRepository;
-  let DepartmentRepository;
-  let WarehouseRepository;
-  let ReciveTypeRepository;
-  let CurrencyRepository;
-  let VoucherStateRepository;
-  let BusinessTypeRepository;
-  let SaleOrderRepository;
-  let SaleDeliveryRepository;
-  let ReceivePaymentRepository;
-
   before(async () => {
-    Warehouse = require('./entities/Warehouse');
-    Partner = require('./entities/Partner');
-    Department = require('./entities/Department');
-    ReciveType = require('./entities/ReciveType');
-    Currency = require('./entities/Currency');
-    VoucherState = require('./entities/VoucherState');
-    BusinessType = require('./entities/BusinessType');
-
-    SaleOrder = require('./entities/SaleOrder');
-    SaleDelivery = require('./entities/SaleDelivery');
-    ReceivePayment = require('./entities/ReceivePayment');
-
-    PartnerRepository = await Repository.create(Partner),
-      DepartmentRepository = await Repository.create(Department),
-      WarehouseRepository = await Repository.create(Warehouse),
-      ReciveTypeRepository = await Repository.create(ReciveType),
-      CurrencyRepository = await Repository.create(Currency),
-      VoucherStateRepository = await Repository.create(VoucherState),
-      BusinessTypeRepository = await Repository.create(BusinessType),
-      SaleOrderRepository = await Repository.create(SaleOrder),
-      SaleDeliveryRepository = await Repository.create(SaleDelivery),
-      ReceivePaymentRepository = await Repository.create(ReceivePayment),
-
-      reps = {
-        Partner: PartnerRepository,
-        Department: DepartmentRepository,
-        Warehouse: WarehouseRepository,
-        ReciveType: ReciveTypeRepository,
-        Currency: CurrencyRepository,
-        VoucherState: VoucherStateRepository,
-        BusinessType: BusinessTypeRepository,
-        SaleOrder: SaleOrderRepository,
-        SaleDelivery: SaleDeliveryRepository,
-        ReceivePayment: ReceivePaymentRepository,
-      };
-
+    entities = require('./Entities');
+    reps = Object.keys(entities).reduce((ret, key) => ({
+      ...ret,
+      [key]: Repository.create(entities[key])
+    }), {});
     await clear();
   })
 
@@ -113,7 +59,7 @@ describe('单据', () => {
 
   it('创建采购订单，保存同时【生成订金的付款单】 ', async () => {
 
-    const cust = (await PartnerRepository.create({
+    const cust = (await (getRep('Partner')).create({
       "Code": "00000001",
       "Name": "广东JH",
       "priuserdefnvc1": "",
@@ -133,40 +79,40 @@ describe('单据', () => {
       "SaleCreditDays": null
     }));
 
-    const dept = (await DepartmentRepository.create({
+    const dept = (await getRep('Department').create({
       "Code": "83103",
       "Name": "市场一部"
     }));
-    const clerk = (await PartnerRepository.create({
+    const clerk = (await getRep('Partner').create({
       "Code": "tplusdemo101",
       "Name": "tplusdemo101"
     }));
-    const warehouse = (await WarehouseRepository.create({
+    const warehouse = (await getRep('Warehouse').create({
       "Code": "00",
       "Name": "a"
     }));
-    const reciveType = (await ReciveTypeRepository.create({
+    const reciveType = (await getRep('ReciveType').create({
       "Code": "05",
       "Name": "其它"
     }));
 
-    const currency = (await CurrencyRepository.create({
+    const currency = (await getRep('Currency').create({
       "Code": "RMB",
       "Name": "人民币"
     }));
 
-    const voucherState = (await VoucherStateRepository.create({
+    const voucherState = (await getRep('VoucherState').create({
       "Code": "00",
       "Name": "未审"
     }));
-    const businessType = (await BusinessTypeRepository.create({
+    const businessType = (await getRep('BusinessType').create({
       "Code": "15",
       "Name": "普通销售"
     }));
 
     //await commitAll();
 
-    const orderService = new CompositeService(SaleOrder, ctx, getRep);
+    const orderService = new CompositeService(entities.SaleOrder, ctx, getRep);
     order = (await orderService.save({
       "Code": "SO-2019-08-0000000001-0054",
       "Status": 0,
@@ -250,10 +196,12 @@ describe('单据', () => {
         $fields: ["Project", "Inventory", "Unit", "freeitem3", "Quantity", "SourceVoucherType", "PartnerInventoryName", "freeitem1", "freeitem0", "pubuserdefnvc4", "SourceVoucherCode", "PartnerInventoryCode", "InventoryBarCode", "DataSource", "SingleInvGrossProfit", "LatestCost", "IsPresent", "freeitem6", "freeitem7", "freeitem8", "freeitem9", "freeitem2", "freeitem4", "freeitem5", "UnitExchangeRate", "Quantity2", "Unit2", "Retailprice", "LatestPOrigTaxPrice", "LatestSaleOrigTaxPrice", "OrigDiscountAmount", "LowestSalePrice", "CompositionQuantity", "OrigTaxPrice", "OrigPrice", "OrigDiscountPrice", "TaxRate", "OrigDiscount", "DiscountRate", "OrigInvoiceTaxAmount", "OrigTaxAmount", "AvailableQuantity", "TaxPrice", "OrigTax", "ExistingQuantity", "priuserdefnvc4", "SourceVoucherId", "SourceVoucherDetailId", "GrossProfitRate", "TaxAmount", "AvailableCompositionQuantity", "DiscountPrice", "IsClose", "DiscountAmount", "Tax", "PriceStrategyTypeName", "Discount", "DeliveryDate", "Closer", "CloseDate", "GrossProfit", "PurchaseQuantity", "PurchaseQuantity2", "HasMRP", "Bom", "ExecutedQuantity", "ExecutedQuantity2", "ManufactureQuantity", "ManufactureQuantity2", "DistributionQuantity", "DistributionQuantity2", "TransferQuantity", "TransferQuantity2", "IsModifiedPrice", "TaxFlag", "LastModifiedField", "Code", "PriceStrategyTypeId", "PriceStrategySchemeIds", "PromotionVoucherIds", "IsMemberIntegral", "IsPromotionPresent", "idsaleOrderDTO", "IsNoModify", "PromotionPresentVoucherID", "PromotionPresentTypeID", "PromotionSingleTypeID", "PromotionSingleVoucherID", "ModifyFieldsForPromotion", "PromotionPresentVoucherCode", "PromotionSingleVoucherCode", "PromotionPresentGroupID", "PromotionSingleGroupID", "CashbackWay", "PromotionSingleVoucherTs", "SourceVoucherDetailTs", "SourceVoucherTs", "PromotionPresentVoucherTs", "HasPRA", "priuserdefdecm2", "ExistingCompositionQuantity", "PriceStrategySchemeNames", "PromotionVoucherCodes", "PromotionPresentBatchInfo", "PromotionPresentBatchType", "PromotionPriceBatchInfo", "PromotionPriceBatchType", "PromotionBatchMemo", "priuserdefnvc1", "priuserdefdecm1", "pubuserdefnvc1", "priuserdefnvc2", "priuserdefnvc3", "pubuserdefdecm2", "DetailMemo", "priuserdefdecm3", "priuserdefdecm4", "pubuserdefnvc3", "pubuserdefdecm3", "pubuserdefnvc2", "Warehouse", "Ts", "Status", "id"],
         $data: [
           [{
-              "id": '3643',
+            //  "id": '3643',
               "Code": "...1",
               "Name": "1-1-101",
-              "DynamicPropertyKeys": ["priuserdefnvc4", "priuserdefnvc5", "priuserdefnvc2", "priuserdefnvc3", "priuserdefnvc1", "withoutbargain", "haseverchanged", "ismodifiedcode", "isbatch_dy", "isqualityperiod_dy", "issingleunit_dy", "islaborcost_dy", "notcheckcolbyinvprop", "issingle_dy", "isfix_dy", "idunit_dy", "rateofunitgroup_dy", "allrateofunitgroup_dy", "islocation_dy"],
+              "DynamicPropertyKeys": ["priuserdefnvc4", "priuserdefnvc5", "priuserdefnvc2", "priuserdefnvc3", "priuserdefnvc1", "withoutbargain",
+              "haseverchanged", "ismodifiedcode", "isbatch_dy", "isqualityperiod_dy", "issingleunit_dy", "islaborcost_dy", "notcheckcolbyinvprop",
+              "issingle_dy", "isfix_dy", "idunit_dy", "rateofunitgroup_dy", "allrateofunitgroup_dy", "islocation_dy"],
               "DynamicPropertyValues": ["", "", "", "", "", 0, "1", 1, false, false, false, false, "Batch", true, false, "434", [{
                   "Name": "套",
                   "RateOfExchange": 120
@@ -282,8 +230,8 @@ describe('单据', () => {
               "priuserdefnvc4": "",
               "priuserdefnvc5": "",
               "ProductInfo": null
-            }, {
-              "id": '434',
+            }, ,{
+            //  "id": '434',
               "Code": "2",
               "Name": "平米"
             }, , 1, , , , , , , , , "", {
@@ -308,11 +256,11 @@ describe('单据', () => {
         $fields: ["SettleStyle", "BankAccount", "Project", "OrigProjectAmount", "ProjectAmount", "OrigAmount", "Amount", "BillNo", "SourceVoucherId", "SourceVoucherDetailId", "Status", "id", "Code"],
         $data: [
           [{
-            "id": '15',
+            //  "id": '15',
             "Code": "997",
             "Name": "转账"
           }, {
-            "id": 1,
+            //  "id": 1,
             "Code": "现金",
             "Name": "现金",
             "NewBalance": 5188.2
@@ -337,7 +285,7 @@ describe('单据', () => {
     await commitAll();
 
     // 付款单不能自动生成，需要业务控制生单逻辑
-    const generateService = new GenerateService(SaleOrder, ReceivePayment, ctx, getRep);
+    const generateService = new GenerateService(entities.SaleOrder, entities.ReceivePayment, ctx, getRep);
     const newEntity = await generateService.generate(order.id);
     expect(newEntity.constructor.name).to.be.eql('ReceivePayment');
 
@@ -350,7 +298,7 @@ describe('单据', () => {
 
   it('采购订单，保存审核生效、【生成进货单】，保存审核', async () => {
 
-    const generateService = new GenerateService(SaleOrder, SaleDelivery, ctx, getRep);
+    const generateService = new GenerateService(entities.SaleOrder, entities.SaleDelivery, ctx, getRep);
     let saleDelivery = await generateService.generate(order.id);
     await commitAll();
     expect(saleDelivery).to.not.null;
@@ -362,7 +310,7 @@ describe('单据', () => {
     });
     await commitAll();
     const SaleDeliveryRepository = getRep('SaleDelivery');
-    saleDelivery = await SaleDeliveryRepository.get(saleDelivery.id);
+    saleDelivery = await getRep('SaleDelivery').get(saleDelivery.id);
     expect(saleDelivery).to.not.null;
     console.log(saleDelivery)
   })
