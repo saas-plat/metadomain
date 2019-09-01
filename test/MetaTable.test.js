@@ -82,7 +82,7 @@ describe('数据表', () => {
 
   it('只创建一个Schame给gql生成类型用', async () => {
 
-    const DataTable1 = MetaTable.createSchame('DataTable1', {
+    const DataTable1 = MetaTable.createSchema('DataTable1', {
       "id": "string",
       "Code": "string",
       "Str1": {
