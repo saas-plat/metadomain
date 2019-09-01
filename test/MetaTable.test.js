@@ -56,7 +56,7 @@ describe('数据表', () => {
       }]
     });
     await dt1.save();
-    await DataTable1.commitAll();
+    //await DataTable1.commitAll();
 
     await DataTable1.findOneAndUpdate({
       id: 'aaaa'
