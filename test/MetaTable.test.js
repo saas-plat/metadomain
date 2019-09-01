@@ -35,12 +35,6 @@ describe('数据表', () => {
           "Name": "string"
         }
       }]
-    }, {
-      testid: 'xxxx'
-    }, {
-      on: (...args) => {
-        console.log(args)
-      }
     });
 
     const dt1 = new DataTable1({
