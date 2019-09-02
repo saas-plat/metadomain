@@ -8,8 +8,22 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+const mongo = require('sourced-repo-mongo/mongo');
 
 describe('数据迁移', () => {
+
+  before(async () => {
+    const db = mongo.db;
+    const keys = ['Department2', 'Warehouse2' ];
+    for (const key of keys) {
+      const snapshots = db.collection(key + '.snapshots');
+      const events = db.collection(key + '.events');
+      if (await events.count() > 0) {
+        await events.drop();
+        await snapshots.drop();
+      }
+    }
+  })
 
   const scope = {
     orgid: 'test001'
@@ -31,17 +45,20 @@ describe('数据迁移', () => {
     const d =await  Department2.create();
     await d.save({
       Code: '111',
-      Name: 'aaaaaaaaaa'
+      Name: 'aaaaaaaaaa',
+      ts: d.ts
     });
     const d2 =await  Department2.create();
     await d2.save({
       Code: '222',
-      Name: 'bbbbbbbb'
+      Name: 'bbbbbbbb',
+      ts: d2.ts
     });
     const d3 =await  Warehouse2.create();
     await d3.save({
       Code: 'qqqq',
-      Name: 'ccccccccc'
+      Name: 'ccccccccc',
+      ts: d3.ts
     });
     DepartmentRep.commitAll(d, d2, d3);
 
@@ -57,7 +74,7 @@ describe('数据迁移', () => {
     await migration.lock();
     await migration.up([Department2_v2, Warehouse2], [`rule update_sciprt1{
       when{
-        e: Event e.method == 'saved' && e.type == 'Department2';
+        e: Event e.name == 'saved' && e.type == 'Department2';
       }
       then{
           e.data.Code2 = e.data.Code+'xxxxx';

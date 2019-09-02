@@ -5,14 +5,27 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+const mongoose = require('mongoose');
 
 describe('明细汇总数据服务', () => {
+
+  before(async () => {
+    await mongoose.connection.dropCollection('SaleOrderSumTable');
+  })
 
   it('将业务实体按照明细维度进行保存，查询', async () => {
 
     const SaleOrderSumTable = require('./Tables/SaleOrderSumTable');
 
-    const sumservice = new SumTableService(SaleOrderSumTable);
+    const sumservice = new SumTableService(SaleOrderSumTable, {
+      idKey: 'ID',
+      detailKey: 'Details',
+      detailIdKey: 'ID',
+      detailMapping: {
+        InventoryName: 'Name',
+        InventoryCode: 'Code'
+      },
+    });
     await sumservice.onSaved({
       ID: 'aaaa',
       Name: 'test001',
