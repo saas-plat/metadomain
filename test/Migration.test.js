@@ -46,19 +46,22 @@ describe('数据迁移', () => {
     await d.save({
       Code: '111',
       Name: 'aaaaaaaaaa',
-      ts: d.ts
+      ts: d.ts,
+      updateBy: 'ccc'
     });
     const d2 =await  Department2.create();
     await d2.save({
       Code: '222',
       Name: 'bbbbbbbb',
-      ts: d2.ts
+      ts: d2.ts,
+      updateBy: 'ccc'
     });
     const d3 =await  Warehouse2.create();
     await d3.save({
       Code: 'qqqq',
       Name: 'ccccccccc',
-      ts: d3.ts
+      ts: d3.ts,
+      updateBy: 'ccc'
     });
     DepartmentRep.commitAll(d, d2, d3);
 

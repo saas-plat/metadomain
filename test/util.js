@@ -13,7 +13,13 @@ const cutObj = exports.cutObj = (target) => {
     return r;
   } else if (target) {
     return target;
-  }else{
+  } else {
     return null;
   }
+}
+
+const wait = exports.wait = (timeout = 0) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  })
 }

@@ -12,7 +12,6 @@ const mongo = require('sourced-repo-mongo/mongo');
 describe('分类数据', () => {
   before(async () => {
     const db = mongo.db;
-
     const keys = ['Partner', 'PartnerCategory'];
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
@@ -248,7 +247,7 @@ describe('分类数据', () => {
         Partners: [],
         status: 'invalid',
         createBy: 'xxxx',
-        updateBy:undefined,
+        updateBy: undefined,
         deleteBy: undefined
       },
       {
