@@ -11,36 +11,36 @@ describe('明细汇总数据服务', () => {
   it('将业务实体按照明细维度进行保存，查询', async () => {
 
     const SaleOrderSumTable = require('./Tables/SaleOrderSumTable');
-    
+
     const sumservice = new SumTableService(SaleOrderSumTable);
     await sumservice.onSaved({
-      id: 'aaaa',
+      ID: 'aaaa',
       Name: 'test001',
       Code: '0001',
-      details: [{
-        id: '001',
+      Details: [{
+        ID: '001',
         Name: 'aaaaaaaa'
       }, {
-        id: '002',
+        ID: '002',
         Name: 'bbbbbbbbbb'
       }, {
-        id: '003',
+        ID: '003',
         Name: 'cccccccccccccc'
       }],
-      ts: new Date().getTime().toString()
+      Ts: new Date().getTime().toString()
     });
 
     await sumservice.onSaved({
-      id: 'aaaa',
-      details: [{
-          id: '001',
+      ID: 'aaaa',
+      Details: [{
+          ID: '001',
         }, {
-          id: '002',
+          ID: '002',
           Name: 'bbbbbbbbbb22222222'
         }
         // 003被删除
       ],
-      ts: new Date().getTime().toString()
+      Ts: new Date().getTime().toString()
     });
 
   });
