@@ -12,6 +12,9 @@ const {
   cutObj
 } = require('./util');
 const mongo = require('sourced-repo-mongo/mongo');
+const {
+  wait
+} = require('./util');
 
 describe('单据', () => {
 
@@ -46,6 +49,9 @@ describe('单据', () => {
   }
 
   before(async () => {
+    console.log('wait...')
+    await wait(1000);
+
     entities = require('./Entities');
     reps = Object.keys(entities).reduce((ret, key) => ({
       ...ret,

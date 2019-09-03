@@ -14,7 +14,7 @@ describe('数据迁移', () => {
 
   before(async () => {
     const db = mongo.db;
-    const keys = ['Department2', 'Warehouse2' ];
+    const keys = ['Department2', 'Warehouse2'];
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
@@ -42,28 +42,28 @@ describe('数据迁移', () => {
     })
     const DepartmentRep = await Repository.create(Department2, scope);
     const WarehouseRep = await Repository.create(Warehouse2, scope);
-    const d =await  Department2.create();
+    const d = await Department2.create();
     await d.save({
       Code: '111',
       Name: 'aaaaaaaaaa',
       ts: d.ts,
       updateBy: 'ccc'
     });
-    const d2 =await  Department2.create();
+    const d2 = await Department2.create();
     await d2.save({
       Code: '222',
       Name: 'bbbbbbbb',
       ts: d2.ts,
       updateBy: 'ccc'
     });
-    const d3 =await  Warehouse2.create();
+    const d3 = await Warehouse2.create();
     await d3.save({
       Code: 'qqqq',
       Name: 'ccccccccc',
       ts: d3.ts,
       updateBy: 'ccc'
     });
-    DepartmentRep.commitAll(d, d2, d3);
+    await DepartmentRep.commitAll(d, d2, d3);
 
     // 修改schame
     const Department2_v2 = MetaEntity.create(BaseData, "Department2", {
@@ -75,22 +75,23 @@ describe('数据迁移', () => {
     // 通常对一个组织下的所有实体开始升级，升级时需要锁定数据提交
     const migration = new Migration(scope);
     await migration.lock();
-    await migration.up([Department2_v2, Warehouse2], [`rule update_sciprt1{
+    await migration.up(
+      [Department2_v2, Warehouse2], [`rule update_sciprt1{
       when{
-        e: Event e.name == 'saved' && e.type == 'Department2';
+        e: Action e.name == 'Department2.migrate' && e.event == 'saved';
       }
       then{
-          e.data.Code2 = e.data.Code+'xxxxx';
-          modify(e);
+          e.data.Name2 = e.data.Name+'xxxxx';
+          console.log('e.data.Name2 =',e.data.Name2);
       }
     }`]);
     await migration.unlock();
 
     // 检查升级效果
     const DepartmentRep_v2 = await Repository.create(Department2_v2, scope);
-    const d12 = DepartmentRep_v2.get(d.id);
+    const d12 = await DepartmentRep_v2.get(d.id);
     expect(d12.Code).to.be.eql(111);
-    expect(d12.Name2).to.be.eql('aaaaaaaaaa');
+    expect(d12.Name2).to.be.eql('aaaaaaaaaaxxxxx');
   })
 
   it('数据表字段修改和数据迁移', async () => {

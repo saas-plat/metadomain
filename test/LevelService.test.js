@@ -7,10 +7,16 @@ const {
 } = require('chai');
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
+const {
+  wait
+} = require('./util');
 
 describe('层级数据', () => {
 
   before(async () => {
+    console.log('wait...')
+    await wait(1000);
+
     const db = mongo.db;
     const snapshots = db.collection('Department.snapshots');
     const events = db.collection('Department.events');

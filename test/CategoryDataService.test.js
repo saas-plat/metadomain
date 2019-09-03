@@ -8,9 +8,15 @@ const {
 } = require('chai');
 const util = require('util');
 const mongo = require('sourced-repo-mongo/mongo');
+const {
+  wait
+} = require('./util');
 
 describe('分类数据', () => {
   before(async () => {
+    console.log('wait...')
+    await wait(1000);
+
     const db = mongo.db;
     const keys = ['Partner', 'PartnerCategory'];
     for (const key of keys) {

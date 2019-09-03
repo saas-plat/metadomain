@@ -2,4 +2,4 @@
 --bail
 --timeout 3000
 --require ./test/env.opts
- test/**/*.test.js
+ test/Mig*.test.js test/**/*.test.js
