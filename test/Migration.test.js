@@ -1,8 +1,12 @@
 const {
+  db,
   MetaEntity,
   BaseData,
   Repository,
-  Migration
+  Migration,
+  MetaTable,
+  BaseTable,
+  DataMigration
 } = require('../lib');
 const {
   expect
@@ -23,11 +27,16 @@ describe('数据迁移', () => {
         await snapshots.drop();
       }
     }
+    const tkeys = ['DataTable2'];
+    for (const key of tkeys) {
+      const tables = db.collection(key);
+      if (await tables.count() > 0) {
+        await tables.drop();
+      }
+    }
   })
 
-  const scope = {
-    orgid: 'test001'
-  }
+  const scope = 'test001'
 
   it('实体字段修改，增加、删除、更新类型', async () => {
 
@@ -73,8 +82,8 @@ describe('数据迁移', () => {
 
     // 给每个实体的event进行迁移， 每个实体可以写一个升级脚本
     // 通常对一个组织下的所有实体开始升级，升级时需要锁定数据提交
-    const migration = new Migration(scope);
-    await migration.lock();
+    const migration = new Migration();
+    await db.lock(scope);
     await migration.up(
       [Department2_v2, Warehouse2], [`rule update_sciprt1{
       when{
@@ -85,7 +94,7 @@ describe('数据迁移', () => {
           console.log('e.data.Name2 =',e.data.Name2);
       }
     }`]);
-    await migration.unlock();
+    await db.unlock(scope);
 
     // 检查升级效果
     const DepartmentRep_v2 = await Repository.create(Department2_v2, scope);
@@ -95,6 +104,81 @@ describe('数据迁移', () => {
   })
 
   it('数据表字段修改和数据迁移', async () => {
+    const DataTable = MetaTable.create(BaseTable, 'DataTable2', {
+      "id": "string",
+      "Code": "string",
+      "Str1": {
+        type: 'string',
+      },
+      "Date": "date",
+      "Value": {
+        type: 'number',
+      },
+      "Bool1": 'bool', // 布尔
+      "Ref": 'mixed',
+      "Obj1": { // 对象类型
+        "Code": "string",
+        "Name": "string"
+      },
+      'Details': [{ // 子表
+        "Value": "number",
+        "REF2": {
+          "id": "string",
+          "Code": "string",
+          "Name": "string"
+        }
+      }]
+    });
+
+    const dt1 = new DataTable({
+      id: 'aaaa',
+      Name: 'test001',
+      Str1: 'abcxyz',
+      Bool1: true,
+      Obj1: {
+        Code: 'eeeeeeeeee'
+      },
+      Ref1: {
+        id: '100'
+      },
+      Details: [{
+        REF2: {
+          id: 'xxxxx'
+        },
+        Value: 100
+      }]
+    });
+    await dt1.save();
+
+    // 修改schame
+    const DataTable2 = MetaTable.create(BaseTable, "DataTable2", {
+      "id": "string",
+      "Code": "string",
+      "Str1": {
+        type: 'string',
+      },
+    })
+
+    const migration = new DataMigration();
+    await db.lock(scope);
+    await migration.up(
+      [DataTable2], [`rule update_sciprt1{
+      when{
+        e: Action e.name == 'DataTable2.migrate' ;
+        d: Document  ;
+      }
+      then{
+          console.log(e.data);
+      }
+    }`]);
+    await db.unlock(scope);
+
+    // 检查升级效果
+    const d12 = await DataTable2.findOne({
+      id: dt1.id
+    });
+    expect(d12.Name).to.be.eql('test001');
+    expect(d12.Details).to.be.undefined;
 
   })
 
