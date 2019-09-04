@@ -23,15 +23,15 @@ describe('数据迁移', () => {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
-        await events.drop();
-        await snapshots.drop();
+        await events.deleteMany();
+        await snapshots.deleteMany();
       }
     }
     const tkeys = ['DataTable2'];
     for (const key of tkeys) {
       const tables = db.collection(key);
       if (await tables.count() > 0) {
-        await tables.drop();
+        await tables.deleteMany();
       }
     }
   })

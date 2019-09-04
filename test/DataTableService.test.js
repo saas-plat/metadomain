@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 describe('数据表存储服务', () => {
 
   before(async () => {
-   await mongoose.connection.dropCollection('WarehouseTable');
+   await mongoose.connection.db.collection('WarehouseTable').deleteMany();
   })
 
   it('接收业务对象(简单对象、层级关系对象、带分类列表对象、复合对象)事件生成数据对象，可以查询数据', async () => {

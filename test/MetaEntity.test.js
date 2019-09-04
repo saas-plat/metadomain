@@ -18,8 +18,8 @@ describe('业务实体', () => {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
-        await events.drop();
-        await snapshots.drop();
+        await events.deleteMany();
+        await snapshots.deleteMany();
       }
     }
   })
@@ -65,7 +65,9 @@ describe('业务实体', () => {
         "Value": "number",
         "REF2": 'TestReference2' // 数组中的引用
       }]
-    },null,null,()=>testRepository);
+    }, null, {
+      findRepository: () => testRepository
+    });
 
     const TestReference1Rep = await Repository.create(TestReference1);
     const TestReference2Rep = await Repository.create(TestReference2);
@@ -95,7 +97,7 @@ describe('业务实体', () => {
     const test = await TestObj.create();
 
     await test.save({
-    updateBy: 'aa',
+      updateBy: 'aa',
       Code: 'test001',
       Str1: 'abcxyz',
       Bool1: true,
@@ -139,13 +141,15 @@ describe('业务实体', () => {
          //modify(d);
       }
     }`], {
-      action1ed: (...args) => {
-        ec++;
-        console.log(...args);
-      },
-      action2ed: (...args) => {
-        ec++;
-        console.log(...args);
+      eventHandler: {
+        action1ed: (...args) => {
+          ec++;
+          console.log(...args);
+        },
+        action2ed: (...args) => {
+          ec++;
+          console.log(...args);
+        }
       }
     });
     const testRepository = await Repository.create(TestObj);
@@ -194,7 +198,10 @@ describe('业务实体', () => {
       ID: new Date().getTime().toString()
     });
     //console.log(111,test)
-    const {ID, ...props} = test;
+    const {
+      ID,
+      ...props
+    } = test;
     await test.save({
       ...props,
       Code: 'xxxxxxxxx',
@@ -222,6 +229,5 @@ describe('业务实体', () => {
       deleteAt: undefined
     })
   })
-
 
 })

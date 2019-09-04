@@ -15,15 +15,15 @@ describe('层级数据', () => {
 
   before(async () => {
     console.log('wait...')
-    await wait(1000);
+    //await wait(1000);
 
     const db = mongo.db;
     const snapshots = db.collection('Department.snapshots');
     const events = db.collection('Department.events');
     if ((await events.count()) > 0) {
       console.log('-------clear-------');
-      await events.drop();
-      await snapshots.drop();
+      await events.deleteMany();
+      await snapshots.deleteMany();
     }
   })
 

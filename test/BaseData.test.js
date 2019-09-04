@@ -21,8 +21,8 @@ describe('基础数据结构对象', () => {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
-        await events.drop();
-        await snapshots.drop();
+        await events.deleteMany();
+        await snapshots.deleteMany();
       }
     }
   })

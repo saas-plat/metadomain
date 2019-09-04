@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 describe('明细汇总数据服务', () => {
 
   before(async () => {
-    await mongoose.connection.dropCollection('SaleOrderSumTable');
+     await mongoose.connection.db.collection('SaleOrderSumTable').deleteMany();
   })
 
   it('将业务实体按照明细维度进行保存，查询', async () => {

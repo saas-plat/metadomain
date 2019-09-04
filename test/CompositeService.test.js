@@ -42,15 +42,15 @@ describe('单据', () => {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
-        await events.drop();
-        await snapshots.drop();
+        await events.deleteMany();
+        await snapshots.deleteMany();
       }
     }
   }
 
   before(async () => {
     console.log('wait...')
-    await wait(1000);
+    //await wait(1000);
 
     entities = require('./Entities');
     reps = Object.keys(entities).reduce((ret, key) => ({

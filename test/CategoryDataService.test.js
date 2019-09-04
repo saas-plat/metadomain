@@ -15,7 +15,7 @@ const {
 describe('分类数据', () => {
   before(async () => {
     console.log('wait...')
-    await wait(1000);
+    //await wait(1000);
 
     const db = mongo.db;
     const keys = ['Partner', 'PartnerCategory'];
@@ -23,8 +23,8 @@ describe('分类数据', () => {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
       if (await events.count() > 0) {
-        await events.drop();
-        await snapshots.drop();
+        await events.deleteMany();
+        await snapshots.deleteMany();
         console.log('-------clear-------');
       }
     }
