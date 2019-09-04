@@ -78,7 +78,7 @@ describe('数据迁移', () => {
     const Department2_v2 = MetaEntity.create(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
-    })
+    },null,{version:'v2'})
 
     // 给每个实体的event进行迁移， 每个实体可以写一个升级脚本
     // 通常对一个组织下的所有实体开始升级，升级时需要锁定数据提交
@@ -157,7 +157,7 @@ describe('数据迁移', () => {
       "Str1": {
         type: 'string',
       },
-    })
+    },null,{version:'v2'})
 
     const migration = new DataMigration();
     await db.lock(scope);
@@ -180,6 +180,12 @@ describe('数据迁移', () => {
     expect(d12.Name).to.be.eql('test001');
     expect(d12.Details).to.be.undefined;
 
+  })
+
+  it('升级时锁定禁止提交和修改数据表', async () => {
+  })
+
+  it('实体和数据表对象可以缓存，在版本更新后可以重建', async () => {
   })
 
 })

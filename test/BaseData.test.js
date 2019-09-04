@@ -69,12 +69,14 @@ describe('基础数据结构对象', () => {
         }
       }
     }`], {
-      on: (name, args) => {
-        console.log(name, args);
-        eventbus.push({
-          name,
-          args
-        })
+      eventHandler: {
+        on: (name, args) => {
+          console.log(name, args);
+          eventbus.push({
+            name,
+            args
+          })
+        }
       }
     });
 
