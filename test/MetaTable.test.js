@@ -6,10 +6,13 @@ const {
   expect
 } = require('chai');
 const util = require('util');
+const mongoose = require('mongoose');
 
 describe('数据表', () => {
 
   it('创建一个简单数据表，可以增删改数据', async () => {
+
+    await mongoose.connection.db.collection('DataTable1').deleteMany();
 
     const DataTable1 = MetaTable.create(BaseTable, 'DataTable1', {
       "id": "string",
@@ -81,6 +84,7 @@ describe('数据表', () => {
   });
 
   it('只创建一个Schame给gql生成类型用', async () => {
+    await mongoose.connection.db.collection('DataTable1').deleteMany();
 
     const DataTable1 = MetaTable.createSchema('DataTable1', {
       "id": "string",
@@ -109,4 +113,42 @@ describe('数据表', () => {
     });
 
   })
+
+  it('相同schema模型，不同租户需要通过集合隔离', async () => {
+
+    await mongoose.connection.db.collection('org001.SamellModel').deleteMany();
+    await mongoose.connection.db.collection('org002.SamellModel').deleteMany();
+
+    const schema = {
+      "Name": "string",
+    }
+
+    const SamellModel1 = MetaTable.create(BaseTable, 'SamellModel', schema, null, {
+      ns: 'org001'
+    });
+
+    await new SamellModel1({
+      Name: 'aaaaa',
+    }).save();
+
+    expect((await SamellModel1.find({
+      Name: 'aaaaa'
+    })).map(it => it.toObject())).to.be.eql([{
+      Name: 'aaaaa'
+    }])
+
+    const SamellModel2 = MetaTable.create(BaseTable, 'SamellModel', schema, null, {
+      ns: 'org002'
+    });
+
+    expect((await SamellModel1.find({
+      Name: 'aaaaa'
+    })).map(it => it.toObject())).to.be.eql([{
+      Name: 'aaaaa'
+    }])
+
+    expect((await SamellModel2.find({
+      Name: 'aaaaa'
+    })).map(it => it.toObject())).to.be.eql([])
+  });
 })

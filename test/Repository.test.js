@@ -39,7 +39,7 @@ describe('实体仓库', () => {
       ns: 'org002'
     });
 
-    const test = await TestObj.create();
+    const test = await testRepository1.create();
     await test.save({
       Code: 'test001',
       updateBy: 'aaa',
@@ -51,7 +51,7 @@ describe('实体仓库', () => {
     expect(await testRepository1.get(test.id)).to.not.null;
     expect(await testRepository2.get(test.id)).to.be.null;
 
-    const test2 = await TestObj.create();
+    const test2 = await testRepository2.create();
     await test2.save({
       orgid: 'xxxxxx',
       Code: 'test001',
@@ -77,7 +77,7 @@ describe('实体仓库', () => {
       snapshotFrequency: 5
     });
 
-    const test = await TestObj.create();
+    const test = await testRepository.create();
     for (let i = 0; i < 23; i++) {
       await test.save({
         Code: 'CODE_' + i,
