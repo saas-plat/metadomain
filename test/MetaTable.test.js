@@ -10,6 +10,42 @@ const mongoose = require('mongoose');
 
 describe('数据表', () => {
 
+  it('元数据定义，支持description等', async () => {
+
+    const TestModel = MetaTable.create(BaseTable, 'TestModel', {
+      "id": "string",
+      "Code": "string",
+      "Str1": {
+        type: 'string',
+        description: '这是一个字符串'
+      },
+      "Date": "date",
+      "Value": {
+        type: 'number',
+      },
+      "Bool1": 'bool', // 布尔
+      "Ref": 'mixed',
+      "Obj1": { // 对象类型
+        "Code": "string",
+        "Name": "string"
+      },
+      'Details': [{ // 子表
+        "Value": "number",
+        "REF2": {
+          "id": "string",
+          "Code": "string",
+          "Name": "string"
+        }
+      }]
+    }, null, {
+      description: '测试Model'
+    });
+    //const  {name, description, fields} = TestMode.schema.paths
+    expect(TestModel.schema.path('Str1').options.description).to.be.eq('这是一个字符串');
+    //console.log({name, description, fields})
+
+  });
+
   it('创建一个简单数据表，可以增删改数据', async () => {
 
     await mongoose.connection.db.collection('DataTable1').deleteMany();

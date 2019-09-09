@@ -40,6 +40,7 @@ describe('分类数据', () => {
     expect(PartnerCategory.fields.find(it => it.key === 'Partners')).to.be.eql({
       "key": "Partners",
       "src": "Partner",
+      "description":undefined,
       "index": undefined,
       "subtype": "reference",
       "type": "array",

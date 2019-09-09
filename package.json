@@ -1,7 +1,7 @@
 {
   "name": "saas-plat-domain",
-  "version": "1.0.1",
-  "description": "domain model",
+  "version": "1.0.2",
+  "description": "业务规则和数据规则引擎",
   "main": "lib/index.js",
   "scripts": {
     "pub": "npm publish --registry https://npm.saas-plat.com",
