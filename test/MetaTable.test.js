@@ -186,5 +186,68 @@ describe('数据表', () => {
     expect((await SamellModel2.find({
       Name: 'aaaaa'
     })).map(it => it.toObject())).to.be.eql([])
-  });
+  })
+
+  it('同时支持多版本的相同数据对象，相同版本采用继承后集合隔离', async () => {
+    process.env.TABLE_TIMEOUT = 3;
+
+    const VersionModel = MetaTable.create(BaseTable, 'VersionModel', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+    const VersionModel2 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+      name: 'string',
+      code: 'string'
+    }, {
+      version: '2'
+    });
+    const VersionModel1 = MetaTable.create(BaseTable, 'VersionModel', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+
+    expect(VersionModel).to.be.equal(VersionModel1);
+    expect(VersionModel).to.not.equal(VersionModel2);
+
+    const VersionModel_org001 = MetaTable.create(BaseTable, 'VersionModel', {
+      name: 'string'
+    }, null, {
+      version: '1',
+      ns: 'org001'
+    });
+
+    expect(VersionModel).to.not.equal(VersionModel_org001);
+    expect(VersionModel_org001).to.not.equal(VersionModel);
+
+    // 继承关系
+    //expect(VersionModel_org001).to.not.equal(VersionModel);
+
+    // 3s后回收
+    await util.wait(2000);
+    const VersionModel22 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+      name: 'string',
+      code: 'string'
+    }, {
+      version: '2'
+    });
+    await util.wait(2000);
+
+    const VersionModel11 = MetaTable.create(BaseTable, 'VersionModel', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+    const VersionModel222 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+      name: 'string',
+      code: 'string'
+    }, {
+      version: '2'
+    });
+    expect(VersionModel2).to.be.equal(VersionModel222);
+    expect(VersionModel).to.not.equal(VersionModel11);
+
+  })
+
 })

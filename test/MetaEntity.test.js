@@ -230,4 +230,57 @@ describe('业务实体', () => {
     })
   })
 
+  it('同时支持多版本的相同实体，相同版本实体共用', async () => {
+    process.env.ENTITY_TIMEOUT = 3;
+
+    const VerEntity = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+
+    const VerEntity2 = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string',
+      code: 'string'
+    }, null, {
+      version: '2'
+    });
+
+    const VerEntity1 = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+
+    expect(VerEntity).to.be.equal(VerEntity1);
+    expect(VerEntity).to.not.equal(VerEntity2);
+
+    // 3s后回收
+    await util.wait(2000);
+    const VerEntity22 = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string',
+      code: 'string'
+    }, null, {
+      version: '2'
+    });
+    await util.wait(2000);
+
+    const VerEntity11 = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string'
+    }, null, {
+      version: '1'
+    });
+
+    const VerEntity222 = MetaEntity.create(BaseData, 'VerEntity', {
+      name: 'string',
+      code: 'string'
+    }, null, {
+      version: '2'
+    });
+
+    expect(VerEntity).to.not.equal(VerEntity11);
+    expect(VerEntity2).to.be.equal(VerEntity222);
+
+  })
+
 })

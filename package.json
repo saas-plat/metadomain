@@ -30,6 +30,7 @@
     "mongodb": "^3.0.1",
     "mongoose": "^5.6.9",
     "mongoose-autopopulate": "^0.9.1",
+    "node-cache": "^4.2.1",
     "nools": "^0.4.4",
     "shortid": "^2.2.13",
     "sourced": "^0.1.4",
