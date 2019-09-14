@@ -15,8 +15,10 @@ describe('数据表存储服务', () => {
 
   it('实体数据对象可以进行引用保存和自动填充查询', async () => {
     const WarehouseTable = require('./Tables/WarehouseTable');
-    const SaleOrderTable = require('./Tables/SaleOrderTable');
     const BankAccountTable = require('./Tables/BankAccountTable');
+    const SaleOrderTable = require('./Tables/SaleOrderTable')({
+      populateService: name => models[name]
+    });
     const warehouseService = new DataTableService(WarehouseTable);
     const warehouse = await warehouseService.onSaved({
       ID: 'aaaa001',
@@ -48,10 +50,15 @@ describe('数据表存储服务', () => {
         }
       }]
     });
+    throw 1
     let doc = await SaleOrderTable.findOne({
       id: 'aaaa001'
-    }).populate('Warehouse').populate('BankAccount');
+    });
+    let docs = await SaleOrderTable.find({
+      id: 'aaaa001'
+    });
     console.log(doc.toObject())
+    expect(docs.length).to.be.eql(1);
     expect(doc.toObject()).to.be.eql({
       ID: 'aaaa001',
       Name: 'test001',

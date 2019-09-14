@@ -3,7 +3,7 @@ const {
   DataTable,
 } = require('../../lib');
 // 订单
-module.exports =  MetaTable.create(DataTable, 'SaleOrder', {
+module.exports = (options)=> MetaTable.create(DataTable, 'SaleOrderTable', {
   "Mobilephone": "string",
   "Memberaddress": "string",
   "DeliveryDate": "date",
@@ -338,6 +338,6 @@ module.exports =  MetaTable.create(DataTable, 'SaleOrder', {
     "data": "mixed"
   }],
 
-})
+}, null, options)
 
 //throw module.exports.fields.find(it=>it.key === 'SaleOrderDetails').fields
