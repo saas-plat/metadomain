@@ -26,7 +26,7 @@ describe('实体仓库', () => {
 
   it('实体可以设置读取范围，一个组织只能操作一个组织内的实体', async () => {
 
-    const TestObj = MetaEntity.create(BaseData, 'TestObj2', {
+    const TestObj = MetaEntity.create(BaseData, 'TestObj200', {
       "orgid": "string",
       "Code": "string"
     });
