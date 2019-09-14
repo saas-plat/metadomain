@@ -1,11 +1,12 @@
 const {
   BaseTable,
+  TableCache,
   MetaTable
 } = require('../lib');
 const {
   expect
 } = require('chai');
-const util = require('util');
+const util = require('./util');
 const mongoose = require('mongoose');
 
 describe('数据表', () => {
@@ -188,18 +189,17 @@ describe('数据表', () => {
     })).map(it => it.toObject())).to.be.eql([])
   })
 
-  it('同时支持多版本的相同数据对象，相同版本采用继承后集合隔离', async () => {
-    process.env.TABLE_TIMEOUT = 3;
+  it('同时支持多版本的相同数据对象，相同版本采用存储隔离', async () => {
 
     const VersionModel = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string'
     }, null, {
       version: '1'
     });
-    const VersionModel2 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+    const VersionModel2 = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string',
       code: 'string'
-    }, {
+    }, null, {
       version: '2'
     });
     const VersionModel1 = MetaTable.create(BaseTable, 'VersionModel', {
@@ -224,12 +224,15 @@ describe('数据表', () => {
     // 继承关系
     //expect(VersionModel_org001).to.not.equal(VersionModel);
 
+    TableCache.ttl('VersionModel_1', 3);
+    TableCache.ttl('VersionModel_2', 3);
+
     // 3s后回收
     await util.wait(2000);
-    const VersionModel22 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+    const VersionModel22 = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string',
       code: 'string'
-    }, {
+    }, null, {
       version: '2'
     });
     await util.wait(2000);
@@ -239,10 +242,10 @@ describe('数据表', () => {
     }, null, {
       version: '1'
     });
-    const VersionModel222 = MetaTable.create(BaseTable, 'VersionModel', schema, {
+    const VersionModel222 = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string',
       code: 'string'
-    }, {
+    }, null, {
       version: '2'
     });
     expect(VersionModel2).to.be.equal(VersionModel222);

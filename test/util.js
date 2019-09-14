@@ -19,6 +19,7 @@ const cutObj = exports.cutObj = (target) => {
 }
 
 const wait = exports.wait = (timeout = 0) => {
+  console.log('waiting...', timeout);
   return new Promise(resolve => {
     setTimeout(resolve, timeout);
   })

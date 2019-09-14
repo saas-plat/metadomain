@@ -54,12 +54,13 @@ describe('实体仓库', () => {
     const test2 = await testRepository2.create();
     await test2.save({
       orgid: 'xxxxxx',
-      Code: 'test001',
+      Code: 'test002',
       updateBy: 'aaa',
       ts: test2.ts
     });
     await testRepository2.commitAll(test2);
 
+    //console.log(await testRepository2.get(test2.id))
     expect(await testRepository1.get(test2.id)).to.be.null;
     expect(await testRepository2.get(test2.id)).to.not.null;
     expect((await testRepository2.get(test2.id)).orgid).to.be.eql('xxxxxx');

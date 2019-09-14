@@ -1,12 +1,13 @@
 const {
   BaseData,
   MetaEntity,
+  EntityCache,
   Repository
 } = require('../lib');
 const {
   expect
 } = require('chai');
-const util = require('util');
+const util = require('./util');
 const mongo = require('sourced-repo-mongo/mongo');
 
 describe('业务实体', () => {
@@ -231,7 +232,6 @@ describe('业务实体', () => {
   })
 
   it('同时支持多版本的相同实体，相同版本实体共用', async () => {
-    process.env.ENTITY_TIMEOUT = 3;
 
     const VerEntity = MetaEntity.create(BaseData, 'VerEntity', {
       name: 'string'
@@ -254,6 +254,9 @@ describe('业务实体', () => {
 
     expect(VerEntity).to.be.equal(VerEntity1);
     expect(VerEntity).to.not.equal(VerEntity2);
+
+    EntityCache.ttl('VerEntity_1',3);
+    EntityCache.ttl('VerEntity_2',3);
 
     // 3s后回收
     await util.wait(2000);

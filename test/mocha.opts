@@ -1,5 +1,5 @@
 --recursive
 --bail
---timeout 3000
+--timeout 5000
 --require ./test/env.opts
 test/common* test/Meta* test/Repository*  test/Migr* test/**/*.test.js
