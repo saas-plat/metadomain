@@ -7,7 +7,7 @@ const {
 const util = require('util');
 const mongoose = require('mongoose');
 
-describe('数据表存储服务', () => {
+describe('数据表基础服务', () => {
 
   before(async () => {
    await mongoose.connection.db.collection('WarehouseTable').deleteMany();

@@ -3,7 +3,7 @@ const {
   SumTable,
 } = require('../../lib');
 
-module.exports = MetaTable.create(SumTable, 'WarehouseTable', {
+module.exports = MetaTable.create(SumTable, 'SaleOrderSumTable', {
   ID: {
     type: 'string',
     mapping: 'id'

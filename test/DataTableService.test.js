@@ -50,25 +50,28 @@ describe('数据表存储服务', () => {
         }
       }]
     });
-    throw 1
     let doc = await SaleOrderTable.findOne({
       id: 'aaaa001'
     });
     let docs = await SaleOrderTable.find({
       id: 'aaaa001'
     });
-    console.log(doc.toObject())
+    // console.log(doc.toObject())
     expect(docs.length).to.be.eql(1);
     expect(doc.toObject()).to.be.eql({
-      ID: 'aaaa001',
+      id: 'aaaa001',
       Name: 'test001',
       Code: '0001',
       Warehouse: {
-        ID: warehouse.ID
+        ID: warehouse.ID,
+        "Code": "0001",
+        "Name": "test001",
       },
       Subscriptions: [{
         BankAccount: {
-          id: bankAccount.id
+          id: bankAccount.id,
+            "Code": "002",
+            "Name": "bbbbb",
         }
       }]
     });
