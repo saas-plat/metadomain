@@ -17,7 +17,7 @@ describe('数据表存储服务', () => {
     const WarehouseTable = require('./Tables/WarehouseTable');
     const BankAccountTable = require('./Tables/BankAccountTable');
     const SaleOrderTable = require('./Tables/SaleOrderTable')({
-      populateService: name => models[name]
+      populateReferences: true
     });
     const warehouseService = new DataTableService(WarehouseTable);
     const warehouse = await warehouseService.onSaved({
@@ -70,8 +70,8 @@ describe('数据表存储服务', () => {
       Subscriptions: [{
         BankAccount: {
           id: bankAccount.id,
-            "Code": "002",
-            "Name": "bbbbb",
+          "Code": "002",
+          "Name": "bbbbb",
         }
       }]
     });
