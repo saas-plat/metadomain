@@ -81,6 +81,8 @@ describe('数据表存储服务', () => {
 
   it('测试不同租户相同数据对象，后加装的租户数据对象不会填充成【之前】租户的数据', async () => {
     const exeScope = async (ns, version) => {
+      console.log(ns, version, '...')
+
       const WarehouseTable = require('./Tables/WarehouseTable')({
         ns,
         version,
@@ -121,6 +123,8 @@ describe('数据表存储服务', () => {
           }
         }]
       });
+
+      console.log(ns, version, 'end')
     }
 
     await exeScope('aaa', '1');
@@ -130,14 +134,15 @@ describe('数据表存储服务', () => {
 
     const SaleOrderTable = require('./Tables/SaleOrderTable')({
       populateReferences: true,
-      getReferenceVersion: () => version,
+      getReferenceVersion: () => '1',
       version:'1',
       ns:'bbb'
     });
+    console.log('-------------')
     let docs = await SaleOrderTable.find({
       id: 'bbb001'
     });
-    expect(doc.toObject()).to.be.eql({
+    expect(docs[0].toObject()).to.be.eql({
       id: 'bbb001',
       Name: 'test001',
       Code: '0001',

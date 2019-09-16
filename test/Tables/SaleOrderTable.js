@@ -99,7 +99,7 @@ module.exports = (options)=> MetaTable.create(DataTable, 'SaleOrderTable', {
 
   "Member": "string",
   "DetailFieldNames": ["string"],
-  "VoucherState": "VoucherState",
+  "VoucherState": "VoucherState",      // 未赋值的引用
   "VoucherDate": "date",
   "IsCarriedForwardOut": "bool",
   "IsCarriedForwardIn": "bool",
