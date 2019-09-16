@@ -1,10 +1,10 @@
 {
   "name": "saas-plat-domain",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "业务规则和数据规则引擎",
   "main": "lib/index.js",
   "scripts": {
-    "pub": "npm publish --registry https://npm.saas-plat.com",
+    "pub": "gulp",
     "test": "cross-env NODE_ENV=test mocha",
     "watch": "cross-env NODE_ENV=test DEBUG=saas-plat*,-not_this mocha --watch",
     "test_d": "cross-env NODE_ENV=test DEBUG=saas-plat*,sourced-repo-mongo*,-not_this mocha"
@@ -39,6 +39,9 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "cross-env": "^5.2.0",
-    "mocha": "^4.0.1"
+    "gitane": "^0.3.2",
+    "gulp": "^3.9.1",
+    "mocha": "^4.0.1",
+    "run-sequence": "^2.2.1"
   }
 }
