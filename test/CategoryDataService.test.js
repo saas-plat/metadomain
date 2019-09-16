@@ -35,7 +35,7 @@ describe('分类数据', () => {
       id: 'xxxx'
     };
 
-    const PartnerCategory = require('./entities/PartnerCategory');
+    const PartnerCategory = require('./Entities/PartnerCategory');
     expect(PartnerCategory.references).to.have.property('Parent');
     expect(PartnerCategory.fields.find(it => it.key === 'Partners')).to.be.eql({
       "key": "Partners",
@@ -55,7 +55,7 @@ describe('分类数据', () => {
     // 数组必须是[]结尾
     expect(PartnerCategory.references).to.have.property('Partners[]');
 
-    const Partner = require('./entities/Partner');
+    const Partner = require('./Entities/Partner');
     const PartnerCategoryRep = await Repository.create(PartnerCategory);
     const PartnerRep = await Repository.create(Partner);
     const reps = {
