@@ -142,6 +142,7 @@ describe('数据表存储服务', () => {
     let docs = await SaleOrderTable.find({
       id: 'bbb001'
     });
+    expect(docs.length).to.be.eql(1);
     expect(docs[0].toObject()).to.be.eql({
       id: 'bbb001',
       Name: 'test001',
