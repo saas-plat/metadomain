@@ -145,7 +145,7 @@ describe('单据', () => {
       "MemberAddress": null,
       "IdCollaborateUpVoucherType": null,
       "IdCollaborateUpVoucher": null,
-      "DeliveryDate": new Date(1, 0, 1, 0, 0, 0, 0),
+      "DeliveryDate": new Date(Date.UTC(1, 0, 1, 0, 0, 0, 0)),
       "ContactPhone": "",
       "Currency": {
         "id": currency.id,
@@ -156,7 +156,7 @@ describe('单据', () => {
       "SourceVoucherType": null,
       "IsAutoGenerateSaleOrderBOM": false,
       "IsAutoGenerateRouting": false,
-      "VoucherDate": new Date(2019, 7, 5, 0, 0, 0, 0),
+      "VoucherDate": new Date(Date.UTC(2019, 7, 5, 0, 0, 0, 0)),
       "DirectCallSource": null,
       "ExternalVoucherCode": null,
       "SourceVoucherCode": null,
@@ -190,11 +190,11 @@ describe('单据', () => {
       "Memo": "",
       "MakerId": 810,
       "Reviser": null,
-      "AuditedDate": new Date(1, 0, 1, 0, 0, 0, 0),
+      "AuditedDate": new Date(Date.UTC(1, 0, 1, 0, 0, 0, 0)),
       "Auditor": null,
       "PrintCount": 0,
       "Changer": null,
-      "ChangeDate": new Date(1, 0, 1, 0, 0, 0, 0),
+      "ChangeDate": new Date(Date.UTC(1, 0, 1, 0, 0, 0, 0)),
       "Closer": null,
       "CloseDate": null,
       "SaleOrderDetails": {
@@ -249,7 +249,7 @@ describe('单据', () => {
               "Code": "1",
               "Name": "套"
             }, ,
-            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(1, 0, 1, 0, 0, 0, 0), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1, "1平米/0.008333套", 1, , {
+            1000, 5, 0, , "1平米/0.008333套", 0, , 0, 0.03, , 1, , 0, , 0, 0, , , , , , 0, , 0, false, 0, 0, "", 0, new Date(Date.UTC(1, 0, 1, 0, 0, 0, 0)), , , -276.8, , , , , , , , , , , , , false, false, , "0000", , "", "", false, false, 7470, , , , , , , "", "", , , , , , , , false, 0, , "", "", "", "", "", "", "", , 0, , , , , , 0, 1, "1平米/0.008333套", 1, , {
               "id": 362,
               "Code": "00",
               "Name": "a"
@@ -280,7 +280,7 @@ describe('单据', () => {
     order = await orderRepository.get(order.id);
     //console.log(JSON.stringify(order,null,2))
     //require('fs').writeFileSync(__dirname + '/Datas/order.json', JSON.stringify(cutObj(order.toJS()), null, 2));
-    expect(JSON.parse(JSON.stringify(cutObj(order.toJS())))).to.be.deep.eql(require('./Datas/order.json'));
+    expect(cutObj(order.toJS())).to.be.deep.eql(require('./Datas/order'));
 
     await orderService.saveStatus({
       id: order.id,

@@ -255,18 +255,18 @@ describe('业务实体', () => {
     expect(VerEntity).to.be.equal(VerEntity1);
     expect(VerEntity).to.not.equal(VerEntity2);
 
-    EntityCache.ttl('VerEntity_1',3);
-    EntityCache.ttl('VerEntity_2',3);
+    EntityCache.ttl('VerEntity_1',0.3);
+    EntityCache.ttl('VerEntity_2',0.3);
 
     // 3s后回收
-    await util.wait(2000);
+    await util.wait(200);
     const VerEntity22 = MetaEntity.create(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
     }, null, {
       version: '2'
     });
-    await util.wait(2000);
+    await util.wait(200);
 
     const VerEntity11 = MetaEntity.create(BaseData, 'VerEntity', {
       name: 'string'

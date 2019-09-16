@@ -224,18 +224,18 @@ describe('数据表', () => {
     // 继承关系
     //expect(VersionModel_org001).to.not.equal(VersionModel);
 
-    TableCache.ttl('VersionModel_1', 3);
-    TableCache.ttl('VersionModel_2', 3);
+    TableCache.ttl('VersionModel_1', .3);
+    TableCache.ttl('VersionModel_2', .3);
 
     // 3s后回收
-    await util.wait(2000);
+    await util.wait(200);
     const VersionModel22 = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string',
       code: 'string'
     }, null, {
       version: '2'
     });
-    await util.wait(2000);
+    await util.wait(200);
 
     const VersionModel11 = MetaTable.create(BaseTable, 'VersionModel', {
       name: 'string'

@@ -225,7 +225,7 @@ module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
     "PromotionSingleVoucherTs": "string",
     "PromotionPresentVoucherTs": "string",
     "IsClose": "bool",
-    "Closer": "string",
+    "Closer": "date",
     "CloseDate": "date",
     "PartnerInventoryCode": "string",
     "PartnerInventoryName": "string",

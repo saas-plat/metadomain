@@ -62,6 +62,8 @@ describe('数据表存储服务', () => {
       id: 'aaaa001',
       Name: 'test001',
       Code: '0001',
+      "DataSource": {},
+      "DirectCallSource": {},
       Warehouse: {
         ID: warehouse.ID,
         "Code": "0001",
