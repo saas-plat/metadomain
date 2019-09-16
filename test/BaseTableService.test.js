@@ -14,7 +14,7 @@ describe('数据表基础服务', () => {
   })
 
   it('接收业务对象(简单对象、层级关系对象、带分类列表对象、复合对象)事件生成数据对象，可以查询数据', async () => {
-    const WarehouseTable = require('./Tables/WarehouseTable');
+    const WarehouseTable = require('./Tables/WarehouseTable')();
     const service = new DataTableService(WarehouseTable);
     await service.onSaved({
       ID: 'aaaa001',
