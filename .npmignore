@@ -32,3 +32,4 @@ output.tar.gz
 
 test/
 .*
+gulpfile.js
