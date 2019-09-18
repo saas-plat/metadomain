@@ -110,6 +110,12 @@ gulp.task('push_tag', (cb) =>{
    }
 });
 
+gulp.task('copy', (cb) =>{
+  const output = process.env.COPYTO;
+  return gulp.src('lib/**/*.js')
+    .pipe(gulp.dest(output));
+})
+
 gulp.task('default', (cb)=>
   runSequence(
     'get_project',
