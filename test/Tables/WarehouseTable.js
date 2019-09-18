@@ -6,7 +6,7 @@ const {
 module.exports = (options)=> MetaTable.create(DataTable, 'WarehouseTable', {
 	ID: {
 		type: 'string',
-		mapping: 'id'
+		mapping: 'entityId'
 	},
   Name: 'string',
   Code: {
