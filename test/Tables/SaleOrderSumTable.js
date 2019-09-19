@@ -6,7 +6,7 @@ const {
 module.exports = MetaTable.create(SumTable, 'SaleOrderSumTable', {
   ID: {
     type: 'string',
-    mapping: 'entityId'
+    mapping: 'id'
   },
   Name: 'string',
   Code: 'string',
