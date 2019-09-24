@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 describe('数据表存储服务', () => {
 
   before(async () => {
-    await mongoose.connection.db.collection('SaleOrderTable').deleteMany();
+    await mongoose.connection.db.collection('SaleOrderTable.tables').deleteMany();
   })
 
   it('实体数据对象可以进行引用保存和自动填充查询', async () => {

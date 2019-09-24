@@ -49,7 +49,7 @@ describe('数据表', () => {
 
   it('创建一个简单数据表，可以增删改数据', async () => {
 
-    await mongoose.connection.db.collection('DataTable1').deleteMany();
+    await mongoose.connection.db.collection('DataTable1.tables').deleteMany();
 
     const DataTable1 = MetaTable.create(BaseTable, 'DataTable1', {
       "id": "string",
@@ -121,7 +121,7 @@ describe('数据表', () => {
   });
 
   it('只创建一个Schame给gql生成类型用', async () => {
-    await mongoose.connection.db.collection('DataTable1').deleteMany();
+    await mongoose.connection.db.collection('DataTable1.tables').deleteMany();
 
     const DataTable1 = MetaTable.createSchema('DataTable1', {
       "id": "string",
@@ -153,8 +153,8 @@ describe('数据表', () => {
 
   it('相同schema模型，不同租户需要通过集合隔离', async () => {
 
-    await mongoose.connection.db.collection('org001.SamellModel').deleteMany();
-    await mongoose.connection.db.collection('org002.SamellModel').deleteMany();
+    await mongoose.connection.db.collection('org001.SamellModel.tables').deleteMany();
+    await mongoose.connection.db.collection('org002.SamellModel.tables').deleteMany();
 
     const schema = {
       "Name": "string",
@@ -167,6 +167,8 @@ describe('数据表', () => {
     await new SamellModel1({
       Name: 'aaaaa',
     }).save();
+
+    console.log('----------------')
 
     expect((await SamellModel1.find({
       Name: 'aaaaa'

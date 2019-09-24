@@ -29,7 +29,7 @@ describe('数据迁移', () => {
     }
     const tkeys = ['DataTable2'];
     for (const key of tkeys) {
-      const tables = db.collection(key);
+      const tables = db.collection(key + '.tables');
       if (await tables.count() > 0) {
         await tables.deleteMany();
       }
