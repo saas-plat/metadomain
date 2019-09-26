@@ -47,10 +47,13 @@ describe('实体仓库', () => {
     });
     await testRepository1.commitAll(test);
 
+    console.log('-------commit all----------')
+
     // 不能读取其他组织的实体
     expect(await testRepository1.get(test.id)).to.not.null;
     expect(await testRepository2.get(test.id)).to.be.null;
 
+    console.log('-------create 2----------')
     const test2 = await testRepository2.create();
     await test2.save({
       orgid: 'xxxxxx',
