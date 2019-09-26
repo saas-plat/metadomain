@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "pub": "gulp",
-    "dev": "cross-env COPYTO=../saas-plat-query/node_modules/saas-plat-domain/lib/ gulp copy",
+    "dev": "cross-env COPYTO=../saas-plat-command/node_modules/saas-plat-domain/lib/ gulp copy",
     "test": "cross-env NODE_ENV=test mocha",
     "watch": "cross-env NODE_ENV=test DEBUG=saas-plat*,-not_this mocha --watch",
     "test_d": "cross-env NODE_ENV=test DEBUG=saas-plat*,sourced-repo-mongo*,-not_this mocha"
