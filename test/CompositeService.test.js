@@ -201,12 +201,13 @@ describe('单据', () => {
         $fields: ["Project", "Inventory", "Unit", "freeitem3", "Quantity", "SourceVoucherType", "PartnerInventoryName", "freeitem1", "freeitem0", "pubuserdefnvc4", "SourceVoucherCode", "PartnerInventoryCode", "InventoryBarCode", "DataSource", "SingleInvGrossProfit", "LatestCost", "IsPresent", "freeitem6", "freeitem7", "freeitem8", "freeitem9", "freeitem2", "freeitem4", "freeitem5", "UnitExchangeRate", "Quantity2", "Unit2", "Retailprice", "LatestPOrigTaxPrice", "LatestSaleOrigTaxPrice", "OrigDiscountAmount", "LowestSalePrice", "CompositionQuantity", "OrigTaxPrice", "OrigPrice", "OrigDiscountPrice", "TaxRate", "OrigDiscount", "DiscountRate", "OrigInvoiceTaxAmount", "OrigTaxAmount", "AvailableQuantity", "TaxPrice", "OrigTax", "ExistingQuantity", "priuserdefnvc4", "SourceVoucherId", "SourceVoucherDetailId", "GrossProfitRate", "TaxAmount", "AvailableCompositionQuantity", "DiscountPrice", "IsClose", "DiscountAmount", "Tax", "PriceStrategyTypeName", "Discount", "DeliveryDate", "Closer", "CloseDate", "GrossProfit", "PurchaseQuantity", "PurchaseQuantity2", "HasMRP", "Bom", "ExecutedQuantity", "ExecutedQuantity2", "ManufactureQuantity", "ManufactureQuantity2", "DistributionQuantity", "DistributionQuantity2", "TransferQuantity", "TransferQuantity2", "IsModifiedPrice", "TaxFlag", "LastModifiedField", "Code", "PriceStrategyTypeId", "PriceStrategySchemeIds", "PromotionVoucherIds", "IsMemberIntegral", "IsPromotionPresent", "idsaleOrderDTO", "IsNoModify", "PromotionPresentVoucherID", "PromotionPresentTypeID", "PromotionSingleTypeID", "PromotionSingleVoucherID", "ModifyFieldsForPromotion", "PromotionPresentVoucherCode", "PromotionSingleVoucherCode", "PromotionPresentGroupID", "PromotionSingleGroupID", "CashbackWay", "PromotionSingleVoucherTs", "SourceVoucherDetailTs", "SourceVoucherTs", "PromotionPresentVoucherTs", "HasPRA", "priuserdefdecm2", "ExistingCompositionQuantity", "PriceStrategySchemeNames", "PromotionVoucherCodes", "PromotionPresentBatchInfo", "PromotionPresentBatchType", "PromotionPriceBatchInfo", "PromotionPriceBatchType", "PromotionBatchMemo", "priuserdefnvc1", "priuserdefdecm1", "pubuserdefnvc1", "priuserdefnvc2", "priuserdefnvc3", "pubuserdefdecm2", "DetailMemo", "priuserdefdecm3", "priuserdefdecm4", "pubuserdefnvc3", "pubuserdefdecm3", "pubuserdefnvc2", "Warehouse", "Ts", "Status", "id"],
         $data: [
           [{
-            //  "id": '3643',
+              //  "id": '3643',
               "Code": "...1",
               "Name": "1-1-101",
               "DynamicPropertyKeys": ["priuserdefnvc4", "priuserdefnvc5", "priuserdefnvc2", "priuserdefnvc3", "priuserdefnvc1", "withoutbargain",
-              "haseverchanged", "ismodifiedcode", "isbatch_dy", "isqualityperiod_dy", "issingleunit_dy", "islaborcost_dy", "notcheckcolbyinvprop",
-              "issingle_dy", "isfix_dy", "idunit_dy", "rateofunitgroup_dy", "allrateofunitgroup_dy", "islocation_dy"],
+                "haseverchanged", "ismodifiedcode", "isbatch_dy", "isqualityperiod_dy", "issingleunit_dy", "islaborcost_dy", "notcheckcolbyinvprop",
+                "issingle_dy", "isfix_dy", "idunit_dy", "rateofunitgroup_dy", "allrateofunitgroup_dy", "islocation_dy"
+              ],
               "DynamicPropertyValues": ["", "", "", "", "", 0, "1", 1, false, false, false, false, "Batch", true, false, "434", [{
                   "Name": "套",
                   "RateOfExchange": 120
@@ -235,8 +236,8 @@ describe('单据', () => {
               "priuserdefnvc4": "",
               "priuserdefnvc5": "",
               "ProductInfo": null
-            }, ,{
-            //  "id": '434',
+            }, , {
+              //  "id": '434',
               "Code": "2",
               "Name": "平米"
             }, , 1, , , , , , , , , "", {
@@ -290,7 +291,8 @@ describe('单据', () => {
     await commitAll();
 
     // 付款单不能自动生成，需要业务控制生单逻辑
-    const generateService = new GenerateService(entities.SaleOrder, entities.ReceivePayment, ctx, getRep);
+    const generateService = new GenerateService(new CompositeService(entities.SaleOrder, ctx, getRep),
+      new CompositeService(entities.ReceivePayment, ctx, getRep));
     const newEntity = await generateService.generate(order.id);
     expect(newEntity.constructor.name).to.be.eql('ReceivePayment');
 
@@ -303,7 +305,8 @@ describe('单据', () => {
 
   it('采购订单，保存审核生效、【生成进货单】，保存审核', async () => {
 
-    const generateService = new GenerateService(entities.SaleOrder, entities.SaleDelivery, ctx, getRep);
+    const generateService = new GenerateService(new CompositeService(entities.SaleOrder, ctx, getRep),
+      new CompositeService(entities.SaleDelivery, ctx, getRep));
     let saleDelivery = await generateService.generate(order.id);
     await commitAll();
     expect(saleDelivery).to.not.null;
