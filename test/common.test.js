@@ -2,15 +2,17 @@ const {
   connect,
   disconnect
 } = require('../lib/db');
-const {MetaTable} = require('../lib/MetaTable');
-
 
 before(async () => {
-  await connect();
-  await MetaTable.connect();
+  await connect({
+    data: true,
+    entity: true
+  });
 })
 
 after(async () => {
-  await setTimeout(async () => await MetaTable.disconnect(), 100)
-  await setTimeout(async () => await disconnect(), 100)
+  await setTimeout(async () => await disconnect({
+    data: true,
+    entity: true
+  }), 100)
 })
