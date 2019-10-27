@@ -211,4 +211,69 @@ describe('数据迁移', () => {
   it('数据表更新，拆分多个表，或合并一张表', async () => {
 
   })
+
+  it('备份升级失败后可以恢复正常使用', async () => {
+    const Department2 = MetaEntity.create(BaseData, "Department2", {
+      "Code": "number",
+      "Name2": "string"
+    }, null, {
+      version: 'v2'
+    })
+    const Warehouse2 = MetaEntity.create(BaseData, "Warehouse2", {
+      "Code": "string",
+      "Name": "string"
+    })
+
+    const DataTable2 = MetaTable.create(BaseTable, "DataTable2", {
+      "id": "string",
+      "Code": "string",
+      "Obj1": {
+        "Code": "string",
+        "Name2": "string"
+      },
+      'Details': [{ // 子表
+        "REF": {
+          "Name": "string"
+        }
+      }]
+    }, null, {
+      version: 'v2'
+    })
+
+    const migration = new Migration();
+    migration.backup([Department2_v2, Warehouse2]);
+    try {
+      await migration.up(
+        [Department2_v2, Warehouse2], [`rule update_sciprt1{
+      when{
+        e: Action e.name == 'Department2.migrate' && e.event == 'saved';
+      }
+      then{
+         throw 'error'
+      }
+    }`]);
+    } catch (err) {
+      await migration.rollback();
+    }
+
+    const datamigration = new DataMigration();
+    migration.backup([DataTable2]);
+    try {
+      await datamigration.up(
+        [DataTable2], [`rule update_sciprt1{
+      when{
+        e: Action e.name == 'DataTable2.migrate' ;
+        d: Document  ;
+      }
+      then{
+        throw 'error'
+      }
+    }`]);
+    } catch (err) {
+      await migration.rollback();
+    }
+
+  const DepartmentRep = await Repository.create(Department2, scope);
+  
+  })
 })
