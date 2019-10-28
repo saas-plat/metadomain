@@ -84,10 +84,9 @@ describe('数据迁移', () => {
 
     // 给每个实体的event进行迁移， 每个实体可以写一个升级脚本
     // 通常对一个组织下的所有实体开始升级，升级时需要锁定数据提交
-    const migration = new Migration();
+    const migration = new Migration(Department2_v2, Warehouse2);
     await db.lock(scope);
-    await migration.up(
-      [Department2_v2, Warehouse2], [`rule update_sciprt1{
+    await migration.up([`rule update_sciprt1{
       when{
         e: Action e.name == 'Department2.migrate' && e.event == 'saved';
       }
@@ -172,10 +171,10 @@ describe('数据迁移', () => {
       version: 'v2'
     })
 
-    const migration = new DataMigration();
+    const migration = new DataMigration(DataTable2);
     await db.lock(scope);
     await migration.up(
-      [DataTable2], [`rule update_sciprt1{
+      [`rule update_sciprt1{
       when{
         e: Action e.name == 'DataTable2.migrate' ;
         d: Document  ;
@@ -202,7 +201,7 @@ describe('数据迁移', () => {
 
   it('升级时锁定禁止提交和修改数据表', async () => {})
 
-  it('实体和数据表对象可以缓存，在版本更新后可以重建', async () => {})
+  // it('实体和数据表对象可以缓存，在版本更新后可以重建', async () => {})
 
   it('实体版本更新，由一个实体拆分多个实体，或有多个实体合并成一个实体', async () => {
 
@@ -213,6 +212,25 @@ describe('数据迁移', () => {
   })
 
   it('备份升级失败后可以恢复正常使用', async () => {
+    const Department1 = MetaEntity.create(BaseData, "Department2", {
+      "Code": "string",
+      "Name": "string"
+    })
+    const DepartmentRep = await Repository.create(Department1, scope);
+    const d = await Department1.create({
+      Code: '000',
+      Name: 'aaaaaaaaaa'
+    });
+    for (let i = 0; i < 20; i++) {
+      await d.save({
+        Code: '00' + i,
+        ts: d.ts,
+        updateBy: 'ccc'
+      });
+    }
+    await DepartmentRep.commitAll(d);
+
+    // ----------- v2 ---------------
     const Department2 = MetaEntity.create(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
@@ -240,11 +258,10 @@ describe('数据迁移', () => {
       version: 'v2'
     })
 
-    const migration = new Migration();
-    migration.backup([Department2_v2, Warehouse2]);
+    const migration = new Migration(Department2, Warehouse2);
+    await migration.backup();
     try {
-      await migration.up(
-        [Department2_v2, Warehouse2], [`rule update_sciprt1{
+      await migration.up([`rule update_sciprt1{
       when{
         e: Action e.name == 'Department2.migrate' && e.event == 'saved';
       }
@@ -253,27 +270,30 @@ describe('数据迁移', () => {
       }
     }`]);
     } catch (err) {
+      console.log(err)
       await migration.rollback();
     }
 
-    const datamigration = new DataMigration();
-    migration.backup([DataTable2]);
+    const datamigration = new DataMigration(DataTable2);
+    await datamigration.backup();
     try {
       await datamigration.up(
         [DataTable2], [`rule update_sciprt1{
       when{
-        e: Action e.name == 'DataTable2.migrate' ;
-        d: Document  ;
+        e: Action e.name == 'DataTable2.migrate';
+        d: Document;
       }
       then{
         throw 'error'
       }
     }`]);
     } catch (err) {
-      await migration.rollback();
+      console.log(err)
+      await datamigration.rollback();
     }
 
-  const DepartmentRep = await Repository.create(Department2, scope);
-  
+    const data = await DepartmentRep.getAll();
+    expect(data.length).to.equal(4);
+    expect(data[3].Code).to.equal('0019');
   })
 })
