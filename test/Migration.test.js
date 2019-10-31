@@ -334,6 +334,9 @@ describe('数据迁移', () => {
       await datamigration.rollback();
     }
 
+    await migration.dropback();
+    await datamigration.dropback();
+
     const data = await Department1Rep.getAll();
     expect(data.length).to.equal(3);
     expect(data.map(it=>it.Code)).to.include('0019');
