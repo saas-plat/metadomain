@@ -5,7 +5,7 @@ const {
 
 module.exports = MetaEntity.create(BaseData, 'Currency', {
   "CurrencySign": "string",
-  "IsNative": "bool",
+  "IsNative": "boolean",
   "MaxError": "number",
   "ExchangeRate": "number",
   "CalDirection": {
@@ -13,21 +13,21 @@ module.exports = MetaEntity.create(BaseData, 'Currency', {
     "Code": "string",
     "Name": "string",
     "Position": "number",
-    "CustomUse": "bool",
+    "CustomUse": "boolean",
     "IsDelete": "number",
     "IsExtend": "number",
     "remark": "string",
     "DefaultValue": "string",
     "EnumId": "string"
   },
-  "Disabled": "bool",
+  "Disabled": "boolean",
   "MadeDate": "date",
   "AccountDate": {
 
     "Code": "string",
     "Name": "string",
     "Position": "number",
-    "CustomUse": "bool",
+    "CustomUse": "boolean",
     "IsDelete": "number",
     "IsExtend": "number",
     "remark": "string",
@@ -39,7 +39,7 @@ module.exports = MetaEntity.create(BaseData, 'Currency', {
     "Code": "string",
     "Name": "string",
     "Position": "number",
-    "CustomUse": "bool",
+    "CustomUse": "boolean",
     "IsDelete": "number",
     "IsExtend": "number",
     "remark": "string",
@@ -51,7 +51,7 @@ module.exports = MetaEntity.create(BaseData, 'Currency', {
     "Code": "string",
     "Name": "string",
     "Position": "number",
-    "CustomUse": "bool",
+    "CustomUse": "boolean",
     "IsDelete": "number",
     "IsExtend": "number",
     "remark": "string",
@@ -62,10 +62,10 @@ module.exports = MetaEntity.create(BaseData, 'Currency', {
   "ExChangeRateDTOs": ["string"],
   "WeakTypeDtoName": "string",
   "DtoClassName": "string",
-  "IsWeakType": "bool",
+  "IsWeakType": "boolean",
   "AliName": "string",
   "Status": "number",
-  "EnableHasChanged": "bool",
+  "EnableHasChanged": "boolean",
   "ChangedProperty": ["string"],
   "DynamicPropertyKeys": ["string"],
   "DynamicPropertyValues": ["string"],
@@ -76,10 +76,10 @@ module.exports = MetaEntity.create(BaseData, 'Currency', {
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",
-  "RecordChange": "bool",
+  "RecordChange": "boolean",
   "InnerPropInParentRecure": "string",
 
-  "CaseSensitive": "bool",
-  "RecordDynamicNullValue": "bool",
+  "CaseSensitive": "boolean",
+  "RecordDynamicNullValue": "boolean",
   "data": "object"
 })

@@ -25,20 +25,20 @@ module.exports = MetaEntity.create(CategoryTree, 'PartnerCategory', {
     mapping: 'details'
   },
 
-  "IsEndNode": "bool",
+  "IsEndNode": "boolean",
   "MadeDate": "date",
   "CreatedTime": "date",
   "Depth": "number",
-  "Disabled": "bool",
+  "Disabled": "boolean",
 
   "InId": "string",
   "MarketingOrgan": "string",
   "WeakTypeDtoName": "string",
   "DtoClassName": "string",
-  "IsWeakType": "bool",
+  "IsWeakType": "boolean",
   "AliName": "string",
   "Status": "number",
-  "EnableHasChanged": "bool",
+  "EnableHasChanged": "boolean",
   "ChangedProperty": ["string"],
   "DynamicPropertyKeys": ["string"],
   "DynamicPropertyValues": ["string"],
@@ -48,11 +48,11 @@ module.exports = MetaEntity.create(CategoryTree, 'PartnerCategory', {
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",
-  "RecordChange": "bool",
+  "RecordChange": "boolean",
   "InnerPropInParentRecure": "string",
 
-  "CaseSensitive": "bool",
-  "RecordDynamicNullValue": "bool",
+  "CaseSensitive": "boolean",
+  "RecordDynamicNullValue": "boolean",
   "data": "object"
 
 }, [`rule has_date_cant_be_delete {

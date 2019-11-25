@@ -24,7 +24,7 @@ describe('数据表', () => {
       "Value": {
         type: 'number',
       },
-      "Bool1": 'bool', // 布尔
+      "Bool1": 'boolean', // 布尔
       "Ref": 'mixed',
       "Obj1": { // 对象类型
         "Code": "string",
@@ -61,7 +61,7 @@ describe('数据表', () => {
       "Value": {
         type: 'number',
       },
-      "Bool1": 'bool', // 布尔
+      "Bool1": 'boolean', // 布尔
       "Ref": 'mixed',
       "Obj1": { // 对象类型
         "Code": "string",
@@ -133,7 +133,7 @@ describe('数据表', () => {
       "Value": {
         type: 'number',
       },
-      "Bool1": 'bool', // 布尔
+      "Bool1": 'boolean', // 布尔
       "Ref": 'mixed',
       "Obj1": { // 对象类型
         "Code": "string",

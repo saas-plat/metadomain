@@ -7,7 +7,7 @@ module.exports = MetaEntity.create(BaseData, 'ReciveType', {
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   "Position": "number",
-  "CustomUse": "bool",
+  "CustomUse": "boolean",
   "IsDelete": "number",
   "IsExtend": "number",
   "remark": "string",

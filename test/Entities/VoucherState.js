@@ -8,7 +8,7 @@ module.exports = MetaEntity.create(BaseData, 'VoucherState', {
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   "Position": "number",
-  "CustomUse": "bool",
+  "CustomUse": "boolean",
   "IsDelete": "number",
   "IsExtend": "number",
   "remark": "string",

@@ -4,20 +4,20 @@ const {
 } = require('../../lib');
 
 module.exports = MetaEntity.create(BaseData, 'MarketingOrgan', {
-  "Disabled": "bool",
+  "Disabled": "boolean",
   "Depth": "number",
   "CreatedTime": "date",
   "SequenceNumber": "number",
   "Parent": "string",
-  "IsEndNode": "bool",
-  "IsHeaderQuaters": "bool",
+  "IsEndNode": "boolean",
+  "IsHeaderQuaters": "boolean",
   "InId": "string",
   "WeakTypeDtoName": "string",
   "DtoClassName": "string",
-  "IsWeakType": "bool",
+  "IsWeakType": "boolean",
   "AliName": "string",
   "Status": "number",
-  "EnableHasChanged": "bool",
+  "EnableHasChanged": "boolean",
   "ChangedProperty": ["string"],
   "DynamicPropertyKeys": ["string"],
   "DynamicPropertyValues": ["string"],
@@ -28,10 +28,10 @@ module.exports = MetaEntity.create(BaseData, 'MarketingOrgan', {
   "Updated": "date",
   "UpdatedBy": "string",
   "InnerSearchLevel": "number",
-  "RecordChange": "bool",
+  "RecordChange": "boolean",
   "InnerPropInParentRecure": "string",
 
-  "CaseSensitive": "bool",
-  "RecordDynamicNullValue": "bool",
+  "CaseSensitive": "boolean",
+  "RecordDynamicNullValue": "boolean",
   "data": "object"
 })

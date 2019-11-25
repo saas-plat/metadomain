@@ -41,7 +41,7 @@ module.exports = {
       "DataSource": {},
       "PriceStrategyTypeName": "0",
       "Closer":  new Date(Date.UTC(1,0,1,0,0,0)),
-      "IsPresent": 276.8,
+      //"IsPresent": false,
       "OrigPrice": "0",
       "OrigDiscountAmount": 5,
       "OrigDiscount": "0.03",
