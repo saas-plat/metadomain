@@ -1,6 +1,6 @@
 {
   "name": "@saas-plat/metadomain",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "业务规则和数据规则引擎",
   "main": "lib/index.js",
   "scripts": {
