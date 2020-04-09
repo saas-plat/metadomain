@@ -1,7 +1,7 @@
 {
   "name": "@saas-plat/metadomain",
   "version": "1.0.31",
-  "description": "业务规则和数据规则引擎",
+  "description": "entity && query metadata",
   "main": "lib/index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
