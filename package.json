@@ -15,7 +15,7 @@
   "keywords": [
     "metadomain"
   ],
-  "author": "saas-plat.com",
+  "author": "saas-plat",
   "license": "ISC",
   "dependencies": {
     "automapper": "^1.0.0",
