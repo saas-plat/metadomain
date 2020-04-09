@@ -1,7 +1,7 @@
 {
   "recursive": true,
   "bail": true,
-  "timeout": 10000,
+  "timeout": 20000,
   "require": "./test/env.opts",
   "spec": [
     "test/common*", "test/DataT*", "test/Meta*", "test/Repository*", "test/Migr*", "test/**/*.test.js"
