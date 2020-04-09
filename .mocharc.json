@@ -1,0 +1,9 @@
+{
+  "recursive": true,
+  "bail": true,
+  "timeout": 5000,
+  "require": "./test/env.opts",
+  "watchFiles": [
+    "test/common*", "test/DataT*", "test/Meta*", "test/Repository*", "test/Migr*", "test/**/*.test.js"
+  ]
+}
