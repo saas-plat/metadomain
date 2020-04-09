@@ -18,7 +18,7 @@ describe('业务实体', () => {
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
-      if (await events.count() > 0) {
+      if (await events.countDocuments() > 0) {
         await events.deleteMany();
         await snapshots.deleteMany();
       }
