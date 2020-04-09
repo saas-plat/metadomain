@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:saas-plat/metamodel.git"
+    "url": "git@github.com:saas-plat/metadomain.git"
   },
   "keywords": [
     "metadomain"
