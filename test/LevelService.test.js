@@ -20,7 +20,7 @@ describe('层级数据', () => {
     const db = mongo.db;
     const snapshots = db.collection('Department.snapshots');
     const events = db.collection('Department.events');
-    if ((await events.count()) > 0) {
+    if ((await events.countDocuments()) > 0) {
       console.log('-------clear-------');
       await events.deleteMany();
       await snapshots.deleteMany();

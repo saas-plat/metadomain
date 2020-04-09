@@ -20,7 +20,7 @@ describe('基础数据结构对象', () => {
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
-      if (await events.count() > 0) {
+      if (await events.countDocuments() > 0) {
         await events.deleteMany();
         await snapshots.deleteMany();
       }

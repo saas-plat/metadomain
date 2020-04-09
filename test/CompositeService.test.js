@@ -41,7 +41,7 @@ describe('单据', () => {
     for (const key of Object.keys(reps)) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
-      if (await events.count() > 0) {
+      if (await events.countDocuments() > 0) {
         await events.deleteMany();
         await snapshots.deleteMany();
       }

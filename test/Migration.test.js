@@ -22,7 +22,7 @@ describe('数据迁移', () => {
     for (const key of keys) {
       const snapshots = db.collection(key + '.snapshots');
       const events = db.collection(key + '.events');
-      if (await events.count() > 0) {
+      if (await events.countDocuments() > 0) {
         await events.deleteMany();
         await snapshots.deleteMany();
       }
@@ -30,7 +30,7 @@ describe('数据迁移', () => {
     const tkeys = [ns + '.DataTable2'];
     for (const key of tkeys) {
       const tables = db.collection(key + '.tables');
-      if (await tables.count() > 0) {
+      if (await tables.countDocuments() > 0) {
         await tables.deleteMany();
       }
     }
