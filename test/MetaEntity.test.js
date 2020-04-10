@@ -208,7 +208,6 @@ describe('业务实体', () => {
       Code: 'xxxxxxxxx',
       updateBy: 'aa'
     });
-    //console.log(111,test)
     expect(test.times).to.not.undefined;
     expect(test.times).to.be.eql(test.ts);
 
