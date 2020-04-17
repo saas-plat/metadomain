@@ -12,7 +12,7 @@ const {
   expect
 } = require('chai');
 const util = require('util');
-const mongo = require('sourced-repo-mongo/mongo');
+const mongo = require('sourced-repo-mongo-hotfix/mongo');
 
 describe('数据迁移', () => {
 
