@@ -1,6 +1,6 @@
 {
   "name": "@saas-plat/metadomain",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "entity && query metadata",
   "main": "lib/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "nools": "^0.4.4",
     "shortid": "^2.2.13",
     "sourced": "^0.1.4",
-    "sourced-repo-mongo": "git+https://github.com/caizx666/sourced-repo-mongo.git"
+    "sourced-repo-mongo-hotfix": ">=0.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
