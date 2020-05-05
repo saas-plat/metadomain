@@ -41,11 +41,11 @@ describe('数据迁移', () => {
   it('实体字段修改，增加、删除、更新类型', async () => {
 
     // 创建初始数据
-    const Department1 = MetaEntity.create(BaseData, "Department2", {
+    const Department1 = MetaEntity.createModel(BaseData, "Department2", {
       "Code": "string",
       "Name": "string"
     })
-    const Warehouse1 = MetaEntity.create(BaseData, "Warehouse2", {
+    const Warehouse1 = MetaEntity.createModel(BaseData, "Warehouse2", {
       "Code": "string",
       "Name": "string"
     })
@@ -86,7 +86,7 @@ describe('数据迁移', () => {
     await WarehouseRep.commitAll(w);
 
     // 修改schame
-    const Department2 = MetaEntity.create(BaseData, "Department2", {
+    const Department2 = MetaEntity.createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
     }, null, {
@@ -123,7 +123,7 @@ describe('数据迁移', () => {
   })
 
   it('数据表字段修改和数据迁移', async () => {
-    const DataTable1 = MetaTable.create(BaseTable, 'DataTable2', {
+    const DataTable1 = MetaTable.createModel(BaseTable, 'DataTable2', {
       "id": "string",
       "Name": "string",
       "Str1": {
@@ -176,7 +176,7 @@ describe('数据迁移', () => {
     expect(dt1.get('Details')).to.not.undefined;
 
     // 修改schame
-    const DataTable2 = MetaTable.create(BaseTable, "DataTable2", {
+    const DataTable2 = MetaTable.createModel(BaseTable, "DataTable2", {
       "id": "string",
       "Code": "string",
       "Obj1": {
@@ -235,7 +235,7 @@ describe('数据迁移', () => {
   })
 
   it('备份升级失败后可以恢复正常使用', async () => {
-    const Department1 = MetaEntity.create(BaseData, "Department2", {
+    const Department1 = MetaEntity.createModel(BaseData, "Department2", {
       "Code": "string",
       "Name": "string"
     })
@@ -257,7 +257,7 @@ describe('数据迁移', () => {
     }
     await Department1Rep.commitAll(d);
 
-    const DataTable1 = MetaTable.create(BaseTable, "DataTable2", {
+    const DataTable1 = MetaTable.createModel(BaseTable, "DataTable2", {
       "id": "string",
       "Code": "string",
       "Obj1": {
@@ -274,7 +274,7 @@ describe('数据迁移', () => {
     })
 
     // ----------- v2 ---------------
-    const Department2 = MetaEntity.create(BaseData, "Department2", {
+    const Department2 = MetaEntity.createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
     }, null, {
@@ -284,7 +284,7 @@ describe('数据迁移', () => {
       ns
     });
 
-    const DataTable2 = MetaTable.create(BaseTable, "DataTable2", {
+    const DataTable2 = MetaTable.createModel(BaseTable, "DataTable2", {
       "id": "string",
       "Code": "string",
       "Obj1": {

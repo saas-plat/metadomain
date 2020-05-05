@@ -4,7 +4,7 @@ const {
 } = require('../../lib');
 
 // 订单
-module.exports = MetaEntity.create(LevelData, 'Department', {
+module.exports = MetaEntity.createModel(LevelData, 'Department', {
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   // "StoreType_Name": 'string',

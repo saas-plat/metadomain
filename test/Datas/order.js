@@ -38,6 +38,7 @@ module.exports = {
       "PurchaseQuantity": "-276.8",
       "LastModifiedField": "false",
       "IsNoModify": "7470",
+      "IsPresent": true,
       "DataSource": {},
       "PriceStrategyTypeName": "0",
       "Closer":  new Date(Date.UTC(1,0,1,0,0,0)),

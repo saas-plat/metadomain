@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'Inventory', {
+module.exports = MetaEntity.createModel(BaseData, 'Inventory', {
   "LatestPPrice": "string",
   "LatestSalePrice": "string",
   "IdUnitByPurchase": "number",

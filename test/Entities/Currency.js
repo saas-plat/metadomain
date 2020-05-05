@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(BaseData, 'Currency', {
+module.exports = MetaEntity.createModel(BaseData, 'Currency', {
   "CurrencySign": "string",
   "IsNative": "boolean",
   "MaxError": "number",

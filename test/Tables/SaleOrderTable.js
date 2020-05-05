@@ -3,7 +3,7 @@ const {
   DataTable,
 } = require('../../lib');
 // 订单
-module.exports = (options)=> MetaTable.create(DataTable, 'SaleOrderTable', {
+module.exports = (options)=> MetaTable.createModel(DataTable, 'SaleOrderTable', {
   "Mobilephone": "string",
   "Memberaddress": "string",
   "DeliveryDate": "date",

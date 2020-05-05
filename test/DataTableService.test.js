@@ -37,7 +37,7 @@ describe('数据表存储服务', () => {
       BankAccountTable
     }
     const service = new DataTableService(SaleOrderTable);
-    await service.onSaved({
+  const saved =  await service.onSaved({
       id: 'aaaa001',
       Name: 'test001',
       Code: '0001',

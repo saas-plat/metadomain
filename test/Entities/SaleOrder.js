@@ -3,7 +3,7 @@ const {
   CompositeData,
 } = require('../../lib');
 // 订单
-module.exports = MetaEntity.create(CompositeData, 'SaleOrder', {
+module.exports = MetaEntity.createModel(CompositeData, 'SaleOrder', {
   "Mobilephone": "string",
   "Memberaddress": "string",
   "DeliveryDate": "date",

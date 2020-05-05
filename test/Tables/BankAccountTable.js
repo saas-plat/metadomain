@@ -3,7 +3,7 @@ const {
   DataTable,
 } = require('../../lib');
 
-module.exports = (options)=> MetaTable.create(DataTable, 'BankAccountTable',{
+module.exports = (options)=> MetaTable.createModel(DataTable, 'BankAccountTable',{
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   "NewBalance": "number"

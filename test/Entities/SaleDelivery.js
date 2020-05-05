@@ -4,7 +4,7 @@ const {
 } = require('../../lib');
 
 // 销货
-module.exports = MetaEntity.create(CompositeData, 'SaleDelivery', {
+module.exports = MetaEntity.createModel(CompositeData, 'SaleDelivery', {
   "Code": {
     type: "string",
     mapping: 'code'

@@ -3,7 +3,7 @@ const {
   CategoryData,
 } = require('../../lib');
 
-module.exports = MetaEntity.create(CategoryData, 'Partner', {
+module.exports = MetaEntity.createModel(CategoryData, 'Partner', {
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   "PartnerClass":  {type:'reference',src:'PartnerCategory',mapping:'category'},

@@ -30,7 +30,7 @@ describe('基础数据结构对象', () => {
   it('创建一个仓库档案，增删改仓库基础数据', async () => {
     let eventbus = [];
 
-    const Warehouse = MetaEntity.create(BaseData, 'Warehouse3', {
+    const Warehouse = MetaEntity.createModel(BaseData, 'Warehouse3', {
 
       "Code": {
         type: "string",
@@ -219,11 +219,11 @@ describe('基础数据结构对象', () => {
 
   it('创建一个仓库档案，并引用了人员和部门档案等信息', async () => {
     let eventbus = [];
-    const Department = MetaEntity.create(BaseData, "Department3", {
+    const Department = MetaEntity.createModel(BaseData, "Department3", {
       "Code": "string",
       "Name": "string"
     })
-    const Persion = MetaEntity.create(BaseData, 'Persion3', {
+    const Persion = MetaEntity.createModel(BaseData, 'Persion3', {
       "Code": "string",
       "Status": 'bool',
       "Name": "string",
@@ -255,11 +255,11 @@ describe('基础数据结构对象', () => {
       "PostCode": "string",
       "PostAddr": "string"
     });
-    const WarehouseType = MetaEntity.create(BaseData, 'WarehouseType3', {
+    const WarehouseType = MetaEntity.createModel(BaseData, 'WarehouseType3', {
       "Code": "string",
       "Name": "string"
     });
-    const Warehouse = MetaEntity.create(BaseData, 'Warehouse4', {
+    const Warehouse = MetaEntity.createModel(BaseData, 'Warehouse4', {
       "Code": {
         type: "string",
         required: true // 必录

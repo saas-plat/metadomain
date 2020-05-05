@@ -3,7 +3,7 @@ const {
 	DataTable,
 } = require('../../lib');
 
-module.exports = (options)=> MetaTable.create(DataTable, 'WarehouseTable', {
+module.exports = (options)=> MetaTable.createModel(DataTable, 'WarehouseTable', {
 	ID: {
 		type: 'string',
 		mapping: 'id'
