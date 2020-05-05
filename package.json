@@ -1,6 +1,6 @@
 {
   "name": "@saas-plat/metadomain",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "entity && query metadata",
   "main": "lib/index.js",
   "scripts": {
