@@ -11,6 +11,10 @@ const mongoose = require('mongoose');
 
 describe('数据表', () => {
 
+  before(async () => {
+    await mongoose.connection.db.collection('tables.DataTableForMerge.tables').deleteMany();
+  })
+
   it('元数据定义，支持description等', async () => {
 
     const TestModel = MetaTable.createModel(BaseTable, 'TestModel', {
@@ -259,4 +263,117 @@ describe('数据表', () => {
 
   })
 
+  it('支持合并存储', async () => {
+
+    await mongoose.connection.db.collection('DataTableForMerge.tables').deleteMany();
+
+    const DataTable1 = MetaTable.createModel(BaseTable, 'DataTableForMerge', {
+      "id": "string",
+      "Code": "string",
+      "Str1": {
+        type: 'string',
+      },
+      "Date": "date",
+      "Value": {
+        type: 'number',
+      },
+      "Bool1": 'boolean', // 布尔
+      "Ref": 'mixed',
+      "Obj1": { // 对象类型
+        "Code": "string",
+        "Name": "string"
+      },
+      'Details': [{ // 子表
+        "Value": "number",
+        "REF2": {
+          "id": "string",
+          "Code": "string",
+          "Name": "string"
+        }
+      }]
+    }, null, {
+      prefix: 'tables',
+      ns: 'orgmerge',
+      splitCollection: false
+    });
+
+    const DataTable2 = MetaTable.createModel(BaseTable, 'DataTableForMerge', {
+      "id": "string",
+      "Code": "string",
+      "Str1": {
+        type: 'string',
+      },
+      "Date": "date",
+      "Value": {
+        type: 'number',
+      },
+      "Bool1": 'boolean', // 布尔
+      "Ref": 'mixed',
+      "Obj1": { // 对象类型
+        "Code": "string",
+        "Name": "string"
+      },
+      'Details': [{ // 子表
+        "Value": "number",
+        "REF2": {
+          "id": "string",
+          "Code": "string",
+          "Name": "string"
+        }
+      }]
+    }, null, {
+      prefix: 'tables',
+      ns: 'orgmerge2',
+      splitCollection: false
+    });
+
+    let dt1 = new DataTable1({
+      id: 'aaaa',
+      Name: 'test001',
+      Str1: 'abcxyz',
+      Bool1: true,
+      Obj1: {
+        Code: 'eeeeeeeeee'
+      },
+      Ref1: {
+        id: '100'
+      },
+      Details: [{
+        REF2: {
+          id: 'xxxxx'
+        },
+        Value: 100
+      }]
+    });
+    await dt1.save();
+    //await DataTable1.commitAll();
+
+    console.log('---------2------------')
+    let dt2 = new DataTable2({
+      id: 'aaaa',
+      Name: 'test001',
+      Str1: 'abcxyz',
+      Bool1: true,
+      Obj1: {
+        Code: 'eeeeeeeeee'
+      },
+      Ref1: {
+        id: '100'
+      },
+      Details: [{
+        REF2: {
+          id: 'xxxxx'
+        },
+        Value: 100
+      }]
+    });
+    await dt2.save();
+
+    expect(await DataTable1.count({
+      id: 'aaaa'
+    })).to.be.eql(1);
+    expect(await DataTable2.count({
+      id: 'aaaa'
+    })).to.be.eql(1);
+  });
 })

@@ -99,4 +99,46 @@ describe('实体仓库', () => {
       updateBy: 'aaa'
     })
   })
+
+  it('支持合并存储', async () => {
+
+    const TestObj = MetaEntity.createModel(BaseData, 'TestObjmerge', {
+      "orgid": "string",
+      "Code": "string"
+    });
+
+    // scope 和 schema 字段同名不冲突
+    const testRepository1 = await Repository.create(TestObj, {
+      prefix:'entities',
+      ns: 'org001',
+      splitCollection: false
+    });
+    const testRepository2 = await Repository.create(TestObj, {
+      prefix:'entities',
+      ns: 'org002',
+      splitCollection: false
+    });
+
+    const test = await testRepository1.create();
+    await test.save({
+      Code: 'test001',
+      updateBy: 'aaa',
+      ts: test.ts
+    });
+    await testRepository1.commitAll(test);
+
+    const test2 = await testRepository2.create();
+    await test2.save({
+      Code: 'test002',
+      updateBy: 'aaa',
+      ts: test2.ts
+    });
+    await testRepository2.commitAll(test2);
+
+    // 不能读取其他组织的实体
+    expect(await testRepository1.get(test.id)).to.not.null;
+    expect(await testRepository2.get(test.id)).to.be.null;
+
+
+  });
 })

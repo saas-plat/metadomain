@@ -132,6 +132,8 @@ describe('数据表存储服务', () => {
     await exeScope('aaa', '2');
     await exeScope('bbb', '2');
 
+    console.log('-------- test query ------------')
+
     const SaleOrderTable = require('./Tables/SaleOrderTable')({
       populateReferences: true,
       getReferenceVersion: () => '1',
