@@ -195,6 +195,163 @@ describe('数据表', () => {
     })).map(it => it.toObject())).to.be.eql([])
   })
 
+  it('不同租户支持ns字段进行数据隔离，ns字段在查询或者保存时由中间件注入', async () => {
+    await mongoose.connection.db.collection('org001.TableNS1.tables').deleteMany();
+    await mongoose.connection.db.collection('org002.TableNS1.tables').deleteMany();
+
+    const schema = {
+      "Name": "string",
+      "Other": "number"
+    }
+
+    const TableNS1 = MetaTable.createModel(BaseTable, 'TableNS1', schema, null, {
+      ns: 'org001'
+    });
+    const TableNS2 = MetaTable.createModel(BaseTable, 'TableNS1', schema, null, {
+      ns: 'org002'
+    });
+
+    await new TableNS1({
+      Name: 'aaaaa',
+    }).save();
+    await new TableNS2({
+      Name: 'bbbbb',
+    }).save();
+
+    expect(await TableNS1.count()).to.be.eql(1);
+    expect(await TableNS2.count()).to.be.eql(1);
+
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+
+    expect(await TableNS1.findOne({
+      Name: 'bbbbb'
+    })).to.be.null;
+    expect(await TableNS2.findOne({
+      Name: 'aaaaa'
+    })).to.be.null;
+
+    expect(await TableNS1.findOneAndUpdate({
+      Name: 'bbbbb'
+    }, {})).to.be.null;
+    expect(await TableNS2.findOneAndUpdate({
+      Name: 'aaaaa'
+    }, {})).to.be.null;
+
+    expect((await TableNS1.findOneAndUpdate()).toObject()).to.be.eql({
+      Name: 'aaaaa',
+    }, {});
+    expect((await TableNS2.findOneAndUpdate()).toObject()).to.be.eql({
+      Name: 'bbbbb',
+    }, {});
+
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+
+    expect(await TableNS1.findOneAndRemove({
+      Name: 'bbbbb'
+    })).to.be.null;
+    expect(await TableNS2.findOneAndRemove({
+      Name: 'aaaaa'
+    })).to.be.null;
+
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+
+    // update
+    await TableNS1.update({
+      Name: 'aaaaa',
+    }, {
+      //  Name: 'aaaaa',
+      Other: 100
+    });
+    await TableNS2.update({
+      Name: 'bbbbb',
+    }, {
+      //Name: 'bbbbb',
+      Other: 200
+    });
+    expect((await TableNS1.findOne()).toObject()).to.be.eql({
+      Name: 'aaaaa',
+      Other: 100
+    });
+    expect((await TableNS2.findOne()).toObject()).to.be.eql({
+      Name: 'bbbbb',
+      Other: 200
+    });
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+    expect(await TableNS1.findOne({
+      Name: 'bbbbb'
+    })).to.be.null;
+    expect(await TableNS2.findOne({
+      Name: 'aaaaa'
+    })).to.be.null;
+
+    // updateOne
+    await TableNS1.updateOne({
+      Name: 'aaaaa',
+    }, {
+      Other: 101
+    });
+    await TableNS2.updateOne({
+      Name: 'bbbbb',
+    }, {
+      Other: 201
+    });
+    expect((await TableNS1.findOne()).toObject()).to.be.eql({
+      Name: 'aaaaa',
+      Other: 101
+    });
+    expect((await TableNS2.findOne()).toObject()).to.be.eql({
+      Name: 'bbbbb',
+      Other: 201
+    });
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+
+    // replaceOne
+    await TableNS1.replaceOne({
+      Name: 'aaaaa',
+    }, {
+      Name: 'aaaaa',
+      Other: 101
+    });
+    await TableNS2.replaceOne({
+      Name: 'bbbbb',
+    }, {
+      Name: 'bbbbb',
+      Other: 201
+    });
+    expect((await TableNS1.findOne()).toObject()).to.be.eql({
+      Name: 'aaaaa',
+      Other: 101
+    });
+    expect((await TableNS2.findOne()).toObject()).to.be.eql({
+      Name: 'bbbbb',
+      Other: 201
+    });
+    expect((await TableNS1.find()).length).to.be.eql(1);
+    expect((await TableNS2.find()).length).to.be.eql(1);
+
+    //bulkWrite
+    //geoSearch
+    //insertMany
+    await TableNS1.insertMany([{
+      Name: 'cccc'
+    }, {
+      Name: 'dddd'
+    }])
+    // updateMany
+    await TableNS1.updateMany({
+      Name: 'cccc'
+    }, {
+      Other: 300
+    })
+    //aggregate
+    await TableNS1.aggregate()
+  })
+
   it('同时支持多版本的相同数据对象，相同版本采用存储隔离', async () => {
 
     const VersionModel = MetaTable.createModel(BaseTable, 'VersionModel', {
