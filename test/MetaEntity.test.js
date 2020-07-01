@@ -286,42 +286,40 @@ describe('业务实体', () => {
   })
 
   it('可以通过schema定义一个自定义行为', async () => {
-    let ec = 0;
     const TestSchemaActionObj = MetaEntity.createModel(BaseData, 'TestSchemaActionObj', {
       "Code": "string",
       // 简写
       schemaAction1: (eventData, params) => {
         eventData.Code = params.otherKey1;
+        console.log(eventData)
       },
       // schema类型定义
       schemaAction2: {
         type: 'function',
-        handle: (eventData) => {
+        handle: function (eventData, params) {
           eventData.Code = params.otherKey2;
         }
-      }
-    }, null, {
-      eventHandler: {
-        schemaAction1ed: (...args) => {
-          ec++;
-          console.log(...args);
-        },
-        schemaAction2ed: (...args) => {
-          ec++;
-          console.log(...args);
-        }
+      },
+      // 字符串数据定义
+      schemaAction3: {
+        type: 'function',
+        handle: ['','eventData.Code = params.otherKey3']
       }
     });
+
     const test = await TestSchemaActionObj.create();
-    test.schemaAction1({
+    await test.schemaAction1({
       otherKey1: 'A1000'
     });
+    expect(test.Code).to.be.eql('A1000');
     // 这里调用和test.schemaAction2等同
     await test.customAction('schemaAction2', {
       otherKey2: 'B2222'
     });
     expect(test.Code).to.be.eql('B2222');
-    // 收到两个自定义业务事件
-    expect(ec).to.be.eql(2);
+    await test.schemaAction3({
+      otherKey3: 'B2222333'
+    });
+    expect(test.Code).to.be.eql('B2222333');
   })
 })
