@@ -416,10 +416,6 @@ describe('数据表', () => {
 
   })
 
-  it('自定义事件的处理，根据事件名称执行规则', async () => {
-
-  })
-
   it('支持合并存储', async () => {
 
     await mongoose.connection.db.collection('DataTableForMerge.tables').deleteMany();
@@ -533,4 +529,12 @@ describe('数据表', () => {
       id: 'aaaa'
     })).to.be.eql(1);
   });
+
+  it('一个数据对象可以执行行为产生的事件规则', async () => {
+
+  })
+
+  it('可以通过schema定义一个自定义行为', async () => {
+
+  })
 })

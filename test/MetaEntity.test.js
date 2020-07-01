@@ -118,69 +118,6 @@ describe('业务实体', () => {
     await testRepository.commitAll(test);
   });
 
-  it('一个实体可以自定义行为和行为的处理规则', async () => {
-    let ec = 0;
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObj2', {
-      "Code": "string"
-    }, [`rule custom_action1{
-      when{
-        e: Action e.name == 'TestObj2.action1ing';
-      }
-      then{
-        if (!e.data.Code  ){
-          throw new Error('error')
-        }
-      }
-    }`, `rule custom_action2{
-      when{
-        e: Action e.name == 'TestObj2.action2';
-        d: EventData;
-      }
-      then{
-        console.log('----dododo---');
-         d.Code = e.data.Code;
-         //modify(d);
-      }
-    }`], {
-      eventHandler: {
-        action1ed: (...args) => {
-          ec++;
-          console.log(...args);
-        },
-        action2ed: (...args) => {
-          ec++;
-          console.log(...args);
-        }
-      }
-    });
-    const testRepository = await Repository.create(TestObj);
-    const test = await TestObj.create();
-    await test.save({
-      Code: 'xxxxxxxxx',
-      ts: test.ts,
-      updateBy: 'aa'
-    });
-    expect(test.Code).to.be.eql('xxxxxxxxx');
-    // 默认自定义行为不修改数据
-    await test.customAction('action1', {
-      Code: 'bbbbbbbbbb',
-      ts: test.ts,
-      updateBy: 'aa'
-    });
-    expect(test.Code).to.be.eql('xxxxxxxxx');
-
-    await test.customAction('action2', {
-      Code: 'cccccccccc',
-      ts: test.ts,
-      updateBy: 'aa'
-    });
-    expect(test.Code).to.be.eql('cccccccccc');
-    await testRepository.commitAll(test);
-
-    // 收到两个自定义业务事件
-    expect(ec).to.be.eql(2);
-  })
-
   it('实体支持字段名称映射，但是也不影响基类的写法', async () => {
 
     const MappingObj = MetaEntity.createModel(BaseData, 'MappingObj1', {
@@ -254,8 +191,8 @@ describe('业务实体', () => {
     expect(VerEntity).to.be.equal(VerEntity1);
     expect(VerEntity).to.not.equal(VerEntity2);
 
-    EntityCache.ttl('VerEntity_1',0.3);
-    EntityCache.ttl('VerEntity_2',0.3);
+    EntityCache.ttl('VerEntity_1', 0.3);
+    EntityCache.ttl('VerEntity_2', 0.3);
 
     // 3s后回收
     await util.wait(200);
@@ -285,4 +222,106 @@ describe('业务实体', () => {
 
   })
 
+  it('一个实体可以自定义行为和行为的处理规则', async () => {
+    let ec = 0;
+    const TestObj = MetaEntity.createModel(BaseData, 'TestObj2', {
+      "Code": "string"
+    }, [`rule custom_action1{
+        when{
+          e: Action e.name == 'TestObj2.action1ing';
+        }
+        then{
+          if (!e.data.Code  ){
+            throw new Error('error')
+          }
+        }
+      }`, `rule custom_action2{
+        when{
+          e: Action e.name == 'TestObj2.action2';
+          d: EventData;
+        }
+        then{
+          console.log('----dododo---');
+           d.Code = e.data.Code;
+           //modify(d);
+        }
+      }`], {
+      eventHandler: {
+        action1ed: (...args) => {
+          ec++;
+          console.log(...args);
+        },
+        action2ed: (...args) => {
+          ec++;
+          console.log(...args);
+        }
+      }
+    });
+    const testRepository = await Repository.create(TestObj);
+    const test = await TestObj.create();
+    await test.save({
+      Code: 'xxxxxxxxx',
+      ts: test.ts,
+      updateBy: 'aa'
+    });
+    expect(test.Code).to.be.eql('xxxxxxxxx');
+    // 默认自定义行为不修改数据
+    await test.customAction('action1', {
+      Code: 'bbbbbbbbbb',
+      ts: test.ts,
+      updateBy: 'aa'
+    });
+    expect(test.Code).to.be.eql('xxxxxxxxx');
+
+    await test.customAction('action2', {
+      Code: 'cccccccccc',
+      ts: test.ts,
+      updateBy: 'aa'
+    });
+    expect(test.Code).to.be.eql('cccccccccc');
+    await testRepository.commitAll(test);
+
+    // 收到两个自定义业务事件
+    expect(ec).to.be.eql(2);
+  })
+
+  it('可以通过schema定义一个自定义行为', async () => {
+    let ec = 0;
+    const TestSchemaActionObj = MetaEntity.createModel(BaseData, 'TestSchemaActionObj', {
+      "Code": "string",
+      // 简写
+      schemaAction1: (eventData, params) => {
+        eventData.Code = params.otherKey1;
+      },
+      // schema类型定义
+      schemaAction2: {
+        type: 'function',
+        handle: (eventData) => {
+          eventData.Code = params.otherKey2;
+        }
+      }
+    }, null, {
+      eventHandler: {
+        schemaAction1ed: (...args) => {
+          ec++;
+          console.log(...args);
+        },
+        schemaAction2ed: (...args) => {
+          ec++;
+          console.log(...args);
+        }
+      }
+    });
+    const test = await TestSchemaActionObj.create();
+    test.schemaAction1({
+      otherKey1: 'A1000'
+    });
+    // 这里调用和test.schemaAction2等同
+    await test.customAction('schemaAction2', {
+      otherKey2: 'B2222'
+    });
+    expect(test.Code).to.be.eql('B2222');
+    // 收到两个自定义业务事件
+    expect(ec).to.be.eql(2);
+  })
 })
