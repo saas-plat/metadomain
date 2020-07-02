@@ -103,7 +103,7 @@ describe('数据迁移', () => {
     await migration.up([`rule update_sciprt1{
       when{
         e: Action e.name == 'Department2.migrate' && e.event == 'saved';
-        d: Event
+        d: EventData
       }
       then{
           d.Name2 = e.data.Name+'xxxxx';
