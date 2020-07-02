@@ -550,6 +550,7 @@ describe('数据表', () => {
   })
 
   it('一个数据对象可以执行行为产生的事件规则', async () => {
+    await mongoose.connection.db.collection('TableWithRules.tables').deleteMany();
     const TableWithRules = MetaTable.createModel(BaseTable, 'TableWithRules', {
       "Name": "string",
       "findByName": async function (name) {
@@ -560,11 +561,13 @@ describe('数据表', () => {
     }, [{
       "name": "xxxx",
       "when": [
-        ["Action", "a", "a.name === 'initing'"],
+        ["Action", "a", "a.name === 'saving'"],
         ["TableWithRules", "t"]
       ],
       "then": [
-        "t.Name = '0001'"
+        `if (t.Name === 'cccc'){
+          t.Name = 'bbbb'
+        }`
       ]
     }, {
       "name": "validating",
@@ -582,7 +585,9 @@ describe('数据表', () => {
       ]
     }]);
 
-    const a = await new TableWithRules({});
+    const a = await new TableWithRules({
+      Name: 'cccc'
+    });
     const b = await new TableWithRules({
       Name: 'aaaaa',
     });
@@ -591,7 +596,7 @@ describe('数据表', () => {
 
     expect((await TableWithRules.find({})).length).to.be.eql(2);
     expect((await TableWithRules.findByName('aaaaa')).length).to.be.eql(1);
-    expect((await TableWithRules.findByName('0001')).length).to.be.eql(1);
+    expect((await TableWithRules.findByName('bbbb')).length).to.be.eql(1);
   })
 
 })
