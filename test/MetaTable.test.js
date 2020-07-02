@@ -530,11 +530,67 @@ describe('数据表', () => {
     })).to.be.eql(1);
   });
 
+  it('可以通过schema自定义一个行为', async () => {
+
+    const CustomeSchemaAction = MetaTable.createModel(BaseTable, 'CustomeSchemaAction', {
+      "Name": "string",
+      "dosomething": async function () { // <==== 这里不能用箭头函数要不this就不是Model啦
+        return await this.find({
+
+        })
+      }
+    });
+
+    await new CustomeSchemaAction({
+      Name: 'aaaaa',
+    });
+
+    await CustomeSchemaAction.dosomething();
+
+  })
+
   it('一个数据对象可以执行行为产生的事件规则', async () => {
+    const TableWithRules = MetaTable.createModel(BaseTable, 'TableWithRules', {
+      "Name": "string",
+      "findByName": async function (name) {
+        return await this.find({
+          Name: name
+        })
+      }
+    }, [{
+      "name": "xxxx",
+      "when": [
+        ["Action", "a", "a.name === 'initing'"],
+        ["TableWithRules", "t"]
+      ],
+      "then": [
+        "t.Name = '0001'"
+      ]
+    }, {
+      "name": "validating",
+      "when": [
+        ["Action", "a", "a.name === 'validating'"],
+        ["TableWithRules", "t"]
+      ],
+      "then": [
+        `if (!t.Name){
+          throw new Error('error!')
+        }else{
+          console.log('validating',t.Name,'=>OK')
+        }`
+      ]
+    }]);
 
+    const a = await new TableWithRules({});
+    const b = await new TableWithRules({
+      Name: 'aaaaa',
+    });
+    await a.save();
+    await b.save();
+
+    expect((await TableWithRules.find({})).length).to.be.eql(2);
+    expect((await TableWithRules.findByName('aaaaa')).length).to.be.eql(1);
+    expect((await TableWithRules.findByName('0001')).length).to.be.eql(1);
   })
 
-  it('可以通过schema定义一个自定义行为', async () => {
-
-  })
 })
