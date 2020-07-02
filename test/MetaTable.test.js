@@ -570,11 +570,12 @@ describe('数据表', () => {
       "name": "validating",
       "when": [
         ["Action", "a", "a.name === 'validating'"],
-        ["TableWithRules", "t"]
+        ["Table", "t"]
       ],
       "then": [
+        `console.log(facts)`,
         `if (!t.Name){
-          throw new Error('error!')
+          throw new Error('!Name', t.Name)
         }else{
           console.log('validating',t.Name,'=>OK')
         }`
