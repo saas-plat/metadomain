@@ -16,28 +16,25 @@
   "keywords": [
     "metadomain"
   ],
-  "author": "saas-plat",
-  "license": "ISC",
+  "author": "saas-plat.com",
+  "license": "MPL-2.0",
   "dependencies": {
     "automapper": "^1.0.0",
     "debug": "^3.1.0",
     "en-inflectors": "^1.0.12",
-    "eventasync": "^1.0.0",
-    "i18next": "^10.2.2",
-    "i18next-xhr-backend": "^3.0.0",
+    "eventasync": "^1.0.0", 
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "mongodb": "^3.0.1",
     "mongoose": "^5.7.5",
     "mongoose-autopopulate": "^0.9.1",
     "node-cache": "^4.2.1",
-    "nools": "^0.4.4",
     "shortid": "^2.2.13",
     "sourced": "^0.1.4",
     "sourced-repo-mongo-hotfix": ">=0.0.1"
   },
   "devDependencies": {
-    "chai": "^4.1.2",    
+    "chai": "^4.1.2",
     "conventional-changelog-cli": "^2.0.34",
     "cross-env": "^5.2.0",
     "mocha": "^7.1.1"
