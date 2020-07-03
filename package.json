@@ -4,6 +4,7 @@
   "description": "entity && query metadata",
   "main": "lib/index.js",
   "scripts": {
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "test": "cross-env NODE_ENV=test mocha",
     "watch": "cross-env NODE_ENV=test DEBUG=saas-plat*,-not_this mocha --watch",
     "test_d": "cross-env NODE_ENV=test DEBUG=saas-plat*,sourced-repo-mongo*,-not_this mocha"
@@ -36,7 +37,8 @@
     "sourced-repo-mongo-hotfix": ">=0.0.1"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.1.2",    
+    "conventional-changelog-cli": "^2.0.34",
     "cross-env": "^5.2.0",
     "mocha": "^7.1.1"
   }
