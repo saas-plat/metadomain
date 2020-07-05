@@ -41,11 +41,11 @@ describe('数据迁移', () => {
   it('实体字段修改，增加、删除、更新类型', async () => {
 
     // 创建初始数据
-    const Department1 = MetaEntity.createModel(BaseData, "Department2", {
+    const Department1 = createModel(BaseData, "Department2", {
       "Code": "string",
       "Name": "string"
     })
-    const Warehouse1 = MetaEntity.createModel(BaseData, "Warehouse2", {
+    const Warehouse1 = createModel(BaseData, "Warehouse2", {
       "Code": "string",
       "Name": "string"
     })
@@ -86,7 +86,7 @@ describe('数据迁移', () => {
     await WarehouseRep.commitAll(w);
 
     // 修改schame
-    const Department2 = MetaEntity.createModel(BaseData, "Department2", {
+    const Department2 = createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
     }, null, {
@@ -235,7 +235,7 @@ describe('数据迁移', () => {
   })
 
   it('备份升级失败后可以恢复正常使用', async () => {
-    const Department1 = MetaEntity.createModel(BaseData, "Department2", {
+    const Department1 = createModel(BaseData, "Department2", {
       "Code": "string",
       "Name": "string"
     })
@@ -274,7 +274,7 @@ describe('数据迁移', () => {
     })
 
     // ----------- v2 ---------------
-    const Department2 = MetaEntity.createModel(BaseData, "Department2", {
+    const Department2 = createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
     }, null, {

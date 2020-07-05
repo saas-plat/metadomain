@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.createModel(BaseData, 'Unit',{
+module.exports = createModel(BaseData, 'Unit',{
   "RateDescription": "string",
   "IsGroup": "boolean",
   "IsMainUnit": "boolean",

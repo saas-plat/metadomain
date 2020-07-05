@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.createModel(BaseData, 'MarketingOrgan', {
+module.exports = createModel(BaseData, 'MarketingOrgan', {
   "Disabled": "boolean",
   "Depth": "number",
   "CreatedTime": "date",

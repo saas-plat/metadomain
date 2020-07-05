@@ -26,15 +26,15 @@ describe('业务实体', () => {
   })
 
   it('创建一个业务实体,数据类型转换和规则检查', async () => {
-    const TestReference1 = MetaEntity.createModel(BaseData, 'TestReference1', {
+    const TestReference1 = createModel(BaseData, 'TestReference1', {
       "Code": "string",
     });
 
-    const TestReference2 = MetaEntity.createModel(BaseData, 'TestReference2', {
+    const TestReference2 = createModel(BaseData, 'TestReference2', {
       "Code": "string",
     });
 
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObj', {
+    const TestObj = createModel(BaseData, 'TestObj', {
       "Code": {
         type: "string",
         required: true, // 必录
@@ -120,7 +120,7 @@ describe('业务实体', () => {
 
   it('实体支持字段名称映射，但是也不影响基类的写法', async () => {
 
-    const MappingObj = MetaEntity.createModel(BaseData, 'MappingObj1', {
+    const MappingObj = createModel(BaseData, 'MappingObj1', {
       "ID": {
         type: 'string',
         mapping: 'id'
@@ -169,20 +169,20 @@ describe('业务实体', () => {
 
   it('同时支持多版本的相同实体，相同版本实体共用', async () => {
 
-    const VerEntity = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity = createModel(BaseData, 'VerEntity', {
       name: 'string'
     }, null, {
       version: '1'
     });
 
-    const VerEntity2 = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity2 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
     }, null, {
       version: '2'
     });
 
-    const VerEntity1 = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity1 = createModel(BaseData, 'VerEntity', {
       name: 'string'
     }, null, {
       version: '1'
@@ -196,7 +196,7 @@ describe('业务实体', () => {
 
     // 3s后回收
     await util.wait(200);
-    const VerEntity22 = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity22 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
     }, null, {
@@ -204,13 +204,13 @@ describe('业务实体', () => {
     });
     await util.wait(200);
 
-    const VerEntity11 = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity11 = createModel(BaseData, 'VerEntity', {
       name: 'string'
     }, null, {
       version: '1'
     });
 
-    const VerEntity222 = MetaEntity.createModel(BaseData, 'VerEntity', {
+    const VerEntity222 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
     }, null, {
@@ -223,7 +223,7 @@ describe('业务实体', () => {
   })
 
   it('可以通过schema定义一个自定义行为', async () => {
-    const TestSchemaActionObj = MetaEntity.createModel(BaseData, 'TestSchemaActionObj', {
+    const TestSchemaActionObj = createModel(BaseData, 'TestSchemaActionObj', {
       "Code": "string",
       // 简写
       schemaAction1: (eventData, params) => {
@@ -262,7 +262,7 @@ describe('业务实体', () => {
 
   it('一个实体可以触发行为的处理规则', async () => {
     let ec = 0;
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObj2', {
+    const TestObj = createModel(BaseData, 'TestObj2', {
       "Code": "string"
     }, [`rule custom_action1{
         when{

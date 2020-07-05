@@ -26,7 +26,7 @@ describe('实体仓库', () => {
 
   it('实体可以设置读取范围，一个组织只能操作一个组织内的实体', async () => {
 
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObj200', {
+    const TestObj = createModel(BaseData, 'TestObj200', {
       "orgid": "string",
       "Code": "string"
     });
@@ -71,7 +71,7 @@ describe('实体仓库', () => {
 
   it('测试快照保存和加载能力', async () => {
 
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObjBig', {
+    const TestObj = createModel(BaseData, 'TestObjBig', {
       "orgid": "string",
       "Code": "string"
     });
@@ -102,7 +102,7 @@ describe('实体仓库', () => {
 
   it('支持合并存储', async () => {
 
-    const TestObj = MetaEntity.createModel(BaseData, 'TestObjmerge', {
+    const TestObj = createModel(BaseData, 'TestObjmerge', {
       "orgid": "string",
       "Code": "string"
     });

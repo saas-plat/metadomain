@@ -3,7 +3,7 @@ const {
   BaseData,
 } = require('../../lib');
 
-module.exports = MetaEntity.createModel(BaseData, 'Person',{
+module.exports = createModel(BaseData, 'Person',{
 
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},

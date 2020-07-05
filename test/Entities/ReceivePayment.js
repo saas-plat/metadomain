@@ -3,7 +3,7 @@ const {
   CompositeData,
 } = require('../../lib');
 
-module.exports = MetaEntity.createModel(CompositeData, 'ReceivePayment', {
+module.exports = createModel(CompositeData, 'ReceivePayment', {
   "Code": {type:"string",mapping:'code'},
   "Name": {type:"string",mapping:'name'},
   "VoucherDate": "date",
