@@ -89,7 +89,7 @@ describe('数据迁移', () => {
     const Department2 = createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
-    }, null, {
+    }, {
       version: 'v2'
     })
     const Department2Rep = await Repository.create(Department2, {
@@ -147,7 +147,7 @@ describe('数据迁移', () => {
           "Name": "string"
         }
       }]
-    }, null, {
+    }, {
       ns
     });
 
@@ -189,7 +189,7 @@ describe('数据迁移', () => {
           "Name": "string"
         }
       }]
-    }, null, {
+    }, {
       ns,
       version: 'v2'
     })
@@ -269,7 +269,7 @@ describe('数据迁移', () => {
           "Name": "string"
         }
       }]
-    }, null, {
+    }, {
       ns
     })
 
@@ -277,7 +277,7 @@ describe('数据迁移', () => {
     const Department2 = createModel(BaseData, "Department2", {
       "Code": "number",
       "Name2": "string"
-    }, null, {
+    }, {
       version: 'v2'
     })
     const Department2Rep = await Repository.create(Department2, {
@@ -296,7 +296,7 @@ describe('数据迁移', () => {
           "Name": "string"
         }
       }]
-    }, null, {
+    }, {
       ns,
       version: 'v2'
     })
@@ -339,6 +339,6 @@ describe('数据迁移', () => {
 
     const data = await Department1Rep.getAll();
     expect(data.length).to.equal(3);
-    expect(data.map(it=>it.Code)).to.include('0019');
+    expect(data.map(it => it.Code)).to.include('0019');
   })
 })

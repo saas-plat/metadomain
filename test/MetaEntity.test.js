@@ -66,7 +66,7 @@ describe('业务实体', () => {
         "Value": "number",
         "REF2": 'TestReference2' // 数组中的引用
       }]
-    }, null, {
+    }, {
       findRepository: () => testRepository
     });
 
@@ -171,20 +171,20 @@ describe('业务实体', () => {
 
     const VerEntity = createModel(BaseData, 'VerEntity', {
       name: 'string'
-    }, null, {
+    }, {
       version: '1'
     });
 
     const VerEntity2 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
-    }, null, {
+    }, {
       version: '2'
     });
 
     const VerEntity1 = createModel(BaseData, 'VerEntity', {
       name: 'string'
-    }, null, {
+    }, {
       version: '1'
     });
 
@@ -199,21 +199,21 @@ describe('业务实体', () => {
     const VerEntity22 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
-    }, null, {
+    }, {
       version: '2'
     });
     await util.wait(200);
 
     const VerEntity11 = createModel(BaseData, 'VerEntity', {
       name: 'string'
-    }, null, {
+    }, {
       version: '1'
     });
 
     const VerEntity222 = createModel(BaseData, 'VerEntity', {
       name: 'string',
       code: 'string'
-    }, null, {
+    }, {
       version: '2'
     });
 
@@ -264,27 +264,7 @@ describe('业务实体', () => {
     let ec = 0;
     const TestObj = createModel(BaseData, 'TestObj2', {
       "Code": "string"
-    }, [`rule custom_action1{
-        when{
-          e: Action e.name == 'TestObj2.action1ing';
-        }
-        then{
-          if (!e.data.Code  ){
-            throw new Error('error')
-          }
-        }
-      }`, `rule custom_action2{
-        when{
-          e: Action e.name == 'TestObj2.action2ed';
-          d: EventData;
-          o: TestObj2
-        }
-        then{
-          console.log('----dododo---');
-           o.Code = 'cccccccccc';  // 自定义行为不修改数据
-           //modify(d);
-        }
-      }`], {
+    }, {
       eventHandler: {
         action1ed: (...args) => {
           ec++;
@@ -294,8 +274,32 @@ describe('业务实体', () => {
           ec++;
           console.log(...args);
         }
+      },
+      actionHandler:  objs=> {
+        console.log(...objs)
       }
     });
+    // [`rule custom_action1{
+    //     when{
+    //       e: Action e.name == 'TestObj2.action1ing';
+    //     }
+    //     then{
+    //       if (!e.data.Code  ){
+    //         throw new Error('error')
+    //       }
+    //     }
+    //   }`, `rule custom_action2{
+    //     when{
+    //       e: Action e.name == 'TestObj2.action2ed';
+    //       d: Event;
+    //       o: TestObj2
+    //     }
+    //     then{
+    //       console.log('----dododo---');
+    //        o.Code = 'cccccccccc';  // 自定义行为不修改数据
+    //        //modify(d);
+    //     }
+    //   }`]
     const testRepository = await Repository.create(TestObj);
     const test = await TestObj.create();
     await test.save({
@@ -314,7 +318,7 @@ describe('业务实体', () => {
 
     // 这里的customAction不推荐使用了，建议自定义行为采用schema的function type
     await test.customAction('action2', {
-      Code: 'cccccccccc',// 自定义行为不修改数据
+      Code: 'cccccccccc', // 自定义行为不修改数据
       ts: test.ts,
       updateBy: 'aa'
     });

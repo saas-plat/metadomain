@@ -58,17 +58,7 @@ describe('基础数据结构对象', () => {
         "Code": "string",
         "Name": "string"
       }]
-    }, [`rule required_onsave {
-      when{
-        e: Action e.name == 'save';
-        o: Entity
-      }
-      then{
-        if (!o.Name && !e.data.Name){
-          throw new Error(t('仓库名称不能为空'))
-        }
-      }
-    }`], {
+    }, {
       eventHandler: {
         on: (name, args) => {
           console.log(name, args);
@@ -77,8 +67,21 @@ describe('基础数据结构对象', () => {
             args
           })
         }
-      }
+      },
+      actionHandler: objs => console.log(...objs)
     });
+
+    // [`rule required_onsave {
+    //   when{
+    //     e: Action e.name == 'save';
+    //     o: Entity
+    //   }
+    //   then{
+    //     if (!o.Name && !e.data.Name){
+    //       throw new Error(t('仓库名称不能为空'))
+    //     }
+    //   }
+    // }`],
 
     console.log('--------------1----------------')
 
@@ -286,7 +289,7 @@ describe('基础数据结构对象', () => {
         "Code": "string",
         "Name": "string"
       }]
-    }, [], {
+    },   {
       on: (name, args) => {
         console.log(name, args);
         eventbus.push({
