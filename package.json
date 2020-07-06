@@ -1,12 +1,12 @@
 {
   "name": "@saas-plat/metadomain",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "entity && query metadata",
   "main": "lib/index.js",
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "test": "cross-env NODE_ENV=test mocha",
-    "watch": "cross-env NODE_ENV=test DEBUG=saas-plat*,-not_this mocha --watch",
+    "test_w": "cross-env NODE_ENV=test DEBUG=saas-plat*,-not_this mocha --watch",
     "test_d": "cross-env NODE_ENV=test DEBUG=saas-plat*,sourced-repo-mongo*,-not_this mocha"
   },
   "repository": {
@@ -19,7 +19,6 @@
   "author": "saas-plat.com",
   "license": "MPL-2.0",
   "dependencies": {
-    "@saas-plat/metaschema": "^1.0.0",
     "debug": "^3.1.0",
     "en-inflectors": "^1.0.12",
     "eventasync": "^1.0.0",
@@ -32,6 +31,7 @@
     "sourced-repo-mongo-hotfix": ">=0.0.1"
   },
   "peerDependencies": {
+    "@saas-plat/metaschema": ">=1.0.0",
     "i18next": ">=19.0.0"
   },
   "devDependencies": {
@@ -39,6 +39,7 @@
     "conventional-changelog-cli": "^2.0.34",
     "cross-env": "^5.2.0",
     "i18next": "^19.5.4",
+    "@saas-plat/metaschema": "^1.0.1",
     "mocha": "^7.1.1"
   }
 }

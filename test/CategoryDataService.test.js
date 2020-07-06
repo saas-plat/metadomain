@@ -36,8 +36,8 @@ describe('分类数据', () => {
     };
 
     const PartnerCategory = require('./Entities/PartnerCategory');
-    expect(PartnerCategory.references).to.have.property('Parent');
-    expect(PartnerCategory.fields.find(it => it.key === 'Partners')).to.be.eql({
+    expect(PartnerCategory.schema.references).to.have.property('Parent');
+    expect(PartnerCategory.schema.fields.find(it => it.key === 'Partners')).to.be.eql({
       "key": "Partners",
       "src": "Partner",
       "description":undefined,
@@ -50,11 +50,11 @@ describe('分类数据', () => {
       },
       "mapping": "details",
       "defValue": [],
-      "fields": undefined
+      "fields": []
     });
 
     // 数组必须是[]结尾
-    expect(PartnerCategory.references).to.have.property('Partners[]');
+    expect(PartnerCategory.schema.references).to.have.property('Partners[]');
 
     const Partner = require('./Entities/Partner');
     const PartnerCategoryRep = await Repository.create(PartnerCategory);

@@ -275,8 +275,16 @@ describe('业务实体', () => {
           console.log(...args);
         }
       },
-      actionHandler:  objs=> {
-        console.log(...objs)
+      actionHandler: objs => {
+        //console.log(...objs)
+        if (objs.some(it => it.name === 'TestObj2.action1ing')) {
+          if (!objs.find(it => it.name === 'TestObj2.action1ing').data.Code) {
+            throw new Error('error')
+          }
+        }
+        if (objs.some(it => it.name === 'TestObj2.action2ed')) {
+          objs.find(it => it instanceof TestObj).Code = 'cccccccccc'; // 自定义行为不修改数据
+        }
       }
     });
     // [`rule custom_action1{
