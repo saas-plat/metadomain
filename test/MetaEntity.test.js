@@ -336,4 +336,54 @@ describe('业务实体', () => {
     // 收到两个自定义业务事件
     expect(ec).to.be.eql(2);
   })
+
+  it('自定义validator校验器的支持', async () => {
+    const TestValidator = createModel(BaseData, 'TestValidator', {
+      "Code": {
+        type: "string",
+        validator: `value === 'aaa'`
+      }
+    });
+
+    const TestValidator2 = createModel(BaseData, 'TestValidator2', {
+      "Code": {
+        type: "string",
+        validator: [
+          `  console.log(this)`,
+           `   value === 'bbb'   `
+         ]
+      }
+    });
+
+    const TestValidator3 = createModel(BaseData, 'TestValidator3', {
+      "Code": {
+        type: "string",
+        validator: async (r, v) => {
+          await util.wait(100);
+          return v === 'ccc'
+        }
+      }
+    });
+
+    const v1 = await TestValidator.create();
+    await v1.save({
+      Code: 'aaa',
+      updateBy: 'uu1',
+      ts: v1.ts
+    });
+
+    const v2 = await TestValidator2.create();
+    await v2.save({
+      Code: 'bbb',
+      updateBy: 'uu1',
+      ts: v2.ts
+    });
+
+    const v3 = await TestValidator3.create();
+    await v3.save({
+      Code: 'ccc',
+      updateBy: 'uu1',
+      ts: v3.ts
+    });
+  })
 })
