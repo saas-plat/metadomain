@@ -1,7 +1,7 @@
 {
   "name": "@saas-plat/metadomain",
   "version": "1.0.37",
-  "description": "entity && query metadata",
+  "description": "使用领域元数据提供通过配置的方式快速定义业务模型",
   "main": "lib/index.js",
   "scripts": {
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",

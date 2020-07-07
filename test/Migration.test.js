@@ -126,5 +126,65 @@ describe('数据迁移', () => {
     expect(d12.Name).to.be.undefined;
     expect(d12.Name2).to.be.eql('aaaaaaaaaaxxxxx');
   })
- 
+
+  it('备份升级失败后可以恢复正常使用', async () => {
+    const Department1 = createModel(BaseData, "Department2", {
+      "Code": "string",
+      "Name": "string"
+    })
+    const Department1Rep = await Repository.create(Department1, {
+      ns
+    });
+    const d = await Department1.create({
+      Code: '000',
+      Name: 'aaaaaaaaaa'
+    }, {
+      ns
+    });
+    for (let i = 0; i < 20; i++) {
+      await d.save({
+        Code: '00' + i,
+        ts: d.ts,
+        updateBy: 'ccc'
+      });
+    }
+    await Department1Rep.commitAll(d);
+
+    // ----------- v2 ---------------
+    const Department2 = createModel(BaseData, "Department2", {
+      "Code": "number",
+      "Name2": "string"
+    }, {
+      version: 'v2'
+    })
+    const Department2Rep = await Repository.create(Department2, {
+      ns
+    });
+
+    const migration = new Migration([Department1Rep], [Department2Rep]);
+    await migration.backup();
+    try {
+      migrate.onAction(() => {
+        throw 'error'
+      })
+      await migration.up();
+      //   [`rule update_sciprt1{
+      //   when{
+      //     e: Action e.name == 'Department2.migrate' && e.event == 'saved';
+      //   }
+      //   then{
+      //      throw 'error'
+      //   }
+      // }`]
+    } catch (err) {
+      console.log(err)
+      await migration.rollback();
+    }
+
+    await migration.dropback();
+
+    const data = await Department1Rep.getAll();
+    expect(data.length).to.equal(3);
+    expect(data.map(it => it.Code)).to.include('0019');
+  })
 })
