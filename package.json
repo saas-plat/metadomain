@@ -28,20 +28,20 @@
     "node-cache": "^4.2.1",
     "shortid": "^2.2.13",
     "sourced": "^0.1.4",
-    "sourced-repo-mongo-hotfix": ">=0.0.1",
-    "vm2": "^3.9.2"
+    "sourced-repo-mongo-hotfix": ">=0.0.1"
   },
   "peerDependencies": {
     "@saas-plat/metaschema": ">=1.0.0",
     "i18next": ">=19.0.0"
   },
   "devDependencies": {
+    "@saas-plat/metaschema": "^1.0.7",
+    "babel-eslint": "^10.1.0",
     "chai": "^4.1.2",
     "conventional-changelog-cli": "^2.0.34",
-    "babel-eslint": "^10.1.0",
     "cross-env": "^5.2.0",
     "i18next": "^19.5.4",
-    "@saas-plat/metaschema": "^1.0.1",
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "vm2": "^3.9.2"
   }
 }

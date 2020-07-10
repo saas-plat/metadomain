@@ -10,6 +10,7 @@ const {
 const fs = require('fs');
 const util = require('./util');
 const mongo = require('sourced-repo-mongo-hotfix/mongo');
+const metaschema = require('@saas-plat/metaschema');
 
 describe('业务实体', () => {
 
@@ -223,8 +224,27 @@ describe('业务实体', () => {
 
   })
 
+  const customActionTest = async (model) => {
+    const TestSchemaActionObj = MetaEntity.createModel(model.name, model.schema);
+
+    const test = await TestSchemaActionObj.create();
+    await test.schemaAction1({
+      otherKey1: 'A1000'
+    });
+    expect(test.Code).to.be.eql('A1000');
+    // 这里调用和test.schemaAction2等同
+    await test.customAction('schemaAction2', {
+      otherKey2: 'B2222'
+    });
+    expect(test.Code).to.be.eql('B2222');
+    await test.schemaAction3({
+      otherKey3: 'B2222333'
+    });
+    expect(test.Code).to.be.eql('B2222333');
+  }
+
   it('可以通过schema定义一个自定义行为', async () => {
-    const TestSchemaActionObj = createModel(BaseData, 'TestSchemaActionObj', {
+    const model = metaschema[BaseData.name]('TestSchemaActionObj', {
       "Code": "string",
       // 简写
       schemaAction1: (eventData, params) => {
@@ -244,21 +264,7 @@ describe('业务实体', () => {
         handle: ['', 'eventData.Code = params.otherKey3']
       }
     });
-
-    const test = await TestSchemaActionObj.create();
-    await test.schemaAction1({
-      otherKey1: 'A1000'
-    });
-    expect(test.Code).to.be.eql('A1000');
-    // 这里调用和test.schemaAction2等同
-    await test.customAction('schemaAction2', {
-      otherKey2: 'B2222'
-    });
-    expect(test.Code).to.be.eql('B2222');
-    await test.schemaAction3({
-      otherKey3: 'B2222333'
-    });
-    expect(test.Code).to.be.eql('B2222333');
+    await customActionTest(model)
   })
 
   it('一个实体可以触发行为的处理规则', async () => {
@@ -388,7 +394,7 @@ describe('业务实体', () => {
     });
   })
 
-  it('vm2对动态加载模型的隔离性', async () => {
+  it('vm2 的隔离性', async () => {
     const {
       NodeVM,
       VMScript
@@ -398,18 +404,77 @@ describe('业务实体', () => {
       sandbox,
       require: {
         external: {
-          modules: ['@saas-plat/*', './jscache/*']
+          modules: ['@saas-plat/metaschema', '@saas-plat/metaapi']
         },
-        root: "./jscache",
+        root: __dirname + "/jscache",
       }
     });
-    let script;
-    try {
-      script = new VMScript(fs.readFileSync(__dirname + '/jscache/a.js'), __dirname + '/jscache/a.js').compile();
-    } catch (err) {
-      console.error('Failed to compile script.', err);
-    }
-    vm.run(script)('hello')
-    expect(sandbox.aaaa999).to.be.eql({})
+    // let script;
+    // try {
+    //   script = new VMScript(fs.readFileSync(__dirname + '/jscache/a.js'), __dirname + '/jscache/a.js').compile();
+    // } catch (err) {
+    //   console.error('Failed to compile script.', err);
+    // }
+    const ret = vm.run(fs.readFileSync(__dirname + '/jscache/a.js'), __dirname + '/jscache/a.js')('word')
+    expect(ret).to.be.eql('hello word ccc')
+  })
+
+  it('vm2对动态加载模型的隔离性', async () => {
+    const {
+      NodeVM,
+      VMScript
+    } = require('vm2');
+    const sandbox = {};
+    const vm2 = new NodeVM({
+      sandbox,
+      require: {
+        external: {
+          modules: ['@saas-plat/metaschema', '@saas-plat/metaapi'],
+         //transitive: true
+        },
+        root: [
+          __dirname + "/jscache",
+         __dirname + '/../node_modules'
+       ],
+      }
+    });
+    // let script;
+    // try {
+    //   script = new VMScript(fs.readFileSync(__dirname + '/jscache/a.js'), __dirname + '/jscache/a.js').compile();
+    // } catch (err) {
+    //   console.error('Failed to compile script.', err);
+    // }
+
+    const test = (eventData)=> console.log(eventData) ;
+
+    require('./jscache/metaapi').test = test;
+
+    const schema = vm2.run(`
+      const {Entity} = require('@saas-plat/metaschema');
+        const {test} = require('./metaapi');
+      // require('lodash')
+      // process.exit(1)
+      module.exports = Entity('VM2Action', {
+        "Code": "string",
+        // 简写
+        schemaAction1: (eventData, params) => {
+          eventData.Code = params.otherKey1;
+          test(eventData)
+        },
+        // schema类型定义
+        schemaAction2: {
+          type: 'function',
+          handle: function (eventData, params) {
+            eventData.Code = params.otherKey2;
+          }
+        },
+        // 字符串数据定义
+        schemaAction3: {
+          type: 'function',
+          handle: ['', 'eventData.Code = params.otherKey3']
+        }
+      })`, __dirname + '/jscache/schema.js');
+      // console.log(schema)
+    await customActionTest(schema);
   })
 })
