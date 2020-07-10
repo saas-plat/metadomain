@@ -7,6 +7,7 @@ const {
 const {
   expect
 } = require('chai');
+const fs = require('fs');
 const util = require('./util');
 const mongo = require('sourced-repo-mongo-hotfix/mongo');
 
@@ -350,8 +351,8 @@ describe('业务实体', () => {
         type: "string",
         validator: [
           `  console.log(this)`,
-           `   value === 'bbb'   `
-         ]
+          `   value === 'bbb'   `
+        ]
       }
     });
 
@@ -385,5 +386,30 @@ describe('业务实体', () => {
       updateBy: 'uu1',
       ts: v3.ts
     });
+  })
+
+  it('vm2对动态加载模型的隔离性', async () => {
+    const {
+      NodeVM,
+      VMScript
+    } = require('vm2');
+    const sandbox = {};
+    const vm = new NodeVM({
+      sandbox,
+      require: {
+        external: {
+          modules: ['@saas-plat/*', './jscache/*']
+        },
+        root: "./jscache",
+      }
+    });
+    let script;
+    try {
+      script = new VMScript(fs.readFileSync(__dirname + '/jscache/a.js'), __dirname + '/jscache/a.js').compile();
+    } catch (err) {
+      console.error('Failed to compile script.', err);
+    }
+    vm.run(script)('hello')
+    expect(sandbox.aaaa999).to.be.eql({})
   })
 })
