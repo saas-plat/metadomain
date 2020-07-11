@@ -14,15 +14,9 @@ global.createModel = (Type, name, schema, opts = {}) => {
 }
 
 before(async () => {
-  await connect({
-    data: true,
-    entity: true
-  });
+  await connect( );
 })
 
 after(async () => {
-  await setTimeout(async () => await disconnect({
-    data: true,
-    entity: true
-  }), 100)
+  await setTimeout(async () => await disconnect( ), 100)
 })
