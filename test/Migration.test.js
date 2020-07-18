@@ -104,7 +104,7 @@ describe('数据迁移', () => {
           objs.find(e => e.name === 'Department2.migrate' && e.event == 'saved').data.Name + 'xxxxx';
       }
     })
-    await migration.up();
+    await migration.up('v1','v2');
     // [`rule update_sciprt1{
     //   when{
     //     e: Action e.name == 'Department2.migrate' && e.event == 'saved';
@@ -167,7 +167,7 @@ describe('数据迁移', () => {
       migrate.onAction(() => {
         throw 'error'
       })
-      await migration.up();
+      await migration.up('v1','v2');
       //   [`rule update_sciprt1{
       //   when{
       //     e: Action e.name == 'Department2.migrate' && e.event == 'saved';
