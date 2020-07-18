@@ -261,6 +261,7 @@ describe('业务实体', () => {
       // 字符串数据定义
       schemaAction3: {
         type: 'function',
+        arguments:['eventData','params'].join(','),
         handle: ['', 'eventData.Code = params.otherKey3']
       }
     });

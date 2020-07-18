@@ -42,6 +42,7 @@ describe('分类数据', () => {
       "src": "Partner",
       "description":undefined,
       "index": undefined,
+      "arguments": undefined,
       "handle": undefined,
       "subtype": "reference",
       "type": "array",
