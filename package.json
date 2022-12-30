@@ -41,7 +41,7 @@
     "conventional-changelog-cli": "^2.0.34",
     "cross-env": "^5.2.1",
     "i18next": "^19.6.2",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "vm2": "^3.9.2"
   }
 }
